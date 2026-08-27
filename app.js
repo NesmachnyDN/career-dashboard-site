@@ -352,18 +352,47 @@ function metric(label, value, note='', drilldown=null) {
   return `<button type="button" class="metric metric-action" ${drilldownAttrs(drilldown)} aria-label="${esc(label)}: ${esc(value)}. Открыть детали">${body}<span class="metric-link">Показать детали →</span></button>`;
 }
 function badge(text, cls='') { return `<span class="badge ${esc(cls)}">${esc(text)}</span>`; }
-function link(label, url) { const u=safeUrl(url); return u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(label)}</a>`:''; }
-function copyBox(text) { if(!text) return ''; return `<div class="copybox">${esc(text)}<button data-copy="${encodeURIComponent(text)}">Копировать</button></div>`; }
+function link(label, url, cls='') { const u=safeUrl(url); return u?`<a class="${esc(cls)}" href="${esc(u)}" target="_blank" rel="noopener">${esc(label)}</a>`:''; }
+
+function contentTypeChip(item) {
+  if (item.kind === 'post') return '<span class="content-chip content-chip-post">Пост по материалу</span>';
+  if (item.kind === 'comment') return '<span class="content-chip content-chip-comment">Комментарий</span>';
+  if (item.kind === 'brief') return '<span class="content-chip content-chip-brief">Обзор</span>';
+  return '';
+}
+
+function copyBox(text, label='Готовый текст', buttonLabel='Копировать') {
+  if (!text) return '';
+  return `<div class="copy-section">
+    <div class="copy-label">${esc(label)}</div>
+    <div class="copybox">${esc(text)}<button data-copy="${encodeURIComponent(text)}">${esc(buttonLabel)}</button></div>
+  </div>`;
+}
 
 function itemCard(item) {
-  const actions = [link('Источник', item.source_url), link('Открыть цель', item.target_url)].filter(Boolean).join('');
-  const meta = [ru(item.kind), ru(item.source_name), item.company, ru(item.role), ru(item.recommendation), item.fit_score != null ? `соответствие ${item.fit_score}%`: '', fmtDate(item.observed_at)].filter(Boolean);
-  return `<article class="card">
-    <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''} ${meta.map(esc).join(' · ')}</div>
+  const isPost = item.kind === 'post';
+  const isComment = item.kind === 'comment';
+  const cardClass = isPost ? ' content-card content-card-post' : isComment ? ' content-card content-card-comment' : '';
+  const primaryUrl = isComment ? (item.target_url || item.source_url) : item.source_url;
+  const primaryLabel = isComment ? 'Открыть обсуждение' : isPost ? 'Открыть материал' : 'Источник';
+  const actions = [
+    link(primaryLabel, primaryUrl, isComment ? 'primary' : ''),
+    !isComment && item.target_url && item.target_url !== item.source_url ? link('Открыть площадку', item.target_url) : ''
+  ].filter(Boolean).join('');
+  const meta = [item.target_platform, ru(item.source_name), item.company, ru(item.role), ru(item.recommendation), item.fit_score != null ? `соответствие ${item.fit_score}%`: '', fmtDate(item.observed_at)].filter(Boolean);
+  const copyLabel = isPost ? 'Готовый текст публикации — копируйте целиком' : isComment ? 'Готовый комментарий' : 'Готовый текст';
+  const copyButton = isPost ? 'Скопировать пост' : isComment ? 'Скопировать комментарий' : 'Копировать';
+
+  return `<article class="card${cardClass}">
+    <div class="content-card-head">
+      <div class="content-card-chips">${contentTypeChip(item)} ${item.target_platform ? `<span class="platform-chip">${esc(item.target_platform)}</span>` : ''}</div>
+      <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''}</div>
+    </div>
     <h3>${esc(displayTitle(item.title))}</h3>
+    ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
     ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
     ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}${item.compensation_status?` · ${esc(ru(item.compensation_status))}`:''}</p>`:''}
-    ${copyBox(item.copy_text)}
+    ${copyBox(item.copy_text, copyLabel, copyButton)}
     ${actions?`<div class="actions">${actions}</div>`:''}
   </article>`;
 }
@@ -746,7 +775,11 @@ function renderOpportunities() {
 
 function renderContent() {
   const items = snapshot.automation.active_items.filter(i => ['post','comment','brief'].includes(i.kind) && containsQuery(i));
-  return items.length ? items.map(itemCard).join('') : '<div class="empty">Сохранённых предложений по контенту пока нет.</div>';
+  if (!items.length) return '<div class="empty">Сохранённых предложений по контенту пока нет.</div>';
+  return `<div class="view-note content-legend">
+    <span class="content-chip content-chip-post">Пост по материалу</span> — готовая самостоятельная публикация: копируйте весь блок целиком.
+    <span class="content-chip content-chip-comment">Комментарий</span> — текст для вставки в конкретное обсуждение по кнопке «Открыть обсуждение».
+  </div>${items.map(itemCard).join('')}`;
 }
 
 function renderInbox() {
