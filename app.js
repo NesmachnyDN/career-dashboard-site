@@ -4,6 +4,8 @@ let query = '';
 let vacancyStatusFilter = 'all';
 let vacancyExactStatusFilter = 'all';
 let vacancyOriginFilter = 'all';
+let vacancyPage = 1;
+let vacancyPageSize = 10;
 let opportunityStatusFilter = 'all';
 let opportunityExactStatusFilter = 'all';
 let opportunityPage = 1;
@@ -249,6 +251,7 @@ function openDrilldown(target) {
     vacancyStatusFilter = target.dataset.drilldownStatusGroup || 'all';
     vacancyExactStatusFilter = target.dataset.drilldownStatus || 'all';
     vacancyOriginFilter = target.dataset.drilldownOrigin || 'all';
+    vacancyPage = 1;
   }
   if (currentView === 'opportunities') {
     opportunityStatusFilter = 'all';
@@ -271,6 +274,7 @@ function startApp() {
   });
   $('#search').addEventListener('input', (event) => {
     query = event.target.value.trim();
+    if (currentView === 'vacancies') vacancyPage = 1;
     if (currentView === 'opportunities') opportunityPage = 1;
     render();
   });
@@ -295,6 +299,22 @@ function startApp() {
       const key = decodeURIComponent(contentToggle.dataset.contentToggle || '');
       const current = contentExpandedByKey(key, contentToggle.dataset.defaultExpanded === 'true');
       contentExpansionOverrides.set(key, !current);
+      render();
+      return;
+    }
+
+    const vacancyQuickFilter = event.target.closest('[data-vacancy-status]');
+    if (vacancyQuickFilter) {
+      vacancyStatusFilter = vacancyQuickFilter.dataset.vacancyStatus;
+      vacancyExactStatusFilter = 'all';
+      vacancyPage = 1;
+      render();
+      return;
+    }
+
+    const vacancyPageButton = event.target.closest('[data-vacancy-page]');
+    if (vacancyPageButton && !vacancyPageButton.disabled) {
+      vacancyPage = Number(vacancyPageButton.dataset.vacancyPage) || 1;
       render();
       return;
     }
@@ -360,6 +380,10 @@ function startApp() {
         vacancyStatusFilter = 'all';
       }
       if (vacancyFilter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = vacancyFilter.value;
+      if (vacancyFilter.dataset.vacancyFilter === 'page-size') {
+        vacancyPageSize = Number(vacancyFilter.value) || 10;
+      }
+      vacancyPage = 1;
       render();
       return;
     }
@@ -780,120 +804,228 @@ function renderToday() {
   </div>`;
 }
 
-function vacancyAssessment(v) {
-  const parts = [];
-  if (v.fit_score != null) parts.push(`соответствие ${v.fit_score}%`);
-  if (v.fit_status) parts.push(ru(v.fit_status));
-  if (v.recommendation) parts.push(ru(v.recommendation));
-  return parts.length ? parts.join(' · ') : 'не оценено';
+function vacancyStatusClass(v) {
+  const status = v.status || 'unknown';
+  if (status === 'accepted') return 'status-success';
+  if (['rejected','dismissed'].includes(status)) return 'status-rejected';
+  if (v.status_group === 'active') return 'status-active';
+  if (v.status_group === 'consideration') return 'status-new';
+  if (v.status_group === 'closed') return 'status-closed';
+  return 'status-unknown';
 }
 
-function vacancyCompensation(v) {
-  const status = esc(ru(v.compensation_status || 'unknown'));
-  const value = v.compensation && v.compensation !== 'unknown' ? ru(v.compensation) : '';
-  return value ? `${status}<div class="cell-note">${esc(value)}</div>` : status;
-}
-
-function vacancyOrigin(v) {
-  const label = ru(v.origin || 'unknown');
-  const firstSeen = v.first_seen_at ? `<div class="cell-note">впервые: ${esc(fmtDate(v.first_seen_at))}</div>` : '';
-  return `${badge(label, v.origin || 'unknown')}${firstSeen}`;
+function vacancyCardClass(v) {
+  if (v.status === 'accepted') return 'vacancy-group-success';
+  if (['rejected','dismissed'].includes(v.status)) return 'vacancy-group-rejected';
+  if (v.status_group === 'active') return 'vacancy-group-active';
+  if (v.status_group === 'consideration') return 'vacancy-group-consideration';
+  return 'vacancy-group-closed';
 }
 
 function vacancyStatus(v) {
-  const interactions = v.interaction_count ? `<div class="cell-note">${v.interaction_count} взаимодействий</div>` : '';
-  return `${badge(ru(v.status || 'unknown'), v.status || 'unknown')}${interactions}`;
+  const interactions = v.interaction_count
+    ? `<span class="vacancy-interactions">${esc(v.interaction_count)} взаим.</span>`
+    : '';
+  return `<span class="status-chip ${vacancyStatusClass(v)}">${esc(ru(v.status || 'unknown'))}</span>${interactions}`;
+}
+
+function vacancyOrigin(v) {
+  const origin = v.origin || 'unknown';
+  return `<span class="origin-chip origin-${esc(origin)}">${esc(ru(origin))}</span>`;
+}
+
+function vacancySignalClass(value, type='fit') {
+  if (type === 'compensation') {
+    if (value === 'qualified') return 'signal-positive';
+    if (value === 'below-floor') return 'signal-negative';
+    if (value === 'to-normalize') return 'signal-warning';
+    return 'signal-neutral';
+  }
+  if (['pursue','TAKE','qualified'].includes(value)) return 'signal-positive';
+  if (['conditional','pursue-after-gates','CONSIDER'].includes(value)) return 'signal-warning';
+  if (['skip','SKIP','weak-fit','rejected','reject'].includes(value)) return 'signal-negative';
+  return 'signal-neutral';
+}
+
+function vacancyAssessment(v) {
+  const primary = v.recommendation || v.fit_status || 'not-assessed';
+  const score = v.fit_score != null
+    ? `<div class="vacancy-score"><strong>${esc(v.fit_score)}%</strong><span>соответствие</span></div>`
+    : '';
+  const fit = v.fit_status && v.recommendation && v.fit_status !== v.recommendation
+    ? `<div class="vacancy-field-note">${esc(ru(v.fit_status))}</div>`
+    : '';
+  return `<div class="vacancy-assessment">${score}<span class="signal-chip ${vacancySignalClass(primary)}">${esc(ru(primary))}</span>${fit}</div>`;
+}
+
+function vacancyCompensation(v) {
+  const rawStatus = v.compensation_status || 'unknown';
+  const value = v.compensation && v.compensation !== 'unknown' ? ru(v.compensation) : '';
+  return `<span class="signal-chip ${vacancySignalClass(rawStatus,'compensation')}">${esc(ru(rawStatus))}</span>${value ? `<div class="vacancy-field-note">${esc(value)}</div>` : ''}`;
+}
+
+function vacancySort(a,b) {
+  const rank = {active:0, consideration:1, closed:2};
+  const groupDiff = (rank[a.status_group] ?? 3) - (rank[b.status_group] ?? 3);
+  if (groupDiff) return groupDiff;
+  const aTime = Date.parse(a.last_activity_at || a.first_seen_at || '') || 0;
+  const bTime = Date.parse(b.last_activity_at || b.first_seen_at || '') || 0;
+  return bTime - aTime;
+}
+
+function vacancyQuickFilters(items) {
+  const counts = {
+    all: items.length,
+    consideration: items.filter(v=>v.status_group === 'consideration').length,
+    active: items.filter(v=>v.status_group === 'active').length,
+    closed: items.filter(v=>v.status_group === 'closed').length,
+  };
+  const filters = [
+    ['all','Все'],
+    ['consideration','К рассмотрению'],
+    ['active','В процессе'],
+    ['closed','Закрытые'],
+  ];
+  return `<div class="status-filters">${filters.map(([key,label]) =>
+    `<button type="button" class="status-filter vacancy-status-filter vacancy-filter-${key} ${vacancyStatusFilter===key?'active':''}" data-vacancy-status="${key}">${label}<strong>${counts[key]}</strong></button>`
+  ).join('')}</div>`;
+}
+
+function vacancyPagination(total,current,totalPages) {
+  if (totalPages <= 1) return '';
+  const pages = [];
+  const addPage = (page) => pages.push(`<button type="button" class="page-button ${page===current?'active':''}" data-vacancy-page="${page}">${page}</button>`);
+  if (totalPages <= 7) {
+    for (let page=1; page<=totalPages; page++) addPage(page);
+  } else {
+    addPage(1);
+    if (current > 4) pages.push('<span class="pagination-gap">…</span>');
+    const from = Math.max(2,current-1);
+    const to = Math.min(totalPages-1,current+1);
+    for (let page=from; page<=to; page++) addPage(page);
+    if (current < totalPages-3) pages.push('<span class="pagination-gap">…</span>');
+    addPage(totalPages);
+  }
+  return `<div class="pagination">
+    <button type="button" class="page-button" data-vacancy-page="${Math.max(1,current-1)}" ${current===1?'disabled':''}>←</button>
+    <div class="page-numbers">${pages.join('')}</div>
+    <button type="button" class="page-button" data-vacancy-page="${Math.min(totalPages,current+1)}" ${current===totalPages?'disabled':''}>→</button>
+  </div>`;
+}
+
+function vacancyCard(v) {
+  const sourceMeta = [
+    v.source_name && v.source_name !== 'unknown' ? ru(v.source_name) : '',
+    v.contact_name && v.contact_name !== 'unknown' ? `контакт: ${v.contact_name}` : '',
+    v.first_seen_at ? `впервые: ${fmtDate(v.first_seen_at)}` : ''
+  ].filter(Boolean);
+  const nextAction = ru(v.next_action || 'none');
+  const nextDate = v.next_action_date && !['none','unknown','to-verify'].includes(v.next_action_date)
+    ? `<div class="vacancy-field-note">до ${esc(fmtDate(v.next_action_date))}</div>`
+    : '';
+  const sourceLink = link('Открыть ↗', v.source_url, 'vacancy-open');
+
+  return `<article class="vacancy-card ${vacancyCardClass(v)}">
+    <div class="vacancy-card-grid">
+      <div class="vacancy-main">
+        <div class="vacancy-chips">${vacancyStatus(v)}${vacancyOrigin(v)}</div>
+        <strong class="vacancy-company">${esc(v.company || '—')}</strong>
+        <div class="vacancy-role">${esc(ru(v.role || v.title || '—'))}</div>
+        ${v.summary ? `<div class="vacancy-summary">${esc(displayText(v.summary))}</div>` : ''}
+        ${sourceMeta.length ? `<div class="vacancy-meta">${sourceMeta.map(item=>`<span>${esc(item)}</span>`).join('')}</div>` : ''}
+      </div>
+      <div class="vacancy-field">
+        <span class="vacancy-field-label">Оценка</span>
+        ${vacancyAssessment(v)}
+      </div>
+      <div class="vacancy-field">
+        <span class="vacancy-field-label">Компенсация</span>
+        ${vacancyCompensation(v)}
+      </div>
+      <div class="vacancy-field vacancy-next">
+        <span class="vacancy-field-label">Следующее действие</span>
+        <div class="vacancy-value">${esc(nextAction)}</div>
+        ${nextDate}
+      </div>
+      <div class="vacancy-tail">
+        <div>
+          <span class="vacancy-field-label">Обновлено</span>
+          <div class="vacancy-updated">${esc(fmtDate(v.last_activity_at || v.first_seen_at))}</div>
+        </div>
+        ${sourceLink}
+      </div>
+    </div>
+  </article>`;
 }
 
 function renderVacancies() {
-  const allItems = (snapshot.vacancies || []).filter(containsQuery);
+  const searchable = (snapshot.vacancies || []).filter(containsQuery).sort(vacancySort);
   const exactStatuses = [...new Set((snapshot.vacancies || []).map(v => v.status).filter(Boolean))]
     .sort((a,b)=>ru(a).localeCompare(ru(b), 'ru'));
-  const items = allItems.filter(v =>
+  const filtered = searchable.filter(v =>
     (vacancyStatusFilter === 'all' || v.status_group === vacancyStatusFilter) &&
     (vacancyExactStatusFilter === 'all' || v.status === vacancyExactStatusFilter) &&
     (vacancyOriginFilter === 'all' || v.origin === vacancyOriginFilter)
   );
-  if (!allItems.length) return '<div class="empty">Вакансий пока нет.</div>';
+  if (!searchable.length) return query
+    ? '<div class="empty">По поиску вакансий нет.</div>'
+    : '<div class="empty">Вакансий пока нет.</div>';
+
+  const totalPages = Math.max(1,Math.ceil(filtered.length / vacancyPageSize));
+  vacancyPage = Math.min(vacancyPage,totalPages);
+  const pageStart = (vacancyPage - 1) * vacancyPageSize;
+  const pageItems = filtered.slice(pageStart,pageStart + vacancyPageSize);
+  const firstShown = filtered.length ? pageStart + 1 : 0;
+  const lastShown = Math.min(pageStart + vacancyPageSize,filtered.length);
 
   return `<div class="grid cards">
-    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || items.length, '', {view:'vacancies'})}
+    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || searchable.length, '', {view:'vacancies'})}
     ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0, '', {view:'vacancies',statusGroup:'consideration'})}
     ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0, '', {view:'vacancies',statusGroup:'active'})}
     ${metric('Закрыто', snapshot.analytics.vacancy_closed_count || 0, '', {view:'vacancies',statusGroup:'closed'})}
   </div>
   <div class="section">
-    <div class="section-head"><h2>Единый список вакансий</h2></div>
-    <div class="filters">
-      <label>Состояние
-        <select data-vacancy-filter="status">
-          <option value="all" ${vacancyStatusFilter === 'all' ? 'selected' : ''}>Все</option>
-          <option value="consideration" ${vacancyStatusFilter === 'consideration' ? 'selected' : ''}>К рассмотрению</option>
-          <option value="active" ${vacancyStatusFilter === 'active' ? 'selected' : ''}>В процессе</option>
-          <option value="closed" ${vacancyStatusFilter === 'closed' ? 'selected' : ''}>Закрытые</option>
-        </select>
-      </label>
-      <label>Точный статус
-        <select data-vacancy-filter="exact-status">
-          <option value="all" ${vacancyExactStatusFilter === 'all' ? 'selected' : ''}>Все статусы</option>
-          ${exactStatuses.map(status => `<option value="${esc(status)}" ${vacancyExactStatusFilter === status ? 'selected' : ''}>${esc(ru(status))}</option>`).join('')}
-        </select>
-      </label>
-      <label>Как появилась
-        <select data-vacancy-filter="origin">
-          <option value="all" ${vacancyOriginFilter === 'all' ? 'selected' : ''}>Все</option>
-          <option value="scheduled-search" ${vacancyOriginFilter === 'scheduled-search' ? 'selected' : ''}>Автопоиск</option>
-          <option value="manual-search" ${vacancyOriginFilter === 'manual-search' ? 'selected' : ''}>Нашёл сам</option>
-          <option value="recruiter-inbound" ${vacancyOriginFilter === 'recruiter-inbound' ? 'selected' : ''}>Рекрутер предложил</option>
-          <option value="platform-inbound" ${vacancyOriginFilter === 'platform-inbound' ? 'selected' : ''}>Входящее с площадки</option>
-        </select>
-      </label>
-      <span class="meta">Показано: ${items.length} из ${allItems.length}</span>
+    <div class="section-head">
+      <div>
+        <h2>Единый список вакансий</h2>
+        <p class="section-note">Один реестр для автопоиска, найденных вручную вакансий и входящих контактов. Источник появления сохраняется независимо от текущего этапа.</p>
+      </div>
     </div>
-    ${items.length ? `<div class="table-wrap">
-      <table class="vacancies-table">
-        <thead>
-          <tr>
-            <th>Статус</th>
-            <th>Вакансия</th>
-            <th>Как появилась</th>
-            <th>Источник</th>
-            <th>Оценка</th>
-            <th>Компенсация</th>
-            <th>Следующее действие</th>
-            <th>Обновлено</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          ${items.map(v => `<tr>
-            <td>${vacancyStatus(v)}</td>
-            <td>
-              <strong>${esc(v.company || '—')}</strong>
-              <div>${esc(ru(v.role || v.title || '—'))}</div>
-              ${v.summary ? `<div class="cell-note">${esc(displayText(v.summary))}</div>` : ''}
-            </td>
-            <td>${vacancyOrigin(v)}</td>
-            <td>
-              ${esc(ru(v.source_name || 'unknown'))}
-              ${v.contact_name && v.contact_name !== 'unknown' ? `<div class="cell-note">контакт: ${esc(v.contact_name)}</div>` : ''}
-            </td>
-            <td>${esc(vacancyAssessment(v))}</td>
-            <td>${vacancyCompensation(v)}</td>
-            <td>
-              ${esc(ru(v.next_action || 'none'))}
-              ${v.next_action_date && !['none','unknown','to-verify'].includes(v.next_action_date) ? `<div class="cell-note">до ${esc(fmtDate(v.next_action_date))}</div>` : ''}
-            </td>
-            <td>${esc(fmtDate(v.last_activity_at || v.first_seen_at))}</td>
-            <td>${link('Открыть', v.source_url)}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>` : '<div class="empty">По выбранным фильтрам вакансий нет.</div>'}
-    <div class="table-legend">
-      <span>${badge('автопоиск', 'scheduled-search')}</span>
-      <span>${badge('нашёл сам', 'manual-search')}</span>
-      <span>${badge('рекрутер предложил', 'recruiter-inbound')}</span>
+    <div class="vacancy-toolbar">
+      ${vacancyQuickFilters(searchable)}
+      <div class="filters vacancy-selects">
+        <label>Точный статус
+          <select data-vacancy-filter="exact-status">
+            <option value="all" ${vacancyExactStatusFilter === 'all' ? 'selected' : ''}>Все статусы</option>
+            ${exactStatuses.map(status => `<option value="${esc(status)}" ${vacancyExactStatusFilter === status ? 'selected' : ''}>${esc(ru(status))}</option>`).join('')}
+          </select>
+        </label>
+        <label>Как появилась
+          <select data-vacancy-filter="origin">
+            <option value="all" ${vacancyOriginFilter === 'all' ? 'selected' : ''}>Все источники</option>
+            <option value="scheduled-search" ${vacancyOriginFilter === 'scheduled-search' ? 'selected' : ''}>Автопоиск</option>
+            <option value="manual-search" ${vacancyOriginFilter === 'manual-search' ? 'selected' : ''}>Нашёл сам</option>
+            <option value="recruiter-inbound" ${vacancyOriginFilter === 'recruiter-inbound' ? 'selected' : ''}>Рекрутер предложил</option>
+            <option value="platform-inbound" ${vacancyOriginFilter === 'platform-inbound' ? 'selected' : ''}>Входящее с площадки</option>
+          </select>
+        </label>
+        <label>На странице
+          <select data-vacancy-filter="page-size">
+            ${[10,20,30].map(size=>`<option value="${size}" ${vacancyPageSize===size?'selected':''}>${size}</option>`).join('')}
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="vacancy-list-head">
+      <span>Показано ${firstShown}–${lastShown} из ${filtered.length}</span>
+      <span>Сначала вакансии в процессе, затем к рассмотрению и закрытые</span>
+    </div>
+    <div class="vacancy-list">${pageItems.map(v=>vacancyCard(v)).join('') || '<div class="empty">По выбранным фильтрам вакансий нет.</div>'}</div>
+    ${vacancyPagination(filtered.length,vacancyPage,totalPages)}
+    <div class="vacancy-legend">
+      <span class="origin-chip origin-scheduled-search">автопоиск</span>
+      <span class="origin-chip origin-manual-search">нашёл сам</span>
+      <span class="origin-chip origin-recruiter-inbound">рекрутер предложил</span>
       <span class="meta">«Как появилась» фиксируется один раз и не меняется после отклика или ответа рекрутера.</span>
     </div>
   </div>`;
