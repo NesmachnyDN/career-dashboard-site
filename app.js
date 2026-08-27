@@ -303,6 +303,20 @@ function startApp() {
       return;
     }
 
+    const downloadImageBtn = event.target.closest('[data-download-image]');
+    if (downloadImageBtn) {
+      try {
+        const title = decodeURIComponent(downloadImageBtn.dataset.imageTitle || '');
+        const source = decodeURIComponent(downloadImageBtn.dataset.imageSource || '');
+        await downloadSetkaCover(title, source);
+        flashCopyButton(downloadImageBtn, 'Скачано');
+      } catch (error) {
+        console.error('Не удалось скачать изображение', error);
+        flashCopyButton(downloadImageBtn, 'Ошибка скачивания');
+      }
+      return;
+    }
+
     const imageBtn = event.target.closest('[data-copy-image]');
     if (imageBtn) {
       try {
@@ -403,11 +417,7 @@ function wrapCanvasText(ctx, text, maxWidth) {
   return lines;
 }
 
-async function copySetkaCover(title, source) {
-  if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') {
-    throw new Error('Clipboard image API is unavailable');
-  }
-
+async function buildSetkaCoverBlob(title, source) {
   const canvas = document.createElement('canvas');
   canvas.width = 1200;
   canvas.height = 630;
@@ -453,10 +463,41 @@ async function copySetkaCover(title, source) {
   const sourceText = source ? `Источник: ${source}` : 'Архитектурный материал';
   ctx.fillText(sourceText, 72, 576);
 
-  const blob = await new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     canvas.toBlob(value => value ? resolve(value) : reject(new Error('PNG generation failed')), 'image/png');
   });
+}
+
+async function copySetkaCover(title, source) {
+  if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') {
+    throw new Error('Clipboard image API is unavailable');
+  }
+  const blob = await buildSetkaCoverBlob(title, source);
   await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+}
+
+function setkaCoverFilename(title) {
+  const stem = String(title || 'setka-cover')
+    .toLowerCase()
+    .replace(/[^a-zа-яё0-9]+/gi, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80);
+  return `${stem || 'setka-cover'}.png`;
+}
+
+async function downloadSetkaCover(title, source) {
+  const blob = await buildSetkaCoverBlob(title, source);
+  const url = URL.createObjectURL(blob);
+  try {
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = setkaCoverFilename(title);
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }
 
 function setkaCoverBox(item) {
@@ -470,7 +511,10 @@ function setkaCoverBox(item) {
       <strong>${esc(publicationTitle)}</strong>
       <span class="setka-cover-source">${esc(source ? `Источник: ${source}` : 'Архитектурный материал')}</span>
     </div>
-    <button type="button" class="copy-image-button" data-copy-image data-image-title="${encodeURIComponent(publicationTitle)}" data-image-source="${encodeURIComponent(source)}">Скопировать изображение</button>
+    <div class="image-actions">
+      <button type="button" class="copy-image-button" data-copy-image data-image-title="${encodeURIComponent(publicationTitle)}" data-image-source="${encodeURIComponent(source)}">Скопировать изображение</button>
+      <button type="button" class="copy-image-button" data-download-image data-image-title="${encodeURIComponent(publicationTitle)}" data-image-source="${encodeURIComponent(source)}">Скачать изображение</button>
+    </div>
   </div>`;
 }
 
