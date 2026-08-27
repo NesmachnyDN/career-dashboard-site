@@ -6,9 +6,18 @@
   --muted: #69707d;
   --line: #e2e5ea;
   --accent: #22262d;
-  --danger: #a22b2b;
-  --warning: #875c00;
-  --success: #1f6a45;
+  --danger: #b42318;
+  --warning: #a15c00;
+  --success: #18794e;
+  --info: #2563eb;
+  --analytics-accent: #7c3aed;
+  --origin: #0f766e;
+  --soft-danger: #fff1f0;
+  --soft-warning: #fff7e6;
+  --soft-success: #ecfdf3;
+  --soft-info: #eff6ff;
+  --soft-accent: #f5f3ff;
+  --soft-origin: #f0fdfa;
   --radius: 14px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -21,6 +30,18 @@
     --muted: #a2a8b2;
     --line: #30343b;
     --accent: #f0f1f3;
+    --danger: #ff7b72;
+    --warning: #e3b341;
+    --success: #56d364;
+    --info: #79c0ff;
+    --analytics-accent: #d2a8ff;
+    --origin: #56d4c4;
+    --soft-danger: #2b1b1d;
+    --soft-warning: #2a2418;
+    --soft-success: #17251d;
+    --soft-info: #17243a;
+    --soft-accent: #251d36;
+    --soft-origin: #162b29;
   }
 }
 * { box-sizing: border-box; }
@@ -55,8 +76,17 @@ main { min-width: 0; padding: 28px 34px 48px; }
 }
 .grid { display: grid; gap: 14px; }
 .grid.cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.metric { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; }
-.metric strong { display: block; margin-top: 8px; font-size: 26px; }
+.metric {
+  min-width: 0; background: var(--panel); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 16px; text-align: left; color: var(--text);
+}
+.metric strong { display: block; margin-top: 8px; font-size: 28px; line-height: 1; }
+.metric-label { color: var(--muted); font-size: 12px; }
+.metric-note { display: block; margin-top: 6px; color: var(--muted); font-size: 11px; }
+.metric-action { position: relative; cursor: pointer; transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+.metric-action:hover { border-color: color-mix(in srgb, var(--info) 45%, var(--line)); box-shadow: 0 7px 22px rgba(23,25,29,.07); transform: translateY(-1px); }
+.metric-action:focus-visible, .chart-row:focus-visible, .stage-card:focus-visible { outline: 2px solid var(--info); outline-offset: 2px; }
+.metric-link { display: block; margin-top: 12px; color: var(--info); font-size: 11px; font-weight: 650; }
 .section { margin-top: 24px; }
 .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .section h2 { margin: 0; font-size: 17px; }
@@ -101,9 +131,74 @@ tr:last-child td { border-bottom: 0; }
   position: absolute; right: 8px; top: 8px; border: 1px solid var(--line); background: var(--panel);
   color: var(--text); border-radius: 7px; padding: 5px 7px; cursor: pointer; font-size: 11px;
 }
-.bar-row { display: grid; grid-template-columns: minmax(130px, 220px) 1fr 40px; align-items: center; gap: 10px; margin: 8px 0; font-size: 13px; }
-.bar { height: 8px; border-radius: 999px; background: var(--line); overflow: hidden; }
-.bar > i { display: block; height: 100%; background: var(--accent); border-radius: inherit; }
+.analytics-section { max-width: 1400px; }
+.section-note { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.stage-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.stage-card {
+  min-width: 0; min-height: 112px; padding: 14px; border: 1px solid var(--line); border-radius: 12px;
+  background: var(--panel); color: var(--text); text-align: left; cursor: pointer;
+  display: grid; grid-template-columns: 28px 1fr auto; grid-template-rows: auto 1fr; gap: 10px 8px;
+  transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+.stage-card:hover { border-color: currentColor; transform: translateY(-1px); box-shadow: 0 6px 18px rgba(23,25,29,.06); }
+.stage-step {
+  width: 24px; height: 24px; border-radius: 999px; display: grid; place-items: center;
+  background: var(--panel-2); border: 1px solid var(--line); color: var(--muted); font-size: 11px; font-weight: 700;
+}
+.stage-name { align-self: center; font-size: 12px; font-weight: 650; line-height: 1.3; }
+.stage-card strong { grid-column: 2 / 4; align-self: end; font-size: 26px; line-height: 1; }
+
+.chart-card { padding: 12px 14px 14px; }
+.chart { display: grid; gap: 6px; }
+.chart-axis {
+  display: grid; grid-template-columns: minmax(170px, 240px) 1fr 72px;
+  gap: 12px; align-items: end; min-height: 24px; color: var(--muted); font-size: 10px;
+}
+.chart-axis-scale { position: relative; height: 18px; border-bottom: 1px solid var(--line); }
+.chart-axis-scale i {
+  position: absolute; bottom: 3px; transform: translateX(-50%);
+  font-style: normal; font-variant-numeric: tabular-nums;
+}
+.chart-axis-scale i:first-child { transform: none; }
+.chart-axis-scale i:last-child { transform: translateX(-100%); }
+.chart-axis-unit { text-align: right; }
+.chart-row {
+  appearance: none; width: 100%; border: 0; border-radius: 10px; padding: 8px 6px;
+  background: transparent; color: var(--text); cursor: pointer;
+  display: grid; grid-template-columns: minmax(170px, 240px) 1fr 72px; gap: 12px; align-items: center;
+  text-align: left; font: inherit; transition: background .15s ease;
+}
+.chart-row:hover { background: var(--panel-2); }
+.chart-label { font-size: 12px; line-height: 1.35; }
+.chart-track {
+  position: relative; height: 18px; overflow: hidden; border-radius: 5px;
+  background-color: var(--panel-2);
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
+}
+.chart-bar { display: block; height: 100%; min-width: 0; border-radius: 5px; background: var(--info); }
+.chart-value { display: flex; justify-content: flex-end; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
+.chart-value strong { font-size: 14px; }
+.chart-value small { min-width: 30px; color: var(--muted); font-size: 10px; text-align: right; }
+
+.tone-neutral { color: var(--muted); }
+.tone-info { color: var(--info); }
+.tone-warning { color: var(--warning); }
+.tone-accent { color: var(--analytics-accent); }
+.tone-success { color: var(--success); }
+.tone-danger { color: var(--danger); }
+.tone-origin { color: var(--origin); }
+.chart-row.tone-info .chart-bar { background: var(--info); }
+.chart-row.tone-warning .chart-bar { background: var(--warning); }
+.chart-row.tone-accent .chart-bar { background: var(--analytics-accent); }
+.chart-row.tone-success .chart-bar { background: var(--success); }
+.chart-row.tone-danger .chart-bar { background: var(--danger); }
+.chart-row.tone-origin .chart-bar { background: var(--origin); }
+.stage-card.tone-neutral { background: var(--panel); }
+.stage-card.tone-info { background: var(--soft-info); }
+.stage-card.tone-accent { background: var(--soft-accent); }
+.stage-card.tone-success { background: var(--soft-success); }
+.stage-card.tone-danger { background: var(--soft-danger); }
+.empty.compact { padding: 18px; }
 .empty { padding: 26px; text-align: center; color: var(--muted); background: var(--panel); border: 1px dashed var(--line); border-radius: var(--radius); }
 .error { margin-top: 10px; min-height: 18px; color: var(--danger); font-size: 12px; }
 .unlock { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
@@ -118,6 +213,8 @@ tr:last-child td { border-bottom: 0; }
 
 @media (max-width: 1000px) {
   .grid.cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .stage-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .chart-axis, .chart-row { grid-template-columns: minmax(130px, 190px) 1fr 64px; }
 }
 @media (max-width: 720px) {
   .shell { grid-template-columns: 1fr; }
@@ -129,6 +226,17 @@ tr:last-child td { border-bottom: 0; }
   .topbar { align-items: start; flex-direction: column; }
   #search { width: 100%; }
   .grid.cards { grid-template-columns: 1fr 1fr; }
+  .stage-grid { grid-template-columns: 1fr 1fr; }
+  .chart-axis { display: none; }
+  .chart-row { grid-template-columns: minmax(110px, 42%) 1fr 58px; gap: 8px; padding: 9px 4px; }
+  .chart-label { font-size: 11px; }
+  .chart-track { height: 16px; }
+}
+@media (max-width: 480px) {
+  .grid.cards, .stage-grid { grid-template-columns: 1fr; }
+  .chart-row { grid-template-columns: 1fr 58px; }
+  .chart-track { grid-column: 1 / 3; grid-row: 2; }
+  .chart-value { grid-column: 2; grid-row: 1; }
 }
 
 .vacancies-table { min-width: 1320px; }

@@ -2,6 +2,7 @@ let snapshot = null;
 let currentView = 'today';
 let query = '';
 let vacancyStatusFilter = 'all';
+let vacancyExactStatusFilter = 'all';
 let vacancyOriginFilter = 'all';
 
 const $ = (s) => document.querySelector(s);
@@ -219,17 +220,50 @@ async function loadData() {
   startApp();
 }
 
+function setActiveNav() {
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+}
+
+function drilldownAttrs(config = {}) {
+  const attrs = [`data-drilldown-view="${esc(config.view || 'vacancies')}"`];
+  if (config.statusGroup) attrs.push(`data-drilldown-status-group="${esc(config.statusGroup)}"`);
+  if (config.status) attrs.push(`data-drilldown-status="${esc(config.status)}"`);
+  if (config.origin) attrs.push(`data-drilldown-origin="${esc(config.origin)}"`);
+  return attrs.join(' ');
+}
+
+function openDrilldown(target) {
+  currentView = target.dataset.drilldownView || 'vacancies';
+  query = '';
+  $('#search').value = '';
+
+  if (currentView === 'vacancies') {
+    vacancyStatusFilter = target.dataset.drilldownStatusGroup || 'all';
+    vacancyExactStatusFilter = target.dataset.drilldownStatus || 'all';
+    vacancyOriginFilter = target.dataset.drilldownOrigin || 'all';
+  }
+
+  setActiveNav();
+  render();
+}
+
 function startApp() {
   $('#shell').classList.remove('hidden');
   $('#generated-at').textContent = `Снимок: ${fmtDate(snapshot.generated_at)}`;
   $('#nav').addEventListener('click', (event) => {
     const btn = event.target.closest('button[data-view]'); if (!btn) return;
     currentView = btn.dataset.view;
-    document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b === btn));
+    setActiveNav();
     render();
   });
   $('#search').addEventListener('input', (event) => { query = event.target.value.trim(); render(); });
   document.addEventListener('click', async (event) => {
+    const drilldown = event.target.closest('[data-drilldown-view]');
+    if (drilldown) {
+      openDrilldown(drilldown);
+      return;
+    }
+
     const btn = event.target.closest('[data-copy]'); if (!btn) return;
     const text = decodeURIComponent(btn.dataset.copy);
     await navigator.clipboard.writeText(text);
@@ -238,7 +272,14 @@ function startApp() {
   document.addEventListener('change', (event) => {
     const filter = event.target.closest('[data-vacancy-filter]');
     if (!filter) return;
-    if (filter.dataset.vacancyFilter === 'status') vacancyStatusFilter = filter.value;
+    if (filter.dataset.vacancyFilter === 'status') {
+      vacancyStatusFilter = filter.value;
+      vacancyExactStatusFilter = 'all';
+    }
+    if (filter.dataset.vacancyFilter === 'exact-status') {
+      vacancyExactStatusFilter = filter.value;
+      vacancyStatusFilter = 'all';
+    }
     if (filter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = filter.value;
     render();
   });
@@ -252,7 +293,11 @@ function render() {
   $('#view').innerHTML = fn();
 }
 
-function metric(label, value, note='') { return `<div class="metric"><span class="meta">${esc(label)}</span><strong>${esc(value)}</strong><span class="meta">${esc(note)}</span></div>`; }
+function metric(label, value, note='', drilldown=null) {
+  const body = `<span class="metric-label">${esc(label)}</span><strong>${esc(value)}</strong>${note?`<span class="metric-note">${esc(note)}</span>`:''}`;
+  if (!drilldown) return `<div class="metric">${body}</div>`;
+  return `<button type="button" class="metric metric-action" ${drilldownAttrs(drilldown)} aria-label="${esc(label)}: ${esc(value)}. Открыть детали">${body}<span class="metric-link">Показать детали →</span></button>`;
+}
 function badge(text, cls='') { return `<span class="badge ${esc(cls)}">${esc(text)}</span>`; }
 function link(label, url) { const u=safeUrl(url); return u?`<a href="${esc(u)}" target="_blank" rel="noopener">${esc(label)}</a>`:''; }
 function copyBox(text) { if(!text) return ''; return `<div class="copybox">${esc(text)}<button data-copy="${encodeURIComponent(text)}">Копировать</button></div>`; }
@@ -276,10 +321,10 @@ function renderToday() {
   const discoveries = items.filter(i => ['vacancy','side-income'].includes(i.kind)).slice(0,8);
   const latest = Object.values(snapshot.automation.latest_by_workflow || {}).sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
   return `<div class="grid cards">
-    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || 0)}
-    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0)}
-    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0)}
-    ${metric('Взаимодействия', snapshot.analytics.interaction_count)}
+    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || 0, '', {view:'vacancies'})}
+    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0, '', {view:'vacancies',statusGroup:'consideration'})}
+    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0, '', {view:'vacancies',statusGroup:'active'})}
+    ${metric('Взаимодействия', snapshot.analytics.interaction_count, '', {view:'opportunities'})}
   </div>
   <div class="section"><div class="section-head"><h2>Приоритетные действия</h2></div>${urgent.length?urgent.map(itemCard).join(''):'<div class="empty">Срочных новых действий нет.</div>'}</div>
   <div class="section"><div class="section-head"><h2>Свежие возможности</h2></div>${discoveries.length?discoveries.map(itemCard).join(''):'<div class="empty">Новых подходящих возможностей в сохранённых запусках нет.</div>'}</div>
@@ -313,17 +358,20 @@ function vacancyStatus(v) {
 
 function renderVacancies() {
   const allItems = (snapshot.vacancies || []).filter(containsQuery);
+  const exactStatuses = [...new Set((snapshot.vacancies || []).map(v => v.status).filter(Boolean))]
+    .sort((a,b)=>ru(a).localeCompare(ru(b), 'ru'));
   const items = allItems.filter(v =>
     (vacancyStatusFilter === 'all' || v.status_group === vacancyStatusFilter) &&
+    (vacancyExactStatusFilter === 'all' || v.status === vacancyExactStatusFilter) &&
     (vacancyOriginFilter === 'all' || v.origin === vacancyOriginFilter)
   );
   if (!allItems.length) return '<div class="empty">Вакансий пока нет.</div>';
 
   return `<div class="grid cards">
-    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || items.length)}
-    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0)}
-    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0)}
-    ${metric('Закрыто', snapshot.analytics.vacancy_closed_count || 0)}
+    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || items.length, '', {view:'vacancies'})}
+    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0, '', {view:'vacancies',statusGroup:'consideration'})}
+    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0, '', {view:'vacancies',statusGroup:'active'})}
+    ${metric('Закрыто', snapshot.analytics.vacancy_closed_count || 0, '', {view:'vacancies',statusGroup:'closed'})}
   </div>
   <div class="section">
     <div class="section-head"><h2>Единый список вакансий</h2></div>
@@ -334,6 +382,12 @@ function renderVacancies() {
           <option value="consideration" ${vacancyStatusFilter === 'consideration' ? 'selected' : ''}>К рассмотрению</option>
           <option value="active" ${vacancyStatusFilter === 'active' ? 'selected' : ''}>В процессе</option>
           <option value="closed" ${vacancyStatusFilter === 'closed' ? 'selected' : ''}>Закрытые</option>
+        </select>
+      </label>
+      <label>Точный статус
+        <select data-vacancy-filter="exact-status">
+          <option value="all" ${vacancyExactStatusFilter === 'all' ? 'selected' : ''}>Все статусы</option>
+          ${exactStatuses.map(status => `<option value="${esc(status)}" ${vacancyExactStatusFilter === status ? 'selected' : ''}>${esc(ru(status))}</option>`).join('')}
         </select>
       </label>
       <label>Как появилась
@@ -420,20 +474,102 @@ function renderInbox() {
   return items.length ? items.map(itemCard).join('') : '<div class="empty">Новых карьерных писем в сохранённых запусках нет.</div>';
 }
 
-function bars(data) {
-  const entries = Object.entries(data||{}).sort((a,b)=>b[1]-a[1]); const max=Math.max(1,...entries.map(([,v])=>v));
-  return entries.map(([k,v])=>`<div class="bar-row"><span>${esc(ru(k))}</span><div class="bar"><i style="width:${Math.round(v/max*100)}%"></i></div><strong>${v}</strong></div>`).join('') || '<div class="empty">Недостаточно данных.</div>';
+const PROCESS_STAGES = [
+  {label:'К рассмотрению', statusGroup:'consideration', tone:'neutral'},
+  {label:'Отклик отправлен', status:'applied', tone:'info'},
+  {label:'Контакт с рекрутером', status:'recruiter-screen', tone:'info'},
+  {label:'Интервью с нанимающим менеджером', status:'hiring-manager-screen', tone:'accent'},
+  {label:'Техническое / архитектурное интервью', status:'technical-or-architecture-interview', tone:'accent'},
+  {label:'Финальное интервью', status:'final-interview', tone:'accent'},
+  {label:'Оффер / контракт', status:'offer-or-contract-discussion', tone:'success'},
+  {label:'Закрыто', statusGroup:'closed', tone:'danger'},
+];
+
+function stageCount(stage) {
+  return (snapshot.vacancies || []).filter(v =>
+    (stage.statusGroup && v.status_group === stage.statusGroup) ||
+    (stage.status && v.status === stage.status)
+  ).length;
 }
+
+function renderProcessStages() {
+  return `<div class="stage-grid">${PROCESS_STAGES.map((stage,index) => {
+    const count = stageCount(stage);
+    const drilldown = {view:'vacancies',statusGroup:stage.statusGroup,status:stage.status};
+    return `<button type="button" class="stage-card tone-${stage.tone}" ${drilldownAttrs(drilldown)}>
+      <span class="stage-step">${index + 1}</span>
+      <span class="stage-name">${esc(stage.label)}</span>
+      <strong>${count}</strong>
+    </button>`;
+  }).join('')}</div>`;
+}
+
+function statusTone(key) {
+  if (['rejected','withdrawn','dismissed','expired','archived'].includes(key)) return 'danger';
+  if (['accepted','offer-or-contract-discussion','promoted'].includes(key)) return 'success';
+  if (['new','reviewing','consideration'].includes(key)) return 'warning';
+  if (['hiring-manager-screen','technical-or-architecture-interview','final-interview'].includes(key)) return 'accent';
+  return 'info';
+}
+
+function chartTicks(max) {
+  if (max <= 5) return Array.from({length:max + 1}, (_,i)=>i);
+  const step = Math.ceil(max / 4);
+  const ticks = [0];
+  for (let value = step; value < max; value += step) ticks.push(value);
+  ticks.push(max);
+  return [...new Set(ticks)];
+}
+
+function bars(data, drilldownFor, toneFor = ()=>'info') {
+  const entries = Object.entries(data || {}).sort((a,b)=>b[1]-a[1]);
+  if (!entries.length) return '<div class="empty compact">Пока недостаточно данных для распределения.</div>';
+
+  const max = Math.max(1, ...entries.map(([,v])=>v));
+  const total = Math.max(1, entries.reduce((sum,[,v])=>sum + v, 0));
+  const ticks = chartTicks(max);
+
+  return `<div class="chart">
+    <div class="chart-axis">
+      <span></span>
+      <span class="chart-axis-scale">${ticks.map(t=>`<i style="left:${Math.round(t/max*10000)/100}%">${t}</i>`).join('')}</span>
+      <span class="chart-axis-unit">кол-во</span>
+    </div>
+    ${entries.map(([k,v]) => {
+      const width = Math.max(v ? 3 : 0, Math.round(v/max*1000)/10);
+      const pct = Math.round(v/total*100);
+      const drilldown = drilldownFor ? drilldownFor(k) : null;
+      const attrs = drilldown ? drilldownAttrs(drilldown) : '';
+      return `<button type="button" class="chart-row tone-${toneFor(k)}" ${attrs}>
+        <span class="chart-label">${esc(ru(k))}</span>
+        <span class="chart-track" style="background-size:${Math.max(20,100/max)}% 100%">
+          <span class="chart-bar" style="width:${width}%"></span>
+        </span>
+        <span class="chart-value"><strong>${v}</strong><small>${pct}%</small></span>
+      </button>`;
+    }).join('')}
+  </div>`;
+}
+
 function renderAnalytics() {
   return `<div class="grid cards">
-    ${metric('Всего вакансий',snapshot.analytics.vacancy_count || 0)}
-    ${metric('К рассмотрению',snapshot.analytics.vacancy_consideration_count || 0)}
-    ${metric('В процессе',snapshot.analytics.vacancy_active_count || 0)}
-    ${metric('Закрыто',snapshot.analytics.vacancy_closed_count || 0)}
+    ${metric('Всего вакансий',snapshot.analytics.vacancy_count || 0,'',{view:'vacancies'})}
+    ${metric('К рассмотрению',snapshot.analytics.vacancy_consideration_count || 0,'',{view:'vacancies',statusGroup:'consideration'})}
+    ${metric('В процессе',snapshot.analytics.vacancy_active_count || 0,'',{view:'vacancies',statusGroup:'active'})}
+    ${metric('Закрыто',snapshot.analytics.vacancy_closed_count || 0,'',{view:'vacancies',statusGroup:'closed'})}
   </div>
-  <div class="section"><h2>Статусы всех вакансий</h2><div class="card">${bars(snapshot.analytics.vacancy_status_counts)}</div></div>
-  <div class="section"><h2>Как вакансии появились</h2><div class="card">${bars(snapshot.analytics.vacancy_origin_counts)}</div></div>
-  <div class="section"><h2>Типы текущих сигналов</h2><div class="card">${bars(snapshot.analytics.item_kind_counts)}</div></div>`;
+  <div class="section analytics-section">
+    <div class="section-head"><div><h2>Текущий этап процесса</h2><p class="section-note">Показано текущее положение вакансий по статусной модели. Нажмите на этап, чтобы открыть соответствующие вакансии.</p></div></div>
+    ${renderProcessStages()}
+  </div>
+  <div class="section analytics-section">
+    <div class="section-head"><div><h2>Точные статусы вакансий</h2><p class="section-note">Шкала показывает абсолютное число вакансий, справа — количество и доля. Нажатие применяет точный фильтр статуса.</p></div></div>
+    <div class="card chart-card">${bars(snapshot.analytics.vacancy_status_counts, status => ({view:'vacancies',status}), statusTone)}</div>
+  </div>
+  <div class="section analytics-section">
+    <div class="section-head"><div><h2>Как вакансии появились</h2><p class="section-note">Происхождение вакансии фиксируется отдельно от её текущего состояния.</p></div></div>
+    <div class="card chart-card">${bars(snapshot.analytics.vacancy_origin_counts, origin => ({view:'vacancies',origin}), ()=>'origin')}</div>
+  </div>`;
 }
 
 function renderRuns() {
