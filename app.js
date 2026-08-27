@@ -4,6 +4,11 @@ let query = '';
 let vacancyStatusFilter = 'all';
 let vacancyExactStatusFilter = 'all';
 let vacancyOriginFilter = 'all';
+let opportunityStatusFilter = 'all';
+let opportunityExactStatusFilter = 'all';
+let opportunityPage = 1;
+let opportunityPageSize = 10;
+const opportunityExpanded = new Set();
 
 const $ = (s) => document.querySelector(s);
 const esc = (v = '') => String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -242,6 +247,11 @@ function openDrilldown(target) {
     vacancyExactStatusFilter = target.dataset.drilldownStatus || 'all';
     vacancyOriginFilter = target.dataset.drilldownOrigin || 'all';
   }
+  if (currentView === 'opportunities') {
+    opportunityStatusFilter = 'all';
+    opportunityExactStatusFilter = 'all';
+    opportunityPage = 1;
+  }
 
   setActiveNav();
   render();
@@ -256,11 +266,40 @@ function startApp() {
     setActiveNav();
     render();
   });
-  $('#search').addEventListener('input', (event) => { query = event.target.value.trim(); render(); });
+  $('#search').addEventListener('input', (event) => {
+    query = event.target.value.trim();
+    if (currentView === 'opportunities') opportunityPage = 1;
+    render();
+  });
   document.addEventListener('click', async (event) => {
     const drilldown = event.target.closest('[data-drilldown-view]');
     if (drilldown) {
       openDrilldown(drilldown);
+      return;
+    }
+
+    const opportunityToggle = event.target.closest('[data-opportunity-toggle]');
+    if (opportunityToggle) {
+      const key = opportunityToggle.dataset.opportunityToggle;
+      if (opportunityExpanded.has(key)) opportunityExpanded.delete(key);
+      else opportunityExpanded.add(key);
+      render();
+      return;
+    }
+
+    const opportunityQuickFilter = event.target.closest('[data-opportunity-status]');
+    if (opportunityQuickFilter) {
+      opportunityStatusFilter = opportunityQuickFilter.dataset.opportunityStatus;
+      opportunityExactStatusFilter = 'all';
+      opportunityPage = 1;
+      render();
+      return;
+    }
+
+    const opportunityPageButton = event.target.closest('[data-opportunity-page]');
+    if (opportunityPageButton && !opportunityPageButton.disabled) {
+      opportunityPage = Number(opportunityPageButton.dataset.opportunityPage) || 1;
+      render();
       return;
     }
 
@@ -270,23 +309,37 @@ function startApp() {
     const before = btn.textContent; btn.textContent = 'Скопировано'; setTimeout(() => btn.textContent = before, 1200);
   });
   document.addEventListener('change', (event) => {
-    const filter = event.target.closest('[data-vacancy-filter]');
-    if (!filter) return;
-    if (filter.dataset.vacancyFilter === 'status') {
-      vacancyStatusFilter = filter.value;
-      vacancyExactStatusFilter = 'all';
+    const vacancyFilter = event.target.closest('[data-vacancy-filter]');
+    if (vacancyFilter) {
+      if (vacancyFilter.dataset.vacancyFilter === 'status') {
+        vacancyStatusFilter = vacancyFilter.value;
+        vacancyExactStatusFilter = 'all';
+      }
+      if (vacancyFilter.dataset.vacancyFilter === 'exact-status') {
+        vacancyExactStatusFilter = vacancyFilter.value;
+        vacancyStatusFilter = 'all';
+      }
+      if (vacancyFilter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = vacancyFilter.value;
+      render();
+      return;
     }
-    if (filter.dataset.vacancyFilter === 'exact-status') {
-      vacancyExactStatusFilter = filter.value;
-      vacancyStatusFilter = 'all';
+
+    const opportunityFilter = event.target.closest('[data-opportunity-filter]');
+    if (!opportunityFilter) return;
+    if (opportunityFilter.dataset.opportunityFilter === 'exact-status') {
+      opportunityExactStatusFilter = opportunityFilter.value;
+      opportunityStatusFilter = 'all';
     }
-    if (filter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = filter.value;
+    if (opportunityFilter.dataset.opportunityFilter === 'page-size') {
+      opportunityPageSize = Number(opportunityFilter.value) || 10;
+    }
+    opportunityPage = 1;
     render();
   });
   render();
 }
 
-const titles = {today:'Сегодня',vacancies:'Все вакансии',opportunities:'Вакансии и взаимодействия',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
+const titles = {today:'Сегодня',vacancies:'Все вакансии',opportunities:'Отклики / контакты',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
 function render() {
   $('#view-title').textContent = titles[currentView];
   const fn = {today:renderToday,vacancies:renderVacancies,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
@@ -495,18 +548,200 @@ function renderVacancies() {
   </div>`;
 }
 
+const OPPORTUNITY_NEW_STAGES = new Set(['discovered','captured','classified','evidence-mapped']);
+const OPPORTUNITY_ACTIVE_STAGES = new Set([
+  'applied','recruiter-screen','hiring-manager-screen','technical-or-architecture-interview',
+  'final-interview','offer-or-contract-discussion'
+]);
+const OPPORTUNITY_REJECTED_STAGES = new Set(['rejected']);
+const OPPORTUNITY_SUCCESS_STAGES = new Set(['accepted']);
+const OPPORTUNITY_CLOSED_STAGES = new Set(['rejected','withdrawn','accepted','archived']);
+
+function opportunityGroup(stage) {
+  if (OPPORTUNITY_NEW_STAGES.has(stage)) return 'new';
+  if (OPPORTUNITY_ACTIVE_STAGES.has(stage)) return 'active';
+  if (OPPORTUNITY_REJECTED_STAGES.has(stage)) return 'rejected';
+  if (OPPORTUNITY_SUCCESS_STAGES.has(stage)) return 'success';
+  if (OPPORTUNITY_CLOSED_STAGES.has(stage)) return 'closed';
+  return 'other';
+}
+
+function opportunityMatchesGroup(o, group) {
+  const stage = o.current_stage || 'unknown';
+  if (group === 'all') return true;
+  if (group === 'closed') return OPPORTUNITY_CLOSED_STAGES.has(stage);
+  return opportunityGroup(stage) === group;
+}
+
+function opportunityStatusClass(stage) {
+  const group = opportunityGroup(stage);
+  if (group === 'rejected') return 'status-rejected';
+  if (group === 'active') return 'status-active';
+  if (group === 'new') return 'status-new';
+  if (group === 'success') return 'status-success';
+  if (group === 'closed') return 'status-closed';
+  return 'status-unknown';
+}
+
+function opportunityStatusChip(stage) {
+  const value = stage || 'unknown';
+  return `<span class="status-chip ${opportunityStatusClass(value)}">${esc(ru(value))}</span>`;
+}
+
+function opportunityKey(o, index) {
+  return String(o.opportunity_id || o.id || o.title || `opportunity-${index}`);
+}
+
+function opportunityLastActivity(o) {
+  const timestamps = [
+    o.last_updated_at,
+    ...(o.interactions || []).map(i => i.timestamp)
+  ].filter(Boolean).map(value => new Date(value).getTime()).filter(Number.isFinite);
+  return timestamps.length ? Math.max(...timestamps) : 0;
+}
+
+function opportunitySort(a,b) {
+  const rank = stage => {
+    const group = opportunityGroup(stage);
+    if (group === 'active') return 0;
+    if (group === 'new') return 1;
+    if (group === 'success') return 2;
+    if (group === 'rejected') return 4;
+    if (group === 'closed') return 3;
+    return 2;
+  };
+  return rank(a.current_stage) - rank(b.current_stage) || opportunityLastActivity(b) - opportunityLastActivity(a);
+}
+
+function opportunityFilterCounts(opps) {
+  return {
+    all: opps.length,
+    active: opps.filter(o => opportunityMatchesGroup(o,'active')).length,
+    new: opps.filter(o => opportunityMatchesGroup(o,'new')).length,
+    rejected: opps.filter(o => opportunityMatchesGroup(o,'rejected')).length,
+    closed: opps.filter(o => opportunityMatchesGroup(o,'closed')).length,
+  };
+}
+
+function opportunityQuickFilters(opps) {
+  const counts = opportunityFilterCounts(opps);
+  const options = [
+    ['all','Все'],
+    ['active','В работе'],
+    ['new','Новые'],
+    ['rejected','Отказы'],
+    ['closed','Закрытые'],
+  ];
+  return `<div class="status-filters" aria-label="Фильтр откликов по состоянию">${options.map(([value,label]) =>
+    `<button type="button" class="status-filter ${opportunityStatusFilter === value ? 'active' : ''}" data-opportunity-status="${value}">${label}<strong>${counts[value]}</strong></button>`
+  ).join('')}</div>`;
+}
+
+function opportunityPageNumbers(totalPages, page) {
+  if (totalPages <= 1) return [];
+  const pages = new Set([1,totalPages,page-1,page,page+1]);
+  return [...pages].filter(p=>p>=1 && p<=totalPages).sort((a,b)=>a-b);
+}
+
+function opportunityPagination(total, page, totalPages) {
+  if (total <= opportunityPageSize) return '';
+  const pages = opportunityPageNumbers(totalPages,page);
+  let previous = 0;
+  const numbered = pages.map(p => {
+    const gap = previous && p - previous > 1 ? '<span class="pagination-gap">…</span>' : '';
+    previous = p;
+    return `${gap}<button type="button" class="page-button ${p===page?'active':''}" data-opportunity-page="${p}" ${p===page?'aria-current="page"':''}>${p}</button>`;
+  }).join('');
+  return `<nav class="pagination" aria-label="Страницы откликов">
+    <button type="button" class="page-button" data-opportunity-page="${Math.max(1,page-1)}" ${page===1?'disabled':''}>← Назад</button>
+    <div class="page-numbers">${numbered}</div>
+    <button type="button" class="page-button" data-opportunity-page="${Math.min(totalPages,page+1)}" ${page===totalPages?'disabled':''}>Далее →</button>
+  </nav>`;
+}
+
+function interactionCountLabel(count) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'контакт';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'контакта';
+  return 'контактов';
+}
+
+function opportunityCard(o,index) {
+  const key = opportunityKey(o,index);
+  const expanded = opportunityExpanded.has(key);
+  const interactions = o.interactions || [];
+  const interactionCount = interactions.length;
+  const sourceLink = link('Исходная вакансия',o.source_url);
+  const nextAction = ru(o.next_action || 'none');
+  return `<article class="opportunity-card ${expanded?'expanded':''}">
+    <button type="button" class="opportunity-preview" data-opportunity-toggle="${esc(key)}" aria-expanded="${expanded?'true':'false'}">
+      <span class="opportunity-status">${opportunityStatusChip(o.current_stage)}</span>
+      <span class="opportunity-main">
+        <strong>${esc(o.company || displayTitle(o.title))}</strong>
+        <span class="opportunity-role">${esc(ru(o.role || ''))}</span>
+        <span class="opportunity-preview-meta">${esc(ru(o.role_track || ''))} · обновлено ${esc(fmtDate(o.last_updated_at))}</span>
+      </span>
+      <span class="opportunity-next">
+        <small>Следующее действие:</small>
+        <span>${esc(nextAction)}${o.next_action_date && !['unknown','none','to-verify'].includes(o.next_action_date) ? ` · ${esc(fmtDate(o.next_action_date))}` : ''}</span>
+      </span>
+      <span class="opportunity-interactions"><strong>${interactionCount}</strong><small>${interactionCountLabel(interactionCount)}</small></span>
+      <span class="opportunity-toggle-label">${expanded?'Свернуть':'Развернуть'} <i class="chevron" aria-hidden="true">⌄</i></span>
+    </button>
+    ${expanded ? `<div class="opportunity-details">
+      <div class="opportunity-detail-head">
+        <div class="meta">${badge(ru(o.fit_status || 'not-assessed'), o.fit_status)} ${badge(ru(o.compensation_status || 'unknown'), o.compensation_status)}</div>
+        ${sourceLink?`<div class="actions">${sourceLink}</div>`:''}
+      </div>
+      ${o.compensation?`<p class="meta">Компенсация: ${esc(ru(o.compensation))}</p>`:''}
+      <div class="timeline">${interactions.slice().reverse().map(i=>`<div class="timeline-item"><h4>${esc(ru(i.title))}</h4><div class="meta">${esc(fmtDate(i.timestamp))} · ${esc(ru(i.direction||''))} · ${esc(ru(i.channel||''))}</div><div class="summary">${esc(displayText(i.event||''))}</div>${i.follow_up?`<div class="meta">Дальше: ${esc(ru(i.follow_up))}</div>`:''}</div>`).join('')||'<div class="meta">История взаимодействий пока пуста.</div>'}</div>
+    </div>` : ''}
+  </article>`;
+}
+
 function renderOpportunities() {
-  const opps = snapshot.opportunities.filter(containsQuery);
-  if (!opps.length) return '<div class="empty">В разделе откликов и взаимодействий пока нет подходящих записей.</div>';
-  return `<div class="view-note">Здесь показана подробная история только тех вакансий, где уже были отклики или контакты. Полный реестр находится в разделе «Все вакансии».</div>` + opps.map(o => `<article class="card">
-    <div class="meta">${badge(ru(o.current_stage || 'unknown'), o.current_stage)} ${badge(ru(o.fit_status || 'not-assessed'), o.fit_status)} ${badge(ru(o.compensation_status || 'unknown'), o.compensation_status)}</div>
-    <h3>${esc(o.company || displayTitle(o.title))} — ${esc(ru(o.role || ''))}</h3>
-    <div class="meta">${esc(ru(o.role_track || ''))} · обновлено ${esc(fmtDate(o.last_updated_at))}</div>
-    <p class="summary"><strong>Следующее действие:</strong> ${esc(ru(o.next_action || '—'))} ${o.next_action_date?`· ${esc(fmtDate(o.next_action_date))}`:''}</p>
-    ${o.compensation?`<p class="meta">Компенсация: ${esc(ru(o.compensation))}</p>`:''}
-    ${link('Исходная вакансия',o.source_url)?`<div class="actions">${link('Исходная вакансия',o.source_url)}</div>`:''}
-    <div class="timeline">${(o.interactions||[]).slice().reverse().map(i=>`<div class="timeline-item"><h4>${esc(ru(i.title))}</h4><div class="meta">${esc(fmtDate(i.timestamp))} · ${esc(ru(i.direction||''))} · ${esc(ru(i.channel||''))}</div><div class="summary">${esc(displayText(i.event||''))}</div>${i.follow_up?`<div class="meta">Дальше: ${esc(ru(i.follow_up))}</div>`:''}</div>`).join('')||'<div class="meta">История взаимодействий пока пуста.</div>'}</div>
-  </article>`).join('');
+  const searchable = snapshot.opportunities.filter(containsQuery).sort(opportunitySort);
+  if (!searchable.length) return '<div class="empty">В разделе откликов и взаимодействий пока нет подходящих записей.</div>';
+
+  const exactStatuses = [...new Set(snapshot.opportunities.map(o=>o.current_stage).filter(Boolean))]
+    .sort((a,b)=>ru(a).localeCompare(ru(b),'ru'));
+
+  const filtered = searchable.filter(o =>
+    opportunityMatchesGroup(o,opportunityStatusFilter) &&
+    (opportunityExactStatusFilter === 'all' || o.current_stage === opportunityExactStatusFilter)
+  );
+
+  const totalPages = Math.max(1,Math.ceil(filtered.length / opportunityPageSize));
+  opportunityPage = Math.min(opportunityPage,totalPages);
+  const start = (opportunityPage - 1) * opportunityPageSize;
+  const pageItems = filtered.slice(start,start + opportunityPageSize);
+  const firstShown = filtered.length ? start + 1 : 0;
+  const lastShown = Math.min(start + opportunityPageSize,filtered.length);
+
+  return `<div class="view-note">Здесь показаны вакансии, по которым уже были отклики или контакты. Карточки свернуты по умолчанию, чтобы список оставался компактным; нажмите на строку, чтобы открыть полную историю. Отказы всегда начинают просмотр в свернутом состоянии.</div>
+    <div class="opportunity-toolbar">
+      ${opportunityQuickFilters(searchable)}
+      <div class="filters opportunity-selects">
+        <label>Точный статус
+          <select data-opportunity-filter="exact-status">
+            <option value="all" ${opportunityExactStatusFilter === 'all'?'selected':''}>Все статусы</option>
+            ${exactStatuses.map(status=>`<option value="${esc(status)}" ${opportunityExactStatusFilter === status?'selected':''}>${esc(ru(status))}</option>`).join('')}
+          </select>
+        </label>
+        <label>На странице
+          <select data-opportunity-filter="page-size">
+            ${[10,20,30].map(size=>`<option value="${size}" ${opportunityPageSize===size?'selected':''}>${size}</option>`).join('')}
+          </select>
+        </label>
+      </div>
+    </div>
+    <div class="opportunity-list-head">
+      <span>Показано ${firstShown}–${lastShown} из ${filtered.length}</span>
+      <span>Сначала: вакансии в работе и новые, затем закрытые</span>
+    </div>
+    <div class="opportunity-list">${pageItems.map((o,index)=>opportunityCard(o,start+index)).join('') || '<div class="empty">По выбранным фильтрам откликов нет.</div>'}</div>
+    ${opportunityPagination(filtered.length,opportunityPage,totalPages)}`;
 }
 
 function renderContent() {
