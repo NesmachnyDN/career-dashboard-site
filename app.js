@@ -303,10 +303,24 @@ function startApp() {
       return;
     }
 
+    const imageBtn = event.target.closest('[data-copy-image]');
+    if (imageBtn) {
+      try {
+        const title = decodeURIComponent(imageBtn.dataset.imageTitle || '');
+        const source = decodeURIComponent(imageBtn.dataset.imageSource || '');
+        await copySetkaCover(title, source);
+        flashCopyButton(imageBtn, 'Скопировано');
+      } catch (error) {
+        console.error('Не удалось скопировать изображение', error);
+        flashCopyButton(imageBtn, 'Ошибка копирования');
+      }
+      return;
+    }
+
     const btn = event.target.closest('[data-copy]'); if (!btn) return;
     const text = decodeURIComponent(btn.dataset.copy);
     await navigator.clipboard.writeText(text);
-    const before = btn.textContent; btn.textContent = 'Скопировано'; setTimeout(() => btn.textContent = before, 1200);
+    flashCopyButton(btn, 'Скопировано');
   });
   document.addEventListener('change', (event) => {
     const vacancyFilter = event.target.closest('[data-vacancy-filter]');
@@ -361,6 +375,12 @@ function contentTypeChip(item) {
   return '';
 }
 
+function flashCopyButton(btn, message) {
+  const before = btn.textContent;
+  btn.textContent = message;
+  setTimeout(() => { btn.textContent = before; }, 1200);
+}
+
 function copyBox(text, label='Готовый текст', buttonLabel='Копировать') {
   if (!text) return '';
   return `<div class="copy-section">
@@ -369,9 +389,102 @@ function copyBox(text, label='Готовый текст', buttonLabel='Копи�
   </div>`;
 }
 
+function wrapCanvasText(ctx, text, maxWidth) {
+  const words = String(text || '').trim().split(/\s+/).filter(Boolean);
+  if (!words.length) return [];
+  const lines = [];
+  let line = words.shift();
+  for (const word of words) {
+    const candidate = `${line} ${word}`;
+    if (ctx.measureText(candidate).width <= maxWidth) line = candidate;
+    else { lines.push(line); line = word; }
+  }
+  lines.push(line);
+  return lines;
+}
+
+async function copySetkaCover(title, source) {
+  if (!navigator.clipboard?.write || typeof ClipboardItem === 'undefined') {
+    throw new Error('Clipboard image API is unavailable');
+  }
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200;
+  canvas.height = 630;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Canvas context is unavailable');
+
+  ctx.fillStyle = '#101318';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#7c8cff';
+  ctx.fillRect(72, 72, 86, 8);
+
+  ctx.fillStyle = '#aeb7c7';
+  ctx.font = '700 24px Arial, sans-serif';
+  ctx.fillText('АРХИТЕКТУРНАЯ ЗАМЕТКА', 72, 132);
+
+  let fontSize = 66;
+  let lines = [];
+  do {
+    ctx.font = `700 ${fontSize}px Arial, sans-serif`;
+    lines = wrapCanvasText(ctx, title, 920);
+    if (lines.length <= 3) break;
+    fontSize -= 4;
+  } while (fontSize >= 46);
+
+  ctx.fillStyle = '#f7f8fa';
+  ctx.textBaseline = 'top';
+  const lineHeight = Math.round(fontSize * 1.17);
+  lines.slice(0, 3).forEach((line, index) => {
+    ctx.fillText(line, 72, 184 + index * lineHeight);
+  });
+
+  ctx.strokeStyle = '#2b3240';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(72, 520);
+  ctx.lineTo(1128, 520);
+  ctx.stroke();
+
+  ctx.fillStyle = '#aeb7c7';
+  ctx.font = '400 24px Arial, sans-serif';
+  ctx.textBaseline = 'alphabetic';
+  const sourceText = source ? `Источник: ${source}` : 'Архитектурный материал';
+  ctx.fillText(sourceText, 72, 576);
+
+  const blob = await new Promise((resolve, reject) => {
+    canvas.toBlob(value => value ? resolve(value) : reject(new Error('PNG generation failed')), 'image/png');
+  });
+  await navigator.clipboard.write([new ClipboardItem({'image/png': blob})]);
+}
+
+function setkaCoverBox(item) {
+  const publicationTitle = item.publication_title || displayTitle(item.title);
+  const source = item.source_name || '';
+  return `<div class="copy-section">
+    <div class="copy-label">Изображение для Сетки</div>
+    <div class="setka-cover-preview" aria-label="Предпросмотр изображения для публикации">
+      <span class="setka-cover-accent"></span>
+      <span class="setka-cover-kicker">АРХИТЕКТУРНАЯ ЗАМЕТКА</span>
+      <strong>${esc(publicationTitle)}</strong>
+      <span class="setka-cover-source">${esc(source ? `Источник: ${source}` : 'Архитектурный материал')}</span>
+    </div>
+    <button type="button" class="copy-image-button" data-copy-image data-image-title="${encodeURIComponent(publicationTitle)}" data-image-source="${encodeURIComponent(source)}">Скопировать изображение</button>
+  </div>`;
+}
+
+function setkaPublicationPackage(item) {
+  const publicationTitle = item.publication_title || displayTitle(item.title);
+  return `${copyBox(publicationTitle, 'Заголовок для Сетки', 'Скопировать заголовок')}
+    ${copyBox(item.copy_text, 'Текст для Сетки', 'Скопировать текст')}
+    ${setkaCoverBox(item)}`;
+}
+
 function itemCard(item) {
   const isPost = item.kind === 'post';
   const isComment = item.kind === 'comment';
+  const isSetkaPost = isPost && item.target_platform === 'Setka';
   const cardClass = isPost ? ' content-card content-card-post' : isComment ? ' content-card content-card-comment' : '';
   const primaryUrl = isComment ? (item.target_url || item.source_url) : item.source_url;
   const primaryLabel = isComment ? 'Открыть обсуждение' : isPost ? 'Открыть материал' : 'Источник';
@@ -382,6 +495,7 @@ function itemCard(item) {
   const meta = [item.target_platform, ru(item.source_name), item.company, ru(item.role), ru(item.recommendation), item.fit_score != null ? `соответствие ${item.fit_score}%`: '', fmtDate(item.observed_at)].filter(Boolean);
   const copyLabel = isPost ? 'Готовый текст публикации — копируйте целиком' : isComment ? 'Готовый комментарий' : 'Готовый текст';
   const copyButton = isPost ? 'Скопировать пост' : isComment ? 'Скопировать комментарий' : 'Копировать';
+  const copyContent = isSetkaPost ? setkaPublicationPackage(item) : copyBox(item.copy_text, copyLabel, copyButton);
 
   return `<article class="card${cardClass}">
     <div class="content-card-head">
@@ -392,7 +506,7 @@ function itemCard(item) {
     ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
     ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
     ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}${item.compensation_status?` · ${esc(ru(item.compensation_status))}`:''}</p>`:''}
-    ${copyBox(item.copy_text, copyLabel, copyButton)}
+    ${copyContent}
     ${actions?`<div class="actions">${actions}</div>`:''}
   </article>`;
 }
@@ -777,7 +891,7 @@ function renderContent() {
   const items = snapshot.automation.active_items.filter(i => ['post','comment','brief'].includes(i.kind) && containsQuery(i));
   if (!items.length) return '<div class="empty">Сохранённых предложений по контенту пока нет.</div>';
   return `<div class="view-note content-legend">
-    <span class="content-chip content-chip-post">Пост по материалу</span> — готовая самостоятельная публикация: копируйте весь блок целиком.
+    <span class="content-chip content-chip-post">Пост по материалу</span> — самостоятельная публикация; для Сетки отдельно подготовлены заголовок, текст и изображение.
     <span class="content-chip content-chip-comment">Комментарий</span> — текст для вставки в конкретное обсуждение по кнопке «Открыть обсуждение».
   </div>${items.map(itemCard).join('')}`;
 }
