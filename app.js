@@ -8,7 +8,10 @@ let opportunityStatusFilter = 'all';
 let opportunityExactStatusFilter = 'all';
 let opportunityPage = 1;
 let opportunityPageSize = 10;
+let contentStatusFilter = 'all';
 const opportunityExpanded = new Set();
+const contentExpansionOverrides = new Map();
+const CONTENT_STATUS_STORAGE_KEY = 'career-dashboard-content-status-v1';
 
 const $ = (s) => document.querySelector(s);
 const esc = (v = '') => String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -287,6 +290,15 @@ function startApp() {
       return;
     }
 
+    const contentToggle = event.target.closest('[data-content-toggle]');
+    if (contentToggle) {
+      const key = decodeURIComponent(contentToggle.dataset.contentToggle || '');
+      const current = contentExpandedByKey(key, contentToggle.dataset.defaultExpanded === 'true');
+      contentExpansionOverrides.set(key, !current);
+      render();
+      return;
+    }
+
     const opportunityQuickFilter = event.target.closest('[data-opportunity-status]');
     if (opportunityQuickFilter) {
       opportunityStatusFilter = opportunityQuickFilter.dataset.opportunityStatus;
@@ -348,6 +360,22 @@ function startApp() {
         vacancyStatusFilter = 'all';
       }
       if (vacancyFilter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = vacancyFilter.value;
+      render();
+      return;
+    }
+
+    const contentStatus = event.target.closest('[data-content-status]');
+    if (contentStatus) {
+      const key = decodeURIComponent(contentStatus.dataset.contentStatus || '');
+      setContentStatusOverride(key, contentStatus.value);
+      contentExpansionOverrides.set(key, contentStatus.value !== 'published');
+      render();
+      return;
+    }
+
+    const contentFilter = event.target.closest('[data-content-filter]');
+    if (contentFilter) {
+      if (contentFilter.dataset.contentFilter === 'status') contentStatusFilter = contentFilter.value;
       render();
       return;
     }
@@ -528,30 +556,65 @@ function setkaPublicationPackage(item) {
 function itemCard(item) {
   const isPost = item.kind === 'post';
   const isComment = item.kind === 'comment';
+  const isManagedContent = isPost || isComment;
   const isSetkaPost = isPost && item.target_platform === 'Setka';
   const cardClass = isPost ? ' content-card content-card-post' : isComment ? ' content-card content-card-comment' : '';
   const primaryUrl = isComment ? (item.target_url || item.source_url) : item.source_url;
   const primaryLabel = isComment ? 'Открыть обсуждение' : isPost ? 'Открыть материал' : 'Источник';
-  const actions = [
-    link(primaryLabel, primaryUrl, isComment ? 'primary' : ''),
-    !isComment && item.target_url && item.target_url !== item.source_url ? link('Открыть площадку', item.target_url) : ''
-  ].filter(Boolean).join('');
+  const sourceAction = link(primaryLabel, primaryUrl, isComment ? 'primary' : '');
+  const platformAction = !isComment && item.target_url && item.target_url !== item.source_url ? link('Открыть площадку', item.target_url) : '';
+  const publishedAction = item.published_url ? link('Открыть публикацию', item.published_url, 'primary') : '';
+  const actions = [sourceAction, platformAction, publishedAction].filter(Boolean).join('');
   const meta = [item.target_platform, ru(item.source_name), item.company, ru(item.role), ru(item.recommendation), item.fit_score != null ? `соответствие ${item.fit_score}%`: '', fmtDate(item.observed_at)].filter(Boolean);
   const copyLabel = isPost ? 'Готовый текст публикации — копируйте целиком' : isComment ? 'Готовый комментарий' : 'Готовый текст';
   const copyButton = isPost ? 'Скопировать пост' : isComment ? 'Скопировать комментарий' : 'Копировать';
   const copyContent = isSetkaPost ? setkaPublicationPackage(item) : copyBox(item.copy_text, copyLabel, copyButton);
 
-  return `<article class="card${cardClass}">
-    <div class="content-card-head">
-      <div class="content-card-chips">${contentTypeChip(item)} ${item.target_platform ? `<span class="platform-chip">${esc(item.target_platform)}</span>` : ''}</div>
-      <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''}</div>
+  if (!isManagedContent) {
+    return `<article class="card${cardClass}">
+      <div class="content-card-head">
+        <div class="content-card-chips">${contentTypeChip(item)} ${item.target_platform ? `<span class="platform-chip">${esc(item.target_platform)}</span>` : ''}</div>
+        <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''}</div>
+      </div>
+      <h3>${esc(displayTitle(item.title))}</h3>
+      ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
+      ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
+      ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}${item.compensation_status?` · ${esc(ru(item.compensation_status))}`:''}</p>`:''}
+      ${copyContent}
+      ${actions?`<div class="actions">${actions}</div>`:''}
+    </article>`;
+  }
+
+  const key = logicalItemKey(item);
+  const status = effectiveContentStatus(item);
+  const defaultExpanded = status !== 'published';
+  const expanded = contentIsExpanded(item);
+  const publicationMeta = [
+    item.published_at ? `опубликовано ${fmtDate(item.published_at)}` : '',
+    item.publication_verified_at ? `проверено ${fmtDate(item.publication_verified_at)}` : ''
+  ].filter(Boolean);
+
+  return `<article class="card content-item-card${cardClass} ${expanded ? 'expanded' : 'collapsed'}">
+    <div class="content-preview">
+      <button type="button" class="content-preview-main" data-content-toggle="${encodeURIComponent(key)}" data-default-expanded="${defaultExpanded ? 'true' : 'false'}" aria-expanded="${expanded ? 'true' : 'false'}">
+        <span class="content-card-chips">${contentTypeChip(item)} ${item.target_platform ? `<span class="platform-chip">${esc(item.target_platform)}</span>` : ''}</span>
+        <span class="content-preview-copy">
+          <strong>${esc(displayTitle(item.title))}</strong>
+          <span class="meta">${meta.map(esc).join(' · ')}</span>
+          ${publicationMeta.length ? `<span class="content-publication-meta">${publicationMeta.map(esc).join(' · ')}</span>` : ''}
+        </span>
+        <span class="content-toggle-label">${expanded ? 'Свернуть' : 'Развернуть'} <i class="chevron" aria-hidden="true">⌄</i></span>
+      </button>
+      ${contentStatusControl(item)}
     </div>
-    <h3>${esc(displayTitle(item.title))}</h3>
-    ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
-    ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
-    ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}${item.compensation_status?` · ${esc(ru(item.compensation_status))}`:''}</p>`:''}
-    ${copyContent}
-    ${actions?`<div class="actions">${actions}</div>`:''}
+    ${expanded ? `<div class="content-details">
+      <div class="content-detail-head">
+        <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''}</div>
+      </div>
+      ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
+      ${copyContent}
+      ${actions?`<div class="actions">${actions}</div>`:''}
+    </div>` : ''}
   </article>`;
 }
 
@@ -604,6 +667,64 @@ function logicalItemKey(item) {
     return `social|brief|${platform}|${canonicalIdentityUrl(item.source_url)}`;
   }
   return item.dedupe_key || item.item_id || '';
+}
+
+function readContentStatusOverrides() {
+  try {
+    const raw = localStorage.getItem(CONTENT_STATUS_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function contentStatusOverrides() {
+  return readContentStatusOverrides();
+}
+
+function setContentStatusOverride(key, status) {
+  if (!key || !['unpublished','published'].includes(status)) return;
+  try {
+    const values = readContentStatusOverrides();
+    values[key] = status;
+    localStorage.setItem(CONTENT_STATUS_STORAGE_KEY, JSON.stringify(values));
+  } catch (error) {
+    console.error('Не удалось сохранить локальный статус контента', error);
+  }
+}
+
+function effectiveContentStatus(item) {
+  const key = logicalItemKey(item);
+  const local = contentStatusOverrides()[key];
+  if (local && ['unpublished','published'].includes(local)) return local;
+  return item.content_status === 'published' ? 'published' : 'unpublished';
+}
+
+function contentStatusLabel(status) {
+  return status === 'published' ? 'Опубликовано' : 'Не опубликовано';
+}
+
+function contentExpandedByKey(key, defaultExpanded) {
+  return contentExpansionOverrides.has(key) ? contentExpansionOverrides.get(key) : defaultExpanded;
+}
+
+function contentIsExpanded(item) {
+  const key = logicalItemKey(item);
+  return contentExpandedByKey(key, effectiveContentStatus(item) !== 'published');
+}
+
+function contentStatusControl(item) {
+  const key = logicalItemKey(item);
+  const status = effectiveContentStatus(item);
+  return `<label class="content-status-control" title="Ручной статус сохраняется в этом браузере; автопоиск отдельно закрепляет подтверждённую публикацию в данных.">
+    <span>Статус</span>
+    <select class="content-status-select status-${status}" data-content-status="${encodeURIComponent(key)}">
+      <option value="unpublished" ${status === 'unpublished' ? 'selected' : ''}>Не опубликовано</option>
+      <option value="published" ${status === 'published' ? 'selected' : ''}>Опубликовано</option>
+    </select>
+  </label>`;
 }
 
 function itemsFromRuns(runs) {
@@ -975,12 +1096,39 @@ function renderOpportunities() {
 }
 
 function renderContent() {
-  const items = snapshot.automation.active_items.filter(i => ['post','comment','brief'].includes(i.kind) && containsQuery(i));
-  if (!items.length) return '<div class="empty">Сохранённых предложений по контенту пока нет.</div>';
+  const sourceItems = snapshot.automation.content_items || snapshot.automation.active_items || [];
+  const allItems = sourceItems
+    .filter(i => ['post','comment','brief'].includes(i.kind) && containsQuery(i))
+    .sort((a,b) => {
+      const rank = item => effectiveContentStatus(item) === 'published' ? 1 : 0;
+      return rank(a) - rank(b) || new Date(b.observed_at || 0) - new Date(a.observed_at || 0);
+    });
+
+  if (!allItems.length) return '<div class="empty">Сохранённых предложений по контенту пока нет.</div>';
+
+  const unpublishedCount = allItems.filter(i => !['post','comment'].includes(i.kind) || effectiveContentStatus(i) === 'unpublished').length;
+  const publishedCount = allItems.filter(i => ['post','comment'].includes(i.kind) && effectiveContentStatus(i) === 'published').length;
+  const items = allItems.filter(i =>
+    contentStatusFilter === 'all' ||
+    !['post','comment'].includes(i.kind) ||
+    effectiveContentStatus(i) === contentStatusFilter
+  );
+
   return `<div class="view-note content-legend">
     <span class="content-chip content-chip-post">Пост по материалу</span> — самостоятельная публикация; для Сетки отдельно подготовлены заголовок, текст и изображение.
-    <span class="content-chip content-chip-comment">Комментарий</span> — текст для вставки в конкретное обсуждение по кнопке «Открыть обсуждение».
-  </div>${items.map(itemCard).join('')}`;
+    <span class="content-chip content-chip-comment">Комментарий</span> — текст для вставки в конкретное обсуждение.
+    <span class="content-legend-note">Опубликованные материалы свернуты по умолчанию. Ручной статус сохраняется в этом браузере; ежедневный автопоиск отдельно проверяет публикации и закрепляет подтверждённый статус в данных.</span>
+  </div>
+  <div class="content-toolbar">
+    <label>Статус
+      <select data-content-filter="status">
+        <option value="all" ${contentStatusFilter === 'all' ? 'selected' : ''}>Все (${allItems.length})</option>
+        <option value="unpublished" ${contentStatusFilter === 'unpublished' ? 'selected' : ''}>Не опубликовано (${unpublishedCount})</option>
+        <option value="published" ${contentStatusFilter === 'published' ? 'selected' : ''}>Опубликовано (${publishedCount})</option>
+      </select>
+    </label>
+  </div>
+  <div class="content-list">${items.map(itemCard).join('') || '<div class="empty">По выбранному статусу материалов нет.</div>'}</div>`;
 }
 
 function renderInbox() {
