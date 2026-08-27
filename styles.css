@@ -77,6 +77,10 @@ main { min-width: 0; padding: 28px 34px 48px; }
 }
 .badge.urgent { color: var(--danger); }
 .badge.high { color: var(--warning); }
+.badge.new { color: var(--success); }
+.badge.reviewing { color: var(--warning); }
+.badge.dismissed, .badge.expired { color: var(--muted); }
+.badge.promoted { color: var(--success); }
 .table-wrap { overflow: auto; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
 table { width: 100%; border-collapse: collapse; min-width: 780px; }
 th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 13px; }

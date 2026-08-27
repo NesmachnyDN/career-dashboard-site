@@ -71,10 +71,10 @@ function startApp() {
   render();
 }
 
-const titles = {today:'Сегодня',opportunities:'Вакансии',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
+const titles = {today:'Сегодня',discovered:'Найденные вакансии',opportunities:'Вакансии и взаимодействия',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
 function render() {
   $('#view-title').textContent = titles[currentView];
-  const fn = {today:renderToday,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
+  const fn = {today:renderToday,discovered:renderDiscovered,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
   $('#view').innerHTML = fn();
 }
 
@@ -112,6 +112,56 @@ function renderToday() {
   <div class="section"><div class="section-head"><h2>Последние автоматизации</h2></div><div class="table-wrap"><table><thead><tr><th>Workflow</th><th>Статус</th><th>Завершено</th><th>Результатов</th></tr></thead><tbody>${latest.map(r=>`<tr><td>${esc(r.workflow)}</td><td>${badge(r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td></tr>`).join('')||'<tr><td colspan="4">Пока нет сохранённых запусков</td></tr>'}</tbody></table></div></div>`;
 }
 
+function discoveryStatusLabel(status) {
+  return ({new:'Новая',reviewing:'На рассмотрении',dismissed:'Отклонена',promoted:'Переведена в работу',expired:'Неактуальна'})[status] || status || 'Новая';
+}
+
+function discoveryCard(item) {
+  const status = item.discovery_status || 'new';
+  const actions = [link('Источник', item.source_url)].filter(Boolean).join('');
+  const meta = [
+    item.company,
+    item.role,
+    item.recommendation,
+    item.fit_score != null ? `fit ${item.fit_score}%` : '',
+    item.compensation_status,
+    item.originally_seen_at ? `найдена ${fmtDate(item.originally_seen_at)}` : ''
+  ].filter(Boolean);
+  return `<article class="card">
+    <div class="meta">${badge(discoveryStatusLabel(status), status)} ${badge(item.priority || 'normal', item.priority)} ${meta.map(esc).join(' · ')}</div>
+    <h3>${esc(item.title)}</h3>
+    ${item.summary?`<p class="summary">${esc(item.summary)}</p>`:''}
+    ${item.status_reason?`<p class="meta"><strong>Статус:</strong> ${esc(item.status_reason)}</p>`:''}
+    ${item.compensation?`<p class="meta">Compensation: ${esc(item.compensation)}</p>`:''}
+    ${actions?`<div class="actions">${actions}</div>`:''}
+  </article>`;
+}
+
+function renderDiscovered() {
+  const items = (snapshot.automation.discovered_vacancies || []).filter(containsQuery);
+  const actionable = items.filter(i => ['new','reviewing'].includes(i.discovery_status || 'new'));
+  const historical = items.filter(i => !['new','reviewing'].includes(i.discovery_status || 'new'));
+  const newCount = items.filter(i => (i.discovery_status || 'new') === 'new').length;
+  const reviewingCount = items.filter(i => i.discovery_status === 'reviewing').length;
+
+  if (!items.length) return '<div class="empty">Сохранённых найденных вакансий пока нет.</div>';
+
+  return `<div class="grid cards">
+    ${metric('Всего найдено', items.length)}
+    ${metric('Новые', newCount)}
+    ${metric('На рассмотрении', reviewingCount)}
+    ${metric('В работе / закрыто', historical.length)}
+  </div>
+  <div class="section">
+    <div class="section-head"><h2>К рассмотрению</h2></div>
+    ${actionable.length?actionable.map(discoveryCard).join(''):'<div class="empty">Нет вакансий, ожидающих решения.</div>'}
+  </div>
+  <div class="section">
+    <div class="section-head"><h2>История найденных вакансий</h2></div>
+    ${historical.length?historical.map(discoveryCard).join(''):'<div class="empty">Исторических записей пока нет.</div>'}
+  </div>`;
+}
+
 function renderOpportunities() {
   const opps = snapshot.opportunities.filter(containsQuery);
   if (!opps.length) return '<div class="empty">В canonical applications пока нет подходящих записей.</div>';
@@ -141,8 +191,9 @@ function bars(data) {
   return entries.map(([k,v])=>`<div class="bar-row"><span>${esc(k)}</span><div class="bar"><i style="width:${Math.round(v/max*100)}%"></i></div><strong>${v}</strong></div>`).join('') || '<div class="empty">Недостаточно данных.</div>';
 }
 function renderAnalytics() {
-  return `<div class="grid cards">${metric('Всего opportunities',snapshot.analytics.opportunity_count)}${metric('Активные',snapshot.analytics.active_opportunity_count)}${metric('Interactions',snapshot.analytics.interaction_count)}${metric('Automation items',snapshot.automation.active_items.length)}</div>
+  return `<div class="grid cards">${metric('Всего opportunities',snapshot.analytics.opportunity_count)}${metric('Активные',snapshot.analytics.active_opportunity_count)}${metric('Найденные вакансии',snapshot.analytics.discovered_vacancy_count || 0)}${metric('К рассмотрению',snapshot.analytics.actionable_discovered_vacancy_count || 0)}</div>
   <div class="section"><h2>Воронка по стадиям</h2><div class="card">${bars(snapshot.analytics.stage_counts)}</div></div>
+  <div class="section"><h2>Статусы найденных вакансий</h2><div class="card">${bars(snapshot.analytics.discovery_status_counts)}</div></div>
   <div class="section"><h2>Источники opportunities</h2><div class="card">${bars(snapshot.analytics.source_counts)}</div></div>
   <div class="section"><h2>Типы текущих сигналов</h2><div class="card">${bars(snapshot.analytics.item_kind_counts)}</div></div>`;
 }
