@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Career Operations</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="unlock" class="unlock hidden">
+    <form id="unlock-form" class="unlock-card">
+      <div class="eyebrow">PRIVATE DASHBOARD</div>
+      <h1>Career Operations</h1>
+      <p>Данные зашифрованы. Введите dashboard passphrase — расшифровка выполняется только в этом браузере.</p>
+      <input id="passphrase" type="password" autocomplete="current-password" placeholder="Passphrase" required />
+      <button type="submit" class="primary">Открыть</button>
+      <div id="unlock-error" class="error"></div>
+    </form>
+  </div>
+
+  <div id="shell" class="shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">CO</span><span>Career Ops</span></div>
+      <nav id="nav">
+        <button data-view="today" class="active">Сегодня</button>
+        <button data-view="opportunities">Вакансии</button>
+        <button data-view="content">Контент</button>
+        <button data-view="inbox">Почта</button>
+        <button data-view="analytics">Аналитика</button>
+        <button data-view="runs">Запуски</button>
+      </nav>
+      <div class="sidebar-foot"><span id="generated-at"></span></div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">CAREER OPERATIONS</div>
+          <h1 id="view-title">Сегодня</h1>
+        </div>
+        <input id="search" type="search" placeholder="Поиск…" />
+      </header>
+      <section id="view"></section>
+    </main>
+  </div>
+
+  <template id="empty-template">
+    <div class="empty">Здесь пока нет данных.</div>
+  </template>
+  <script src="app.js" defer></script>
+</body>
+</html>
