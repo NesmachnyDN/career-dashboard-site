@@ -1,6 +1,8 @@
 let snapshot = null;
 let currentView = 'today';
 let query = '';
+let vacancyStatusFilter = 'all';
+let vacancyOriginFilter = 'all';
 
 const $ = (s) => document.querySelector(s);
 const esc = (v = '') => String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -47,6 +49,7 @@ const RU = {
   'vacancy-market-screening': 'Поиск вакансий',
   'daily-brand-scan': 'Поиск профессионального контента',
   'historical-vacancy-backfill': 'Восстановление истории вакансий',
+  'manual-vacancy-capture': 'Добавление вакансии вручную',
 
   // Recommendation vocabulary
   'pursue': 'рассматривать',
@@ -82,6 +85,12 @@ const RU = {
   'accepted': 'принято',
   'withdrawn': 'отозвано',
   'archived': 'архив',
+
+  // Как вакансия появилась
+  'scheduled-search': 'автопоиск',
+  'manual-search': 'нашёл сам',
+  'recruiter-inbound': 'рекрутер предложил',
+  'platform-inbound': 'входящее предложение с площадки',
 
   // Role tracks
   'architecture-first': 'архитектурный трек',
@@ -226,13 +235,20 @@ function startApp() {
     await navigator.clipboard.writeText(text);
     const before = btn.textContent; btn.textContent = 'Скопировано'; setTimeout(() => btn.textContent = before, 1200);
   });
+  document.addEventListener('change', (event) => {
+    const filter = event.target.closest('[data-vacancy-filter]');
+    if (!filter) return;
+    if (filter.dataset.vacancyFilter === 'status') vacancyStatusFilter = filter.value;
+    if (filter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = filter.value;
+    render();
+  });
   render();
 }
 
-const titles = {today:'Сегодня',discovered:'Найденные вакансии',opportunities:'Вакансии и взаимодействия',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
+const titles = {today:'Сегодня',vacancies:'Все вакансии',opportunities:'Вакансии и взаимодействия',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
 function render() {
   $('#view-title').textContent = titles[currentView];
-  const fn = {today:renderToday,discovered:renderDiscovered,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
+  const fn = {today:renderToday,vacancies:renderVacancies,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
   $('#view').innerHTML = fn();
 }
 
@@ -260,9 +276,9 @@ function renderToday() {
   const discoveries = items.filter(i => ['vacancy','side-income'].includes(i.kind)).slice(0,8);
   const latest = Object.values(snapshot.automation.latest_by_workflow || {}).sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
   return `<div class="grid cards">
-    ${metric('Активные вакансии', snapshot.analytics.active_opportunity_count)}
-    ${metric('Новые сигналы', items.length)}
-    ${metric('Требуют внимания', urgent.length)}
+    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || 0)}
+    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0)}
+    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0)}
     ${metric('Взаимодействия', snapshot.analytics.interaction_count)}
   </div>
   <div class="section"><div class="section-head"><h2>Приоритетные действия</h2></div>${urgent.length?urgent.map(itemCard).join(''):'<div class="empty">Срочных новых действий нет.</div>'}</div>
@@ -270,60 +286,120 @@ function renderToday() {
   <div class="section"><div class="section-head"><h2>Последние автоматизации</h2></div><div class="table-wrap"><table><thead><tr><th>Автоматизация</th><th>Статус</th><th>Завершено</th><th>Результатов</th></tr></thead><tbody>${latest.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${badge(ru(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td></tr>`).join('')||'<tr><td colspan="4">Пока нет сохранённых запусков</td></tr>'}</tbody></table></div></div>`;
 }
 
-function discoveryStatusLabel(status) {
-  return ({new:'Новая',reviewing:'На рассмотрении',dismissed:'Отклонена',promoted:'Переведена в работу',expired:'Неактуальна'})[status] || status || 'Новая';
+function vacancyAssessment(v) {
+  const parts = [];
+  if (v.fit_score != null) parts.push(`соответствие ${v.fit_score}%`);
+  if (v.fit_status) parts.push(ru(v.fit_status));
+  if (v.recommendation) parts.push(ru(v.recommendation));
+  return parts.length ? parts.join(' · ') : 'не оценено';
 }
 
-function discoveryCard(item) {
-  const status = item.discovery_status || 'new';
-  const actions = [link('Источник', item.source_url)].filter(Boolean).join('');
-  const meta = [
-    item.company,
-    ru(item.role),
-    ru(item.recommendation),
-    item.fit_score != null ? `соответствие ${item.fit_score}%` : '',
-    ru(item.compensation_status),
-    item.originally_seen_at ? `найдена ${fmtDate(item.originally_seen_at)}` : ''
-  ].filter(Boolean);
-  return `<article class="card">
-    <div class="meta">${badge(discoveryStatusLabel(status), status)} ${badge(ru(item.priority || 'normal'), item.priority)} ${meta.map(esc).join(' · ')}</div>
-    <h3>${esc(displayTitle(item.title))}</h3>
-    ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
-    ${item.status_reason?`<p class="meta"><strong>Статус:</strong> ${esc(displayText(item.status_reason))}</p>`:''}
-    ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}</p>`:''}
-    ${actions?`<div class="actions">${actions}</div>`:''}
-  </article>`;
+function vacancyCompensation(v) {
+  const status = esc(ru(v.compensation_status || 'unknown'));
+  const value = v.compensation && v.compensation !== 'unknown' ? ru(v.compensation) : '';
+  return value ? `${status}<div class="cell-note">${esc(value)}</div>` : status;
 }
 
-function renderDiscovered() {
-  const items = (snapshot.automation.discovered_vacancies || []).filter(containsQuery);
-  const actionable = items.filter(i => ['new','reviewing'].includes(i.discovery_status || 'new'));
-  const historical = items.filter(i => !['new','reviewing'].includes(i.discovery_status || 'new'));
-  const newCount = items.filter(i => (i.discovery_status || 'new') === 'new').length;
-  const reviewingCount = items.filter(i => i.discovery_status === 'reviewing').length;
+function vacancyOrigin(v) {
+  const label = ru(v.origin || 'unknown');
+  const firstSeen = v.first_seen_at ? `<div class="cell-note">впервые: ${esc(fmtDate(v.first_seen_at))}</div>` : '';
+  return `${badge(label, v.origin || 'unknown')}${firstSeen}`;
+}
 
-  if (!items.length) return '<div class="empty">Сохранённых найденных вакансий пока нет.</div>';
+function vacancyStatus(v) {
+  const interactions = v.interaction_count ? `<div class="cell-note">${v.interaction_count} взаимодействий</div>` : '';
+  return `${badge(ru(v.status || 'unknown'), v.status || 'unknown')}${interactions}`;
+}
+
+function renderVacancies() {
+  const allItems = (snapshot.vacancies || []).filter(containsQuery);
+  const items = allItems.filter(v =>
+    (vacancyStatusFilter === 'all' || v.status_group === vacancyStatusFilter) &&
+    (vacancyOriginFilter === 'all' || v.origin === vacancyOriginFilter)
+  );
+  if (!allItems.length) return '<div class="empty">Вакансий пока нет.</div>';
 
   return `<div class="grid cards">
-    ${metric('Всего найдено', items.length)}
-    ${metric('Новые', newCount)}
-    ${metric('На рассмотрении', reviewingCount)}
-    ${metric('В работе / закрыто', historical.length)}
+    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || items.length)}
+    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0)}
+    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0)}
+    ${metric('Закрыто', snapshot.analytics.vacancy_closed_count || 0)}
   </div>
   <div class="section">
-    <div class="section-head"><h2>К рассмотрению</h2></div>
-    ${actionable.length?actionable.map(discoveryCard).join(''):'<div class="empty">Нет вакансий, ожидающих решения.</div>'}
-  </div>
-  <div class="section">
-    <div class="section-head"><h2>История найденных вакансий</h2></div>
-    ${historical.length?historical.map(discoveryCard).join(''):'<div class="empty">Исторических записей пока нет.</div>'}
+    <div class="section-head"><h2>Единый список вакансий</h2></div>
+    <div class="filters">
+      <label>Состояние
+        <select data-vacancy-filter="status">
+          <option value="all" ${vacancyStatusFilter === 'all' ? 'selected' : ''}>Все</option>
+          <option value="consideration" ${vacancyStatusFilter === 'consideration' ? 'selected' : ''}>К рассмотрению</option>
+          <option value="active" ${vacancyStatusFilter === 'active' ? 'selected' : ''}>В процессе</option>
+          <option value="closed" ${vacancyStatusFilter === 'closed' ? 'selected' : ''}>Закрытые</option>
+        </select>
+      </label>
+      <label>Как появилась
+        <select data-vacancy-filter="origin">
+          <option value="all" ${vacancyOriginFilter === 'all' ? 'selected' : ''}>Все</option>
+          <option value="scheduled-search" ${vacancyOriginFilter === 'scheduled-search' ? 'selected' : ''}>Автопоиск</option>
+          <option value="manual-search" ${vacancyOriginFilter === 'manual-search' ? 'selected' : ''}>Нашёл сам</option>
+          <option value="recruiter-inbound" ${vacancyOriginFilter === 'recruiter-inbound' ? 'selected' : ''}>Рекрутер предложил</option>
+          <option value="platform-inbound" ${vacancyOriginFilter === 'platform-inbound' ? 'selected' : ''}>Входящее с площадки</option>
+        </select>
+      </label>
+      <span class="meta">Показано: ${items.length} из ${allItems.length}</span>
+    </div>
+    ${items.length ? `<div class="table-wrap">
+      <table class="vacancies-table">
+        <thead>
+          <tr>
+            <th>Статус</th>
+            <th>Вакансия</th>
+            <th>Как появилась</th>
+            <th>Источник</th>
+            <th>Оценка</th>
+            <th>Компенсация</th>
+            <th>Следующее действие</th>
+            <th>Обновлено</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(v => `<tr>
+            <td>${vacancyStatus(v)}</td>
+            <td>
+              <strong>${esc(v.company || '—')}</strong>
+              <div>${esc(ru(v.role || v.title || '—'))}</div>
+              ${v.summary ? `<div class="cell-note">${esc(displayText(v.summary))}</div>` : ''}
+            </td>
+            <td>${vacancyOrigin(v)}</td>
+            <td>
+              ${esc(ru(v.source_name || 'unknown'))}
+              ${v.contact_name && v.contact_name !== 'unknown' ? `<div class="cell-note">контакт: ${esc(v.contact_name)}</div>` : ''}
+            </td>
+            <td>${esc(vacancyAssessment(v))}</td>
+            <td>${vacancyCompensation(v)}</td>
+            <td>
+              ${esc(ru(v.next_action || 'none'))}
+              ${v.next_action_date && !['none','unknown','to-verify'].includes(v.next_action_date) ? `<div class="cell-note">до ${esc(fmtDate(v.next_action_date))}</div>` : ''}
+            </td>
+            <td>${esc(fmtDate(v.last_activity_at || v.first_seen_at))}</td>
+            <td>${link('Открыть', v.source_url)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>` : '<div class="empty">По выбранным фильтрам вакансий нет.</div>'}
+    <div class="table-legend">
+      <span>${badge('автопоиск', 'scheduled-search')}</span>
+      <span>${badge('нашёл сам', 'manual-search')}</span>
+      <span>${badge('рекрутер предложил', 'recruiter-inbound')}</span>
+      <span class="meta">«Как появилась» фиксируется один раз и не меняется после отклика или ответа рекрутера.</span>
+    </div>
   </div>`;
 }
 
 function renderOpportunities() {
   const opps = snapshot.opportunities.filter(containsQuery);
   if (!opps.length) return '<div class="empty">В разделе откликов и взаимодействий пока нет подходящих записей.</div>';
-  return opps.map(o => `<article class="card">
+  return `<div class="view-note">Здесь показана подробная история только тех вакансий, где уже были отклики или контакты. Полный реестр находится в разделе «Все вакансии».</div>` + opps.map(o => `<article class="card">
     <div class="meta">${badge(ru(o.current_stage || 'unknown'), o.current_stage)} ${badge(ru(o.fit_status || 'not-assessed'), o.fit_status)} ${badge(ru(o.compensation_status || 'unknown'), o.compensation_status)}</div>
     <h3>${esc(o.company || displayTitle(o.title))} — ${esc(ru(o.role || ''))}</h3>
     <div class="meta">${esc(ru(o.role_track || ''))} · обновлено ${esc(fmtDate(o.last_updated_at))}</div>
@@ -349,10 +425,14 @@ function bars(data) {
   return entries.map(([k,v])=>`<div class="bar-row"><span>${esc(ru(k))}</span><div class="bar"><i style="width:${Math.round(v/max*100)}%"></i></div><strong>${v}</strong></div>`).join('') || '<div class="empty">Недостаточно данных.</div>';
 }
 function renderAnalytics() {
-  return `<div class="grid cards">${metric('Всего вакансий в работе',snapshot.analytics.opportunity_count)}${metric('Активные',snapshot.analytics.active_opportunity_count)}${metric('Найденные вакансии',snapshot.analytics.discovered_vacancy_count || 0)}${metric('К рассмотрению',snapshot.analytics.actionable_discovered_vacancy_count || 0)}</div>
-  <div class="section"><h2>Воронка по стадиям</h2><div class="card">${bars(snapshot.analytics.stage_counts)}</div></div>
-  <div class="section"><h2>Статусы найденных вакансий</h2><div class="card">${bars(snapshot.analytics.discovery_status_counts)}</div></div>
-  <div class="section"><h2>Источники вакансий в работе</h2><div class="card">${bars(snapshot.analytics.source_counts)}</div></div>
+  return `<div class="grid cards">
+    ${metric('Всего вакансий',snapshot.analytics.vacancy_count || 0)}
+    ${metric('К рассмотрению',snapshot.analytics.vacancy_consideration_count || 0)}
+    ${metric('В процессе',snapshot.analytics.vacancy_active_count || 0)}
+    ${metric('Закрыто',snapshot.analytics.vacancy_closed_count || 0)}
+  </div>
+  <div class="section"><h2>Статусы всех вакансий</h2><div class="card">${bars(snapshot.analytics.vacancy_status_counts)}</div></div>
+  <div class="section"><h2>Как вакансии появились</h2><div class="card">${bars(snapshot.analytics.vacancy_origin_counts)}</div></div>
   <div class="section"><h2>Типы текущих сигналов</h2><div class="card">${bars(snapshot.analytics.item_kind_counts)}</div></div>`;
 }
 
