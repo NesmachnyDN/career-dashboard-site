@@ -571,14 +571,57 @@ function runsToday() {
     .filter(containsQuery);
 }
 
+const TRACKING_QUERY_KEYS = new Set(['fbclid','gclid','yclid','mc_cid','mc_eid']);
+
+function canonicalIdentityUrl(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(value);
+    [...url.searchParams.keys()].forEach(key => {
+      if (key.toLowerCase().startsWith('utm_') || TRACKING_QUERY_KEYS.has(key.toLowerCase())) {
+        url.searchParams.delete(key);
+      }
+    });
+    url.hash = '';
+    url.hostname = url.hostname.toLowerCase();
+    if (url.pathname.length > 1) url.pathname = url.pathname.replace(/\/+$/, '');
+    return url.toString();
+  } catch {
+    return String(value).trim().replace(/\/+$/, '');
+  }
+}
+
+function logicalItemKey(item) {
+  const kind = item.kind || '';
+  const platform = String(item.target_platform || '').trim().toLowerCase();
+  if (kind === 'post' && item.source_url) {
+    return `social|post|${platform}|${canonicalIdentityUrl(item.source_url)}`;
+  }
+  if (kind === 'comment' && (item.target_url || item.source_url)) {
+    return `social|comment|${platform}|${canonicalIdentityUrl(item.target_url || item.source_url)}`;
+  }
+  if (kind === 'brief' && item.source_url) {
+    return `social|brief|${platform}|${canonicalIdentityUrl(item.source_url)}`;
+  }
+  return item.dedupe_key || item.item_id || '';
+}
+
 function itemsFromRuns(runs) {
-  return runs.flatMap(run => (run.items || []).map(item => ({
+  const items = runs.flatMap(run => (run.items || []).map(item => ({
     ...item,
     workflow: run.workflow,
     run_id: run.run_id,
     observed_at: run.completed_at,
     backfill: Boolean(run.backfill)
-  })));
+  }))).sort((a,b) => new Date(b.observed_at || 0) - new Date(a.observed_at || 0));
+
+  const newest = new Map();
+  for (const item of items) {
+    const key = logicalItemKey(item);
+    if (!key || newest.has(key)) continue;
+    newest.set(key, item);
+  }
+  return [...newest.values()];
 }
 
 function runTable(runs, emptyText) {
