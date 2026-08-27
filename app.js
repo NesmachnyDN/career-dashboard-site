@@ -742,7 +742,7 @@ function itemsFromRuns(runs) {
     if (!key || newest.has(key)) continue;
     newest.set(key, item);
   }
-  return [...newest.values()];
+  return [...newest.values()].filter(item => item.content_status !== 'dismissed');
 }
 
 function runTable(runs, emptyText) {
