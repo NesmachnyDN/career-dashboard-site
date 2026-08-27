@@ -306,7 +306,7 @@ function itemCard(item) {
   const actions = [link('Источник', item.source_url), link('Открыть цель', item.target_url)].filter(Boolean).join('');
   const meta = [ru(item.kind), ru(item.source_name), item.company, ru(item.role), ru(item.recommendation), item.fit_score != null ? `соответствие ${item.fit_score}%`: '', fmtDate(item.observed_at)].filter(Boolean);
   return `<article class="card">
-    <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${meta.map(esc).join(' · ')}</div>
+    <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''} ${meta.map(esc).join(' · ')}</div>
     <h3>${esc(displayTitle(item.title))}</h3>
     ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
     ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}${item.compensation_status?` · ${esc(ru(item.compensation_status))}`:''}</p>`:''}
@@ -315,20 +315,65 @@ function itemCard(item) {
   </article>`;
 }
 
+function localDateKey(value) {
+  const d = value ? new Date(value) : new Date();
+  if (Number.isNaN(d.getTime())) return '';
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function runsToday() {
+  const today = localDateKey();
+  return (snapshot.automation.runs || [])
+    .filter(r => localDateKey(r.completed_at) === today)
+    .filter(containsQuery);
+}
+
+function itemsFromRuns(runs) {
+  return runs.flatMap(run => (run.items || []).map(item => ({
+    ...item,
+    workflow: run.workflow,
+    run_id: run.run_id,
+    observed_at: run.completed_at,
+    backfill: Boolean(run.backfill)
+  })));
+}
+
+function runTable(runs, emptyText) {
+  return `<div class="table-wrap"><table><thead><tr><th>Автоматизация</th><th>Запуск</th><th>Статус</th><th>Завершено</th><th>Результаты</th><th>Итог</th></tr></thead><tbody>${runs.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${esc(r.run_id)}</td><td>${badge(ru(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td><td>${esc(displayText(r.summary||''))}</td></tr>`).join('')||`<tr><td colspan="6">${esc(emptyText)}</td></tr>`}</tbody></table></div>`;
+}
+
 function renderToday() {
-  const items = snapshot.automation.active_items.filter(containsQuery);
-  const urgent = items.filter(i => ['urgent','high'].includes(i.priority)).slice(0,8);
-  const discoveries = items.filter(i => ['vacancy','side-income'].includes(i.kind)).slice(0,8);
-  const latest = Object.values(snapshot.automation.latest_by_workflow || {}).sort((a,b)=>new Date(b.completed_at)-new Date(a.completed_at));
+  const runs = runsToday();
+  const items = itemsFromRuns(runs);
+  const attention = items.filter(i => !i.backfill && ['urgent','high'].includes(i.priority));
+  const failed = runs.filter(r => ['partial','failed'].includes(r.status));
+
   return `<div class="grid cards">
-    ${metric('Всего вакансий', snapshot.analytics.vacancy_count || 0, '', {view:'vacancies'})}
-    ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0, '', {view:'vacancies',statusGroup:'consideration'})}
-    ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0, '', {view:'vacancies',statusGroup:'active'})}
-    ${metric('Взаимодействия', snapshot.analytics.interaction_count, '', {view:'opportunities'})}
+    ${metric('Запусков сегодня', runs.length)}
+    ${metric('Результатов сегодня', items.length)}
+    ${metric('Требуют внимания', attention.length)}
+    ${metric('Частично / с ошибкой', failed.length)}
   </div>
-  <div class="section"><div class="section-head"><h2>Приоритетные действия</h2></div>${urgent.length?urgent.map(itemCard).join(''):'<div class="empty">Срочных новых действий нет.</div>'}</div>
-  <div class="section"><div class="section-head"><h2>Свежие возможности</h2></div>${discoveries.length?discoveries.map(itemCard).join(''):'<div class="empty">Новых подходящих возможностей в сохранённых запусках нет.</div>'}</div>
-  <div class="section"><div class="section-head"><h2>Последние автоматизации</h2></div><div class="table-wrap"><table><thead><tr><th>Автоматизация</th><th>Статус</th><th>Завершено</th><th>Результатов</th></tr></thead><tbody>${latest.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${badge(ru(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td></tr>`).join('')||'<tr><td colspan="4">Пока нет сохранённых запусков</td></tr>'}</tbody></table></div></div>`;
+  <div class="section">
+    <div class="section-head"><h2>Запуски сегодня</h2></div>
+    ${runTable(runs, 'Сегодня сохранённых запусков пока нет.')}
+  </div>
+  <div class="section">
+    <div class="section-head"><h2>Результаты запусков сегодня</h2></div>
+    ${items.length ? items.map(itemCard).join('') : '<div class="empty">Сегодня сохранённых результатов пока нет.</div>'}
+  </div>
+  <div class="section">
+    <div class="section-head"><h2>Текущее состояние вакансий</h2></div>
+    <div class="grid cards">
+      ${metric('Всего вакансий', snapshot.analytics.vacancy_count || 0, '', {view:'vacancies'})}
+      ${metric('К рассмотрению', snapshot.analytics.vacancy_consideration_count || 0, '', {view:'vacancies',statusGroup:'consideration'})}
+      ${metric('В процессе', snapshot.analytics.vacancy_active_count || 0, '', {view:'vacancies',statusGroup:'active'})}
+      ${metric('Взаимодействия', snapshot.analytics.interaction_count, '', {view:'opportunities'})}
+    </div>
+  </div>`;
 }
 
 function vacancyAssessment(v) {
@@ -573,8 +618,8 @@ function renderAnalytics() {
 }
 
 function renderRuns() {
-  const runs = snapshot.automation.runs.filter(containsQuery);
-  return `<div class="table-wrap"><table><thead><tr><th>Автоматизация</th><th>Запуск</th><th>Статус</th><th>Завершено</th><th>Результаты</th><th>Итог</th></tr></thead><tbody>${runs.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${esc(r.run_id)}</td><td>${badge(ru(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td><td>${esc(displayText(r.summary||''))}</td></tr>`).join('')||'<tr><td colspan="6">Сохранённых запусков пока нет.</td></tr>'}</tbody></table></div>`;
+  const runs = (snapshot.automation.runs || []).filter(containsQuery);
+  return runTable(runs, 'Сохранённых запусков пока нет.');
 }
 
 loadData().catch((error) => {
