@@ -12,6 +12,7 @@ let opportunityPage = 1;
 let opportunityPageSize = 10;
 let contentStatusFilter = 'all';
 const opportunityExpanded = new Set();
+const vacancySummaryExpanded = new Set();
 const contentExpansionOverrides = new Map();
 const CONTENT_STATUS_STORAGE_KEY = 'career-dashboard-content-status-v1';
 
@@ -299,6 +300,15 @@ function startApp() {
       const key = decodeURIComponent(contentToggle.dataset.contentToggle || '');
       const current = contentExpandedByKey(key, contentToggle.dataset.defaultExpanded === 'true');
       contentExpansionOverrides.set(key, !current);
+      render();
+      return;
+    }
+
+    const vacancySummaryToggle = event.target.closest('[data-vacancy-summary-toggle]');
+    if (vacancySummaryToggle) {
+      const key = decodeURIComponent(vacancySummaryToggle.dataset.vacancySummaryToggle || '');
+      if (vacancySummaryExpanded.has(key)) vacancySummaryExpanded.delete(key);
+      else vacancySummaryExpanded.add(key);
       render();
       return;
     }
@@ -913,7 +923,24 @@ function vacancyPagination(total,current,totalPages) {
   </div>`;
 }
 
-function vacancyCard(v) {
+function vacancyKey(v, index=0) {
+  return String(
+    v.opportunity_id ||
+    v.discovery_key ||
+    v.dedupe_key ||
+    v.source_url ||
+    `${v.company || ''}|${v.role || v.title || ''}|${v.first_seen_at || index}`
+  );
+}
+
+function vacancyCard(v, index=0) {
+  const key = vacancyKey(v,index);
+  const summary = v.summary ? displayText(v.summary) : '';
+  const summaryExpanded = vacancySummaryExpanded.has(key);
+  const summaryMarkup = summary ? `<div class="vacancy-summary-wrap">
+    <div class="vacancy-summary ${summaryExpanded ? 'expanded' : ''}" ${summaryExpanded ? '' : `title="${esc(summary)}"`}>${esc(summary)}</div>
+    <button type="button" class="vacancy-summary-toggle" data-vacancy-summary-toggle="${encodeURIComponent(key)}" aria-expanded="${summaryExpanded ? 'true' : 'false'}">${summaryExpanded ? 'Свернуть описание' : 'Показать описание'}</button>
+  </div>` : '';
   const sourceMeta = [
     v.source_name && v.source_name !== 'unknown' ? ru(v.source_name) : '',
     v.contact_name && v.contact_name !== 'unknown' ? `контакт: ${v.contact_name}` : '',
@@ -931,7 +958,7 @@ function vacancyCard(v) {
         <div class="vacancy-chips">${vacancyStatus(v)}${vacancyOrigin(v)}</div>
         <strong class="vacancy-company">${esc(v.company || '—')}</strong>
         <div class="vacancy-role">${esc(ru(v.role || v.title || '—'))}</div>
-        ${v.summary ? `<div class="vacancy-summary">${esc(displayText(v.summary))}</div>` : ''}
+        ${summaryMarkup}
         ${sourceMeta.length ? `<div class="vacancy-meta">${sourceMeta.map(item=>`<span>${esc(item)}</span>`).join('')}</div>` : ''}
       </div>
       <div class="vacancy-field">
@@ -1020,7 +1047,7 @@ function renderVacancies() {
       <span>Показано ${firstShown}–${lastShown} из ${filtered.length}</span>
       <span>Сначала вакансии в процессе, затем к рассмотрению и закрытые</span>
     </div>
-    <div class="vacancy-list">${pageItems.map(v=>vacancyCard(v)).join('') || '<div class="empty">По выбранным фильтрам вакансий нет.</div>'}</div>
+    <div class="vacancy-list">${pageItems.map((v,index)=>vacancyCard(v,pageStart+index)).join('') || '<div class="empty">По выбранным фильтрам вакансий нет.</div>'}</div>
     ${vacancyPagination(filtered.length,vacancyPage,totalPages)}
     <div class="vacancy-legend">
       <span class="origin-chip origin-scheduled-search">автопоиск</span>
