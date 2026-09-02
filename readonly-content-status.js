@@ -63,9 +63,5 @@
   });
 
   observer.observe(document.documentElement, { childList: true, subtree: true });
-
-  if (typeof window.render === 'function') {
-    window.render();
-  }
   enforceReadOnly();
 })();
