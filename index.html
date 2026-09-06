@@ -7,6 +7,7 @@
   <title>Карьерный центр</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="funnel.css" />
+  <link rel="stylesheet" href="sources.css" />
 </head>
 <body>
   <div id="unlock" class="unlock hidden">
@@ -34,6 +35,7 @@
         <button data-view="analytics">Аналитика</button>
         <button data-view="runs">Запуски</button>
       </nav>
+      <button id="sources-nav" class="sources-nav-button" type="button">Источники данных</button>
       <div class="sidebar-foot"><span id="generated-at"></span></div>
     </aside>
 
@@ -49,12 +51,11 @@
     </main>
   </div>
 
-  <template id="empty-template">
-    <div class="empty">Здесь пока нет данных.</div>
-  </template>
+  <template id="empty-template"><div class="empty">Здесь пока нет данных.</div></template>
   <script src="readonly-content-status.js" defer></script>
   <script src="app.js" defer></script>
   <script src="side-income.js" defer></script>
   <script src="funnel.js" defer></script>
+  <script src="sources.js" defer></script>
 </body>
 </html>
