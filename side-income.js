@@ -41,6 +41,59 @@ function sideIncomeRecommendationClass(value) {
   return 'normal';
 }
 
+const sideIncomeDetailLabels = {
+  effort_estimate: 'Оценка трудозатрат',
+  evidence_fit: 'Подтверждённое соответствие',
+  deliverables: 'Ожидаемый результат',
+  calls: 'Созвоны',
+  geography: 'География',
+  payment_risk: 'Риск оплаты',
+  next_gate: 'Следующий шаг',
+  contract_model: 'Модель контракта',
+  jurisdiction: 'Юрисдикция',
+  currency: 'Валюта',
+  taxation: 'Налоги',
+  payment_mechanics: 'Механика оплаты',
+  time_zone: 'Часовой пояс',
+  english_requirements: 'Требования к английскому',
+  remote_restrictions: 'Ограничения удалённой работы',
+  duration: 'Продолжительность',
+};
+
+function sideIncomeDetailLabel(key) {
+  if (sideIncomeDetailLabels[key]) return sideIncomeDetailLabels[key];
+  return String(key || '')
+    .replace(/_/g, ' ')
+    .replace(/^./, char => char.toUpperCase());
+}
+
+function sideIncomeDetailValue(value) {
+  if (value == null) return '';
+  if (Array.isArray(value)) return value.map(sideIncomeDetailValue).filter(Boolean).join('; ');
+  if (typeof value === 'object') {
+    return Object.entries(value)
+      .map(([key, nested]) => `${sideIncomeDetailLabel(key)}: ${sideIncomeDetailValue(nested)}`)
+      .filter(text => !text.endsWith(': '))
+      .join('; ');
+  }
+  if (typeof value === 'boolean') return value ? 'да' : 'нет';
+  return displayText(String(value));
+}
+
+function sideIncomeDetailsMarkup(details) {
+  if (!details) return '';
+  if (typeof details === 'string') return `<p class="summary">${esc(displayText(details))}</p>`;
+
+  const rows = Object.entries(details)
+    .map(([key, value]) => [sideIncomeDetailLabel(key), sideIncomeDetailValue(value)])
+    .filter(([, value]) => value);
+  if (!rows.length) return '';
+
+  return `<div class="summary side-income-details">
+    ${rows.map(([label, value]) => `<p><strong>${esc(label)}:</strong> ${esc(value)}</p>`).join('')}
+  </div>`;
+}
+
 function sideIncomeCard(item) {
   const active = sideIncomeIsActive(item);
   const meta = [
@@ -61,7 +114,7 @@ function sideIncomeCard(item) {
     ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
     ${item.compensation ? `<p class="meta">Бюджет / ставка: ${esc(ru(item.compensation))}</p>` : ''}
     ${item.summary ? `<p class="summary">${esc(displayText(item.summary))}</p>` : ''}
-    ${item.details ? `<p class="summary">${esc(displayText(typeof item.details === 'string' ? item.details : JSON.stringify(item.details)))}</p>` : ''}
+    ${sideIncomeDetailsMarkup(item.details)}
     ${item.source_url ? `<div class="actions">${link('Открыть задачу ↗', item.source_url, 'primary')}</div>` : ''}
   </article>`;
 }
