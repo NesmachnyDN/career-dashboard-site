@@ -1,10 +1,32 @@
 let sideIncomeRecommendationFilter = 'all';
 let sideIncomeFreshnessFilter = 'active';
 
+function sideIncomeNorm(value) {
+  return String(value || '').trim().toLowerCase().replace(/[^a-zа-я0-9]+/g, '');
+}
+
+function sideIncomeHost(value) {
+  try { return new URL(value || '').hostname.toLowerCase().replace(/^www\./, ''); }
+  catch { return ''; }
+}
+
+function sideIncomeSourceDisabled(item) {
+  const sources = snapshot?.source_analytics?.sources || [];
+  const itemName = sideIncomeNorm(item.source_name);
+  const itemHost = sideIncomeHost(item.source_url);
+  return sources.some(source => {
+    if (source.stream !== 'side-income' || source.mode !== 'fixed' || source.enabled !== false) return false;
+    const sameName = itemName && sideIncomeNorm(source.name) === itemName;
+    const sourceHost = sideIncomeHost(source.entrypoint);
+    const sameHost = itemHost && sourceHost && itemHost === sourceHost;
+    return sameName || sameHost;
+  });
+}
+
 function sideIncomeItems() {
   const all = (snapshot?.automation?.runs || [])
     .flatMap(run => (run.items || [])
-      .filter(item => item.kind === 'side-income')
+      .filter(item => item.kind === 'side-income' && !sideIncomeSourceDisabled(item))
       .map(item => ({...item, workflow: run.workflow, run_id: run.run_id, observed_at: run.completed_at})))
     .sort((a,b) => new Date(b.observed_at || 0) - new Date(a.observed_at || 0));
 
