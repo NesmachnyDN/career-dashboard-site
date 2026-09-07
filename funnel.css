@@ -146,27 +146,29 @@
 
 .mini-funnel-step {
   width: var(--mini-width);
-  min-width: 82px;
+  min-width: 96px;
   min-height: 42px;
   justify-self: center;
-  padding: 7px 12px;
+  padding: 6px 14px;
   box-sizing: border-box;
   clip-path: polygon(5% 0, 95% 0, 86% 100%, 14% 100%);
   background: linear-gradient(135deg, rgba(52, 120, 246, .94), rgba(110, 165, 255, .94));
   color: #fff;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 7px;
+  gap: 1px;
   border-radius: 8px;
+  text-align: center;
 }
 
 .mini-funnel-step:nth-child(2) { background: linear-gradient(135deg, rgba(78, 167, 215, .94), rgba(122, 195, 232, .94)); }
 .mini-funnel-step:nth-child(3) { background: linear-gradient(135deg, rgba(75, 188, 142, .94), rgba(122, 213, 175, .94)); }
 .mini-funnel-step.zero { opacity: .5; }
 .mini-funnel-step.unknown { background: rgba(140, 151, 168, .22); color: inherit; }
-.mini-funnel-step strong { font-size: 18px; }
-.mini-funnel-step span { font-size: 10px; font-weight: 700; }
+.mini-funnel-step strong { font-size: 18px; line-height: 1; }
+.mini-funnel-step span { font-size: 10px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
 
 .source-viz {
   display: grid;
