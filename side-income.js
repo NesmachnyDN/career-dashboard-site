@@ -40,6 +40,7 @@ function sideIncomeItems() {
 }
 
 function sideIncomeIsActive(item) {
+  if (['dismissed','expired'].includes(item.discovery_status)) return false;
   if (!item.expires_at) return true;
   const time = new Date(item.expires_at).getTime();
   return Number.isNaN(time) || time >= Date.now();
@@ -47,12 +48,15 @@ function sideIncomeIsActive(item) {
 
 function sideIncomeStats(items) {
   const active = items.filter(sideIncomeIsActive);
+  const dismissed = items.filter(i => i.discovery_status === 'dismissed').length;
+  const expired = items.filter(i => i.discovery_status !== 'dismissed' && !sideIncomeIsActive(i)).length;
   return {
     total: items.length,
     active: active.length,
     take: active.filter(i => i.recommendation === 'TAKE').length,
     consider: active.filter(i => i.recommendation === 'CONSIDER').length,
-    expired: items.length - active.length,
+    dismissed,
+    expired,
   };
 }
 
@@ -61,6 +65,12 @@ function sideIncomeRecommendationClass(value) {
   if (value === 'CONSIDER') return 'warning';
   if (value === 'SKIP') return 'danger';
   return 'normal';
+}
+
+function sideIncomeLifecycleBadge(item) {
+  if (item.discovery_status === 'dismissed') return badge('отклонено', 'danger');
+  if (sideIncomeIsActive(item)) return badge('актуально', 'success');
+  return badge('срок актуальности истёк', 'expired');
 }
 
 const sideIncomeDetailLabels = {
@@ -117,24 +127,24 @@ function sideIncomeDetailsMarkup(details) {
 }
 
 function sideIncomeCard(item) {
-  const active = sideIncomeIsActive(item);
   const meta = [
     item.source_name,
     item.source_published_at ? `опубликовано ${fmtDate(item.source_published_at)}` : '',
     item.fit_score != null ? `соответствие ${item.fit_score}%` : '',
-    item.observed_at ? `найдено ${fmtDate(item.observed_at)}` : '',
+    item.observed_at ? `обновлено ${fmtDate(item.observed_at)}` : '',
   ].filter(Boolean);
   return `<article class="card">
     <div class="content-card-head">
       <div class="content-card-chips">
         <span class="content-chip content-chip-brief">Подработка</span>
         ${badge(ru(item.recommendation || 'CONSIDER'), sideIncomeRecommendationClass(item.recommendation))}
-        ${badge(active ? 'актуально' : 'срок актуальности истёк', active ? 'success' : 'expired')}
+        ${sideIncomeLifecycleBadge(item)}
       </div>
     </div>
     <h3>${esc(displayTitle(item.title || item.role || 'Задача'))}</h3>
     ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
     ${item.compensation ? `<p class="meta">Бюджет / ставка: ${esc(ru(item.compensation))}</p>` : ''}
+    ${item.status_reason ? `<p class="summary"><strong>Статус:</strong> ${esc(displayText(item.status_reason))}</p>` : ''}
     ${item.summary ? `<p class="summary">${esc(displayText(item.summary))}</p>` : ''}
     ${sideIncomeDetailsMarkup(item.details)}
     ${item.source_url ? `<div class="actions">${link('Открыть задачу ↗', item.source_url, 'primary')}</div>` : ''}
@@ -153,7 +163,7 @@ function renderSideIncome() {
     ${metric('Актуальных задач', stats.active)}
     ${metric('Брать', stats.take)}
     ${metric('Рассмотреть', stats.consider)}
-    ${metric('Всего найдено', stats.total, stats.expired ? `истекло: ${stats.expired}` : '')}
+    ${metric('Отклонено', stats.dismissed, stats.expired ? `истекло: ${stats.expired}` : '')}
   </div>
   <div class="section">
     <div class="section-head">
@@ -174,7 +184,7 @@ function renderSideIncome() {
       <label>Актуальность
         <select data-side-income-filter="freshness">
           <option value="active" ${sideIncomeFreshnessFilter === 'active' ? 'selected' : ''}>Актуальные</option>
-          <option value="expired" ${sideIncomeFreshnessFilter === 'expired' ? 'selected' : ''}>Истёкшие</option>
+          <option value="expired" ${sideIncomeFreshnessFilter === 'expired' ? 'selected' : ''}>Неактуальные / отклонённые</option>
           <option value="all" ${sideIncomeFreshnessFilter === 'all' ? 'selected' : ''}>Все</option>
         </select>
       </label>
@@ -200,7 +210,7 @@ function sideIncomeAnalyticsMarkup() {
       ${metric('Актуальных', stats.active)}
       ${metric('Брать', stats.take)}
       ${metric('Рассмотреть', stats.consider)}
-      ${metric('Истекло', stats.expired)}
+      ${metric('Отклонено', stats.dismissed, stats.expired ? `истекло: ${stats.expired}` : '')}
     </div>
     <div class="card chart-card"><h3>По рекомендации</h3>${bars(byRecommendation, null, statusTone)}</div>
     <div class="card chart-card"><h3>По источникам</h3>${bars(bySource, null, ()=>'origin')}</div>
