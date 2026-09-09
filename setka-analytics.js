@@ -42,6 +42,13 @@
   };
 
   const allSetkaMetrics = () => {
+    const aggregated = snapshot?.automation?.brand_metrics;
+    if (Array.isArray(aggregated)) {
+      return aggregated
+        .filter(item => item.platform === 'setka')
+        .sort((a, b) => observedTime(b.observed_at) - observedTime(a.observed_at));
+    }
+
     const runs = snapshot?.automation?.runs || [];
     return runs
       .flatMap(run => (run.brand_metrics || []).map(item => ({
