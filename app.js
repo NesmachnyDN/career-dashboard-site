@@ -37,6 +37,8 @@ const RU = {
   'no-findings': 'нет подходящих результатов',
   'partial': 'частично',
   'failed': 'ошибка',
+  'stale': 'данные устарели',
+  'never-run': 'ещё не запускалось',
   'new': 'новая',
   'reviewing': 'на рассмотрении',
   'dismissed': 'отклонена',
@@ -59,6 +61,8 @@ const RU = {
 
   // Workflows
   'vacancy-market-screening': 'Поиск вакансий',
+  'side-income-screening': 'Поиск подработок',
+  'setka-monitoring': 'Мониторинг Сетки',
   'daily-brand-scan': 'Поиск профессионального контента',
   'historical-vacancy-backfill': 'Восстановление истории вакансий',
   'manual-vacancy-capture': 'Добавление вакансии вручную',
@@ -429,10 +433,10 @@ function startApp() {
   render();
 }
 
-const titles = {today:'Сегодня',vacancies:'Все вакансии',opportunities:'Отклики / контакты',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
+const titles = {today:'Сегодня',health:'Состояние системы',vacancies:'Все вакансии',opportunities:'Отклики / контакты',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
 function render() {
   $('#view-title').textContent = titles[currentView];
-  const fn = {today:renderToday,vacancies:renderVacancies,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
+  const fn = {today:renderToday,health:renderHealth,vacancies:renderVacancies,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
   $('#view').innerHTML = fn();
 }
 
@@ -1369,6 +1373,72 @@ function bars(data, drilldownFor, toneFor = ()=>'info') {
         <span class="chart-value"><strong>${v}</strong><small>${pct}%</small></span>
       </button>`;
     }).join('')}
+  </div>`;
+}
+
+
+function effectiveHealth(item) {
+  if (!item?.run_id || !item?.completed_at) return item?.health || 'never-run';
+  const completed = Date.parse(item.completed_at);
+  const freshnessHours = Number(item.freshness_hours);
+  if (Number.isFinite(completed) && Number.isFinite(freshnessHours)) {
+    const ageHours = Math.max(0, (Date.now() - completed) / 3600000);
+    if (ageHours > freshnessHours) return 'stale';
+  }
+  if (['success','no-findings'].includes(item.run_status)) return 'success';
+  if (item.run_status === 'partial') return 'partial';
+  if (item.run_status === 'failed') return 'failed';
+  return item.health || 'failed';
+}
+
+function healthBadge(state) {
+  const cls = {
+    success: 'success',
+    partial: 'partial',
+    failed: 'failed',
+    stale: 'failed',
+    'never-run': 'partial',
+  }[state] || '';
+  return badge(ru(state || 'unknown'), cls);
+}
+
+function healthAge(item) {
+  const completed = item?.completed_at ? Date.parse(item.completed_at) : NaN;
+  const hours = Number.isFinite(completed)
+    ? Math.max(0, (Date.now() - completed) / 3600000)
+    : Number(item?.age_hours);
+  if (!Number.isFinite(hours)) return '—';
+  if (hours < 1) return '< 1 ч';
+  if (hours < 24) return `${Math.round(hours)} ч`;
+  return `${(hours / 24).toFixed(1)} д`;
+}
+
+function renderHealth() {
+  const all = snapshot.automation.workflow_health || [];
+  const rows = all.filter(containsQuery);
+  const healthy = all.filter(item => effectiveHealth(item) === 'success').length;
+  const attention = all.length - healthy;
+  const stale = all.filter(item => effectiveHealth(item) === 'stale').length;
+
+  return `<div class="grid cards">
+    ${metric('Контуров', all.length)}
+    ${metric('В норме', healthy)}
+    ${metric('Требуют внимания', attention)}
+    ${metric('Устарели', stale)}
+  </div>
+  <div class="section">
+    <div class="section-head"><div><h2>Состояние автоматизаций</h2><p class="section-note">Состояние вычисляется из сохранённой истории запусков. Для ежедневных контуров данные считаются устаревшими после 36 часов без свежего запуска.</p></div></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Автоматизация</th><th>Состояние</th><th>Последний запуск</th><th>Возраст</th><th>SLA свежести</th><th>Исходный статус</th></tr></thead>
+      <tbody>${rows.map(item => `<tr>
+        <td>${esc(ru(item.workflow))}</td>
+        <td>${healthBadge(effectiveHealth(item))}</td>
+        <td>${item.completed_at ? esc(fmtDate(item.completed_at)) : '—'}</td>
+        <td>${esc(healthAge(item))}</td>
+        <td>${esc(item.freshness_hours)} ч</td>
+        <td>${item.run_status ? badge(ru(item.run_status), item.run_status) : '—'}</td>
+      </tr>`).join('') || '<tr><td colspan="6">Нет данных о состоянии автоматизаций.</td></tr>'}</tbody>
+    </table></div>
   </div>`;
 }
 
