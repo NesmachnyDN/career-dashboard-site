@@ -1433,6 +1433,82 @@ function publicationStatus(item) {
   return state ? ru(state) : '—';
 }
 
+function fmtDuration(seconds) {
+  const value = Number(seconds);
+  if (!Number.isFinite(value) || value < 0) return '—';
+  if (value < 60) return Math.round(value) + ' сек';
+  const minutes = Math.round(value / 60);
+  if (minutes < 60) return minutes + ' мин';
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest ? hours + ' ч ' + rest + ' мин' : hours + ' ч';
+}
+
+function sourceCoverageText(item) {
+  const coverage = item?.source_coverage;
+  if (!coverage || coverage.telemetry_status !== 'measured') {
+    return 'Телеметрия источников для этого запуска отсутствует.';
+  }
+  const parts = [
+    'Проверено источников: ' + (coverage.checked_sources ?? 0),
+    'недоступно: ' + (coverage.unavailable_sources ?? 0),
+  ];
+  if ((coverage.mandatory_expected ?? 0) > 0) {
+    parts.push(
+      'обязательные: ' + (coverage.mandatory_checked ?? 0) + '/' + coverage.mandatory_expected
+    );
+  } else {
+    parts.push('фиксированный обязательный реестр не применяется');
+  }
+  return parts.join(' · ');
+}
+
+function sourceIssueList(item) {
+  const coverage = item?.source_coverage || {};
+  const unavailable = coverage.mandatory_unavailable || [];
+  const missing = coverage.mandatory_missing || [];
+  if (!unavailable.length && !missing.length) return '';
+
+  let html = '<div class="summary">';
+  if (unavailable.length) {
+    html += '<strong>Недоступные обязательные источники:</strong> '
+      + unavailable.map(source => esc(source.source_name || source.source_ref)).join(', ') + '.';
+  }
+  if (missing.length) {
+    if (unavailable.length) html += '<br>';
+    html += '<strong>Не отражены в телеметрии:</strong> '
+      + missing.map(source => esc(source.source_name || source.source_ref)).join(', ') + '.';
+  }
+  return html + '</div>';
+}
+
+function workflowDiagnosticCard(item) {
+  const state = effectiveHealth(item);
+  const coverage = item?.source_coverage || {};
+  const hasSourceIssues = (coverage.mandatory_unavailable || []).length
+    || (coverage.mandatory_missing || []).length;
+  const showSummary = item?.run_summary && (state !== 'success' || hasSourceIssues);
+  const staleText = state === 'stale'
+    ? '<p class="summary"><strong>Причина:</strong> последний запуск вышел за SLA свежести.</p>'
+    : '';
+
+  let html = '<div class="card"><h3>' + esc(ru(item.workflow)) + ' ' + healthBadge(state) + '</h3>';
+  html += '<div class="meta">';
+  html += '<span>Длительность: ' + esc(fmtDuration(item.duration_seconds)) + '</span>';
+  html += '<span>' + esc(sourceCoverageText(item)) + '</span>';
+  if (coverage.found_candidates != null) {
+    html += '<span>Найдено: ' + esc(coverage.found_candidates) + '</span>';
+  }
+  if (coverage.actionable_candidates != null) {
+    html += '<span>Целевых: ' + esc(coverage.actionable_candidates) + '</span>';
+  }
+  html += '</div>' + staleText + sourceIssueList(item);
+  if (showSummary) {
+    html += '<p class="section-note"><strong>Итог запуска:</strong> ' + esc(item.run_summary) + '</p>';
+  }
+  return html + '</div>';
+}
+
 function renderHealth() {
   const all = snapshot.automation.workflow_health || [];
   const rows = all.filter(containsQuery);
@@ -1443,6 +1519,9 @@ function renderHealth() {
   const latestRefresh = refresh.latest_request || null;
   const lastCompletedRefresh = refresh.last_completed || null;
   const refreshRows = (refresh.recent_requests || []).filter(containsQuery);
+  const reliability = snapshot.automation.reliability_summary || {};
+  const mandatoryExpected = reliability.mandatory_expected_latest || 0;
+  const mandatoryChecked = reliability.mandatory_checked_latest || 0;
 
   return `<div class="grid cards">
     ${metric('Контуров', all.length)}
@@ -1463,6 +1542,26 @@ function renderHealth() {
         <td>${item.run_status ? badge(ru(item.run_status), item.run_status) : '—'}</td>
       </tr>`).join('') || '<tr><td colspan="6">Нет данных о состоянии автоматизаций.</td></tr>'}</tbody>
     </table></div>
+  </div>
+  <div class="grid cards">
+    ${metric('Средняя длительность', fmtDuration(reliability.average_duration_seconds))}
+    ${metric('Проверено источников', reliability.source_checks_latest ?? 0)}
+    ${metric(
+      'Обязательные источники',
+      mandatoryExpected ? String(mandatoryChecked) + '/' + String(mandatoryExpected) : '—',
+      mandatoryExpected ? 'проверено в последних запусках' : 'фиксированный набор не применяется'
+    )}
+    ${metric(
+      'Недоступно обязательных',
+      reliability.mandatory_unavailable_latest ?? 0,
+      (reliability.mandatory_missing_latest || 0)
+        ? 'ещё ' + reliability.mandatory_missing_latest + ' не отражено в телеметрии'
+        : ''
+    )}
+  </div>
+  <div class="section">
+    <div class="section-head"><div><h2>Диагностика последних запусков</h2><p class="section-note">Длительность и покрытие вычисляются из последнего сохранённого запуска каждого критического контура. Недоступный обязательный источник отличается от отсутствующей записи source_metrics.</p></div></div>
+    ${rows.map(workflowDiagnosticCard).join('') || '<div class="empty compact">Нет данных для диагностики.</div>'}
   </div>
   <div class="grid cards">
     ${metric('Запросов в очереди', refresh.queued_count || 0)}
