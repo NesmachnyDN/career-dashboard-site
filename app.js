@@ -33,6 +33,10 @@ const RU = {
   'to-verify': 'нужно уточнить',
   'none': 'нет',
   'pending': 'ожидание',
+  'queued': 'в очереди',
+  'running': 'выполняется',
+  'published': 'обновлено и опубликовано',
+  'completed-not-published': 'обновлено, публикация не подтверждена',
   'success': 'успешно',
   'no-findings': 'нет подходящих результатов',
   'partial': 'частично',
@@ -1413,12 +1417,32 @@ function healthAge(item) {
   return `${(hours / 24).toFixed(1)} д`;
 }
 
+function refreshStatusBadge(state) {
+  const cls = {
+    queued: 'partial',
+    running: 'partial',
+    published: 'success',
+    'completed-not-published': 'partial',
+    failed: 'failed',
+  }[state] || '';
+  return badge(ru(state || 'unknown'), cls);
+}
+
+function publicationStatus(item) {
+  const state = item?.dashboard?.publication_status;
+  return state ? ru(state) : '—';
+}
+
 function renderHealth() {
   const all = snapshot.automation.workflow_health || [];
   const rows = all.filter(containsQuery);
   const healthy = all.filter(item => effectiveHealth(item) === 'success').length;
   const attention = all.length - healthy;
   const stale = all.filter(item => effectiveHealth(item) === 'stale').length;
+  const refresh = snapshot.automation.control_plane?.manual_refresh || {};
+  const latestRefresh = refresh.latest_request || null;
+  const lastCompletedRefresh = refresh.last_completed || null;
+  const refreshRows = (refresh.recent_requests || []).filter(containsQuery);
 
   return `<div class="grid cards">
     ${metric('Контуров', all.length)}
@@ -1439,6 +1463,34 @@ function renderHealth() {
         <td>${item.run_status ? badge(ru(item.run_status), item.run_status) : '—'}</td>
       </tr>`).join('') || '<tr><td colspan="6">Нет данных о состоянии автоматизаций.</td></tr>'}</tbody>
     </table></div>
+  </div>
+  <div class="grid cards">
+    ${metric('Запросов в очереди', refresh.queued_count || 0)}
+    ${metric('Выполняются', refresh.running_count || 0)}
+    ${metric(
+      'Последний ручной запрос',
+      latestRefresh?.requested_at ? fmtDate(latestRefresh.requested_at) : '—',
+      latestRefresh ? ru(latestRefresh.status) : 'данных пока нет'
+    )}
+    ${metric(
+      'Последнее полное обновление',
+      lastCompletedRefresh?.completed_at ? fmtDate(lastCompletedRefresh.completed_at) : '—',
+      lastCompletedRefresh ? ru(lastCompletedRefresh.status) : 'данных пока нет'
+    )}
+  </div>
+  <div class="section">
+    <div class="section-head"><div><h2>Контур ручного обновления</h2><p class="section-note">Статус выводится только из неизменяемых request / lock / response записей. Карьерный центр не хранит и не изменяет собственное состояние выполнения.</p></div></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Запрошено</th><th>Состояние</th><th>Старт</th><th>Завершено</th><th>Публикация</th></tr></thead>
+      <tbody>${refreshRows.map(item => `<tr>
+        <td>${item.requested_at ? esc(fmtDate(item.requested_at)) : '—'}</td>
+        <td>${refreshStatusBadge(item.status)}</td>
+        <td>${item.started_at ? esc(fmtDate(item.started_at)) : '—'}</td>
+        <td>${item.completed_at ? esc(fmtDate(item.completed_at)) : '—'}</td>
+        <td>${esc(publicationStatus(item))}</td>
+      </tr>`).join('') || '<tr><td colspan="5">Ручные запросы обновления ещё не зафиксированы.</td></tr>'}</tbody>
+    </table></div>
+    ${lastCompletedRefresh?.summary ? `<p class="section-note">Последний итог: ${esc(lastCompletedRefresh.summary)}</p>` : ''}
   </div>`;
 }
 
