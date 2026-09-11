@@ -283,3 +283,139 @@
   .funnel-history-row span:last-child { text-align: left; }
   .details-section summary span { display: none; }
 }
+
+
+.current-state-grid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.funnel-subhead {
+  margin: 22px 0 12px;
+  font-size: 15px;
+}
+
+.funnel-segment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+.funnel-segment-card,
+.transition-card {
+  border: 1px solid var(--border, #dfe3ea);
+  border-radius: 14px;
+  background: var(--card, #fff);
+  padding: 14px;
+}
+
+.funnel-segment-card header {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 10px;
+}
+
+.funnel-segment-card header strong {
+  font-size: 13px;
+}
+
+.funnel-segment-card header span {
+  font-size: 11px;
+  opacity: .62;
+}
+
+.funnel-segment-list {
+  display: grid;
+  gap: 7px;
+}
+
+.funnel-segment-list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 12px;
+}
+
+.funnel-segment-list > div span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.funnel-segment-list > div strong {
+  flex: 0 0 auto;
+}
+
+.historical-transition-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 14px 0 18px;
+}
+
+.transition-card {
+  display: grid;
+  gap: 6px;
+}
+
+.transition-card span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.transition-card strong {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.transition-card small {
+  opacity: .68;
+  line-height: 1.35;
+}
+
+.funnel-evidence-note {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border, #dfe3ea);
+  border-radius: 12px;
+  background: rgba(52, 120, 246, .04);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.funnel-evidence-note span {
+  opacity: .72;
+}
+
+.funnel-segment-section {
+  display: grid;
+  gap: 8px;
+}
+
+.funnel-segment-section h4 {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.funnel-segment-table th,
+.funnel-segment-table td {
+  white-space: nowrap;
+}
+
+.funnel-segment-table th:first-child,
+.funnel-segment-table td:first-child {
+  white-space: normal;
+  min-width: 180px;
+}
+
+@media (max-width: 900px) {
+  .historical-transition-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .historical-transition-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -6,38 +6,59 @@
   const pct = (part, total) => total > 0 ? `${(part / total * 100).toFixed(1).replace('.', ',')}%` : '—';
   const safeDate = (value) => value ? fmtDate(value) : '—';
 
-  function opportunityHasInbound(opportunity) {
-    return (opportunity.interactions || []).some(interaction => interaction.direction === 'inbound');
+  const STAGE_ORDER = [
+    'discovered', 'captured', 'classified', 'evidence-mapped', 'qualified',
+    'applied', 'recruiter-screen', 'hiring-manager-screen',
+    'technical-or-architecture-interview', 'final-interview',
+    'offer-or-contract-discussion', 'accepted', 'rejected', 'withdrawn', 'archived', 'unknown'
+  ];
+  const MILESTONES = [
+    ['applied', 'Отклик'],
+    ['recruiter', 'Рекрутер'],
+    ['interview', 'Интервью'],
+    ['offer', 'Оффер'],
+    ['accepted', 'Принято']
+  ];
+  const TRANSITION_LABELS = {
+    applied_to_recruiter: 'Отклик → рекрутер',
+    recruiter_to_interview: 'Рекрутер → интервью',
+    interview_to_offer: 'Интервью → оффер',
+    offer_to_accepted: 'Оффер → принято'
+  };
+  const DIMENSIONS = [
+    ['source', 'Источник обнаружения'],
+    ['role_track', 'Ролевой трек'],
+    ['fit_status', 'Соответствие'],
+    ['recommendation', 'Рекомендация'],
+    ['compensation_status', 'Компенсация']
+  ];
+
+  function funnelIntel() {
+    return snapshot?.analytics?.funnel || {
+      current_state: {opportunity_count: 0, stage_counts: {}, segments: {}},
+      historical: {
+        opportunity_count: 0,
+        evidenced_opportunity_count: 0,
+        missing_transition_evidence_count: 0,
+        milestone_counts: {},
+        transitions: [],
+        segments: {}
+      }
+    };
   }
 
-  function opportunityReachedRecruiterScreen(opportunity) {
-    const stage = opportunity.current_stage || '';
-    const stages = new Set([
-      'recruiter-screen',
-      'hiring-manager-screen',
-      'technical-or-architecture-interview',
-      'final-interview',
-      'offer-or-contract-discussion',
-      'accepted'
-    ]);
-    if (stages.has(stage)) return true;
-    return (opportunity.interactions || []).some(interaction => {
-      const text = `${interaction.title || ''} ${interaction.event || ''}`.toLowerCase();
-      return text.includes('recruiter') || text.includes('hr call') || text.includes('скрининг') || text.includes('звонок с hr');
-    });
+  function transitionById(id, transitions = funnelIntel().historical?.transitions || []) {
+    return transitions.find(row => row.id === id) || null;
   }
 
-  function opportunityReachedTechnical(opportunity) {
-    return new Set([
-      'technical-or-architecture-interview',
-      'final-interview',
-      'offer-or-contract-discussion',
-      'accepted'
-    ]).has(opportunity.current_stage || '');
+  function conversionText(row) {
+    return row && row.source_count > 0 && Number.isFinite(Number(row.conversion_pct))
+      ? `${String(row.conversion_pct).replace('.', ',')}%`
+      : '—';
   }
 
-  function opportunityReachedOffer(opportunity) {
-    return new Set(['offer-or-contract-discussion', 'accepted']).has(opportunity.current_stage || '');
+  function coverageText(evidenced, total) {
+    return total > 0 ? `${evidenced} из ${total} (${pct(evidenced, total)})` : '—';
   }
 
   function normalizeChannel(source) {
@@ -79,52 +100,82 @@
     return [...latest.values()];
   }
 
-  function observedStages() {
-    const opportunities = snapshot.opportunities || [];
-    const registry = num(snapshot.analytics?.vacancy_count || (snapshot.vacancies || []).length);
-    const real = opportunities.length;
-    const inbound = opportunities.filter(opportunityHasInbound).length;
-    const recruiter = opportunities.filter(opportunityReachedRecruiterScreen).length;
-    const technical = opportunities.filter(opportunityReachedTechnical).length;
-    const offers = opportunities.filter(opportunityReachedOffer).length;
-    return [
-      {label: 'В едином реестре', short: 'Вакансии', value: registry, note: 'все сохранённые вакансии'},
-      {label: 'Взаимодействие начато', short: 'Контакт', value: real, note: registry ? `${pct(real, registry)} от реестра` : 'канонические opportunities'},
-      {label: 'Есть входящий ответ', short: 'Ответ', value: inbound, note: real ? `${pct(inbound, real)} от взаимодействий` : 'по журналу контактов'},
-      {label: 'Recruiter screen / диалог', short: 'Recruiter', value: recruiter, note: real ? `${pct(recruiter, real)} от взаимодействий` : 'по статусам и журналу'},
-      {label: 'Техническое интервью', short: 'Тех. интервью', value: technical, note: recruiter ? `${pct(technical, recruiter)} от recruiter screen` : 'пока нет'},
-      {label: 'Оффер / обсуждение', short: 'Оффер', value: offers, note: technical ? `${pct(offers, technical)} от тех. интервью` : 'пока нет'}
-    ];
+  function currentStageRows() {
+    const counts = funnelIntel().current_state?.stage_counts || {};
+    const known = STAGE_ORDER.filter(stage => Object.prototype.hasOwnProperty.call(counts, stage));
+    const extra = Object.keys(counts).filter(stage => !STAGE_ORDER.includes(stage)).sort((a,b) => a.localeCompare(b, 'ru'));
+    return [...known, ...extra].map(stage => ({stage, count: num(counts[stage])}));
+  }
+
+  function renderCurrentState() {
+    const rows = currentStageRows();
+    if (!rows.length) return '<div class="empty compact">Канонические opportunities пока отсутствуют.</div>';
+    return `<div class="funnel-stage-grid current-state-grid">${rows.map(row =>
+      stageCard(ru(row.stage), row.count, 'текущее состояние; это не историческая конверсия')
+    ).join('')}</div>`;
+  }
+
+  function renderCurrentSegments() {
+    const segments = funnelIntel().current_state?.segments || {};
+    return `<div class="funnel-segment-grid">${DIMENSIONS.map(([dimension, label]) => {
+      const rows = segments[dimension] || [];
+      return `<article class="funnel-segment-card">
+        <header><strong>${esc(label)}</strong><span>текущее распределение</span></header>
+        <div class="funnel-segment-list">${rows.length ? rows.map(row =>
+          `<div><span>${esc(ru(row.value))}</span><strong>${num(row.count)}</strong></div>`
+        ).join('') : '<div class="muted">Нет данных</div>'}</div>
+      </article>`;
+    }).join('')}</div>`;
   }
 
   function stageCard(label, value, note = '') {
     return `<div class="funnel-stage-card"><span>${esc(label)}</span><strong>${esc(value)}</strong>${note ? `<small>${esc(note)}</small>` : ''}</div>`;
   }
 
-  function renderGraphicFunnel() {
-    const stages = observedStages();
-    const max = Math.max(1, ...stages.map(stage => stage.value));
-    return `<div class="visual-funnel" aria-label="Графическая воронка поиска">${stages.map((stage, index) => {
-      const proportional = stage.value > 0 ? stage.value / max * 100 : 0;
-      const width = stage.value > 0 ? Math.max(34, proportional) : 28;
-      const previous = index ? stages[index - 1].value : 0;
-      const conversion = index ? pct(stage.value, previous) : '100%';
+  function renderHistoricalFunnel() {
+    const historical = funnelIntel().historical || {};
+    const counts = historical.milestone_counts || {};
+    const max = Math.max(1, ...MILESTONES.map(([id]) => num(counts[id])));
+    return `<div class="visual-funnel" aria-label="Историческая воронка по подтверждённым переходам">${MILESTONES.map(([id, label], index) => {
+      const value = num(counts[id]);
+      const width = value > 0 ? Math.max(34, value / max * 100) : 28;
+      const prevId = index ? MILESTONES[index - 1][0] : null;
+      const transition = prevId ? transitionById(`${prevId}_to_${id}`) : null;
+      const note = transition
+        ? `${conversionText(transition)} · ${transition.converted_count} из ${transition.source_count} с доказанным предыдущим этапом`
+        : 'зафиксированный этап после события';
       return `<div class="visual-funnel-row">
-        <div class="visual-funnel-bar ${stage.value === 0 ? 'zero' : ''}" style="--funnel-width:${width}%">
-          <strong>${stage.value}</strong><span>${esc(stage.short)}</span>
+        <div class="visual-funnel-bar ${value === 0 ? 'zero' : ''}" style="--funnel-width:${width}%">
+          <strong>${value}</strong><span>${esc(label)}</span>
         </div>
         <div class="visual-funnel-copy">
-          <strong>${esc(stage.label)}</strong>
-          <span>${esc(stage.note)}</span>
-          <small>${index ? `Переход с предыдущего этапа: ${conversion}` : 'База текущего реестра'}</small>
+          <strong>${esc(label)}</strong>
+          <span>${esc(note)}</span>
+          <small>Только зафиксированные этапы из журнала взаимодействий; текущий статус здесь не используется.</small>
         </div>
       </div>`;
     }).join('')}</div>`;
   }
 
-  function renderObservedFunnel() {
-    const stages = observedStages();
-    return `<div class="funnel-stage-grid">${stages.map(stage => stageCard(stage.label, stage.value, stage.note)).join('')}</div>`;
+  function renderHistoricalTransitions() {
+    const rows = funnelIntel().historical?.transitions || [];
+    if (!rows.length) return '<div class="empty compact">Исторические переходы пока не вычислены.</div>';
+    return `<div class="historical-transition-grid">${rows.map(row => `<article class="transition-card">
+      <span>${esc(TRANSITION_LABELS[row.id] || row.id)}</span>
+      <strong>${esc(conversionText(row))}</strong>
+      <small>${row.source_count ? `${row.converted_count} из ${row.source_count}` : 'нет подтверждённой базы этапа'}</small>
+    </article>`).join('')}</div>`;
+  }
+
+  function renderEvidenceCoverage() {
+    const h = funnelIntel().historical || {};
+    const evidenced = num(h.evidenced_opportunity_count);
+    const total = num(h.opportunity_count);
+    const missing = num(h.missing_transition_evidence_count);
+    return `<div class="funnel-evidence-note">
+      <strong>Покрытие историческими доказательствами: ${esc(coverageText(evidenced, total))}</strong>
+      <span>Без зафиксированного этапа после события: ${missing}. Такие записи остаются в текущем состоянии, но не повышают историческую конверсию.</span>
+    </div>`;
   }
 
   function metricValue(row, key) {
@@ -182,27 +233,31 @@
     }).join('')}</tbody></table></div>`;
   }
 
-  function renderChannelOutcomes() {
-    const grouped = new Map();
-    for (const opportunity of snapshot.opportunities || []) {
-      const channel = normalizeChannel(opportunity.source);
-      if (!grouped.has(channel)) grouped.set(channel, {opportunities: 0, inbound: 0, recruiter: 0, technical: 0, offers: 0});
-      const row = grouped.get(channel);
-      row.opportunities += 1;
-      if (opportunityHasInbound(opportunity)) row.inbound += 1;
-      if (opportunityReachedRecruiterScreen(opportunity)) row.recruiter += 1;
-      if (opportunityReachedTechnical(opportunity)) row.technical += 1;
-      if (opportunityReachedOffer(opportunity)) row.offers += 1;
-    }
+  function transitionCell(rows, id) {
+    return conversionText(transitionById(id, rows || []));
+  }
 
-    const rows = [...grouped.entries()].sort((a, b) => b[1].opportunities - a[1].opportunities || a[0].localeCompare(b[0], 'ru'));
-    if (!rows.length) return '<div class="empty compact">Взаимодействия по источникам пока не зафиксированы.</div>';
-
-    return `<div class="table-wrap"><table class="funnel-table"><thead><tr>
-      <th>Источник</th><th>Opportunities</th><th>Входящие ответы</th><th>Recruiter screen</th><th>Тех. интервью</th><th>Офферы</th>
-    </tr></thead><tbody>${rows.map(([channel, data]) => `<tr>
-      <td>${esc(channel)}</td><td>${data.opportunities}</td><td>${data.inbound}</td><td>${data.recruiter}</td><td>${data.technical}</td><td>${data.offers}</td>
-    </tr>`).join('')}</tbody></table></div>`;
+  function renderHistoricalSegments() {
+    const segments = funnelIntel().historical?.segments || {};
+    return DIMENSIONS.map(([dimension, label]) => {
+      const rows = segments[dimension] || [];
+      if (!rows.length) return `<section class="funnel-segment-section"><h4>${esc(label)}</h4><div class="empty compact">Нет данных.</div></section>`;
+      return `<section class="funnel-segment-section">
+        <h4>${esc(label)}</h4>
+        <div class="table-wrap"><table class="funnel-table funnel-segment-table"><thead><tr>
+          <th>Сегмент</th><th>Процессы</th><th>Есть история переходов</th>
+          <th>Отклик → рекрутер</th><th>Рекрутер → интервью</th><th>Интервью → оффер</th><th>Оффер → принято</th>
+        </tr></thead><tbody>${rows.map(row => `<tr>
+          <td>${esc(ru(row.value))}</td>
+          <td>${num(row.opportunity_count)}</td>
+          <td>${esc(coverageText(num(row.evidenced_opportunity_count), num(row.opportunity_count)))}</td>
+          <td>${esc(transitionCell(row.transitions, 'applied_to_recruiter'))}</td>
+          <td>${esc(transitionCell(row.transitions, 'recruiter_to_interview'))}</td>
+          <td>${esc(transitionCell(row.transitions, 'interview_to_offer'))}</td>
+          <td>${esc(transitionCell(row.transitions, 'offer_to_accepted'))}</td>
+        </tr>`).join('')}</tbody></table></div>
+      </section>`;
+    }).join('');
   }
 
   function sourceDistribution() {
@@ -291,39 +346,61 @@
     const hhImpressions = hhRows.reduce((sum, row) => sum + num(row.impressions), 0);
     const hhViews = hhRows.reduce((sum, row) => sum + num(row.views), 0);
     const hhInvitations = hhRows.reduce((sum, row) => sum + num(row.invitations), 0);
+    const h = funnelIntel().historical || {};
 
-    return `<div class="view-note">Все графики ниже строятся непосредственно из актуального snapshot Карьерного центра: applications, единого реестра вакансий и append-only automation-results. При очередной сборке сайта значения пересчитываются автоматически; отсутствующие показатели не восстанавливаются предположениями.</div>
+    return `<div class="view-note"><strong>Текущее состояние и историческая конверсия разделены.</strong> Текущий статус показывает, где процесс находится сейчас. Конверсия считается только по явно зафиксированным переходам в журнале взаимодействий; пропущенная история не восстанавливается из текущего статуса.</div>
       <div class="grid cards funnel-kpis">
-        ${metric('HH: показы', hhImpressions || '—', hhRows.length ? `последний сохранённый snapshot по ${hhRows.length} резюме` : 'нет снимка')}
-        ${metric('HH: просмотры', hhViews || '—', hhImpressions ? `${pct(hhViews, hhImpressions)} от показов` : 'нет данных')}
-        ${metric('HH: приглашения', hhInvitations || '—', hhViews ? `${pct(hhInvitations, hhViews)} от просмотров` : 'нет данных')}
-        ${metric('Реальные opportunities', (snapshot.opportunities || []).length, 'отклик, входящий контакт или иной реальный процесс')}
+        ${metric('Текущие процессы', num(funnelIntel().current_state?.opportunity_count), 'канонические записи по возможностям')}
+        ${metric('С подтверждённой историей', num(h.evidenced_opportunity_count), coverageText(num(h.evidenced_opportunity_count), num(h.opportunity_count)))}
+        ${metric('Без подтверждённой истории', num(h.missing_transition_evidence_count), 'не участвуют в исторической конверсии')}
+        ${metric('Подтверждённые офферы', num(h.milestone_counts?.offer), 'только зафиксированные этапы')}
       </div>
+
+      <section class="section analytics-section">
+        <div class="section-head"><div><h2>Текущее состояние</h2><p class="section-note">Распределение по текущему статусу. Значения показывают состояние на момент сборки и не интерпретируются как последовательная конверсия.</p></div></div>
+        ${renderCurrentState()}
+        <h3 class="funnel-subhead">Текущая сегментация</h3>
+        ${renderCurrentSegments()}
+      </section>
+
+      <section class="section analytics-section">
+        <div class="section-head"><div><h2>Историческая воронка</h2><p class="section-note">Только доказанные этапы и переходы. Из-за пробелов в истории уровни могут быть немонотонными — это сигнал качества данных, а не повод дорисовывать историю.</p></div></div>
+        ${renderEvidenceCoverage()}
+        ${renderHistoricalTransitions()}
+        ${renderHistoricalFunnel()}
+      </section>
+
       <div class="dashboard-viz-grid">
         <section class="section analytics-section viz-panel viz-panel-wide">
-          <div class="section-head"><div><h2>Основная воронка поиска</h2><p class="section-note">Ширина сегмента отражает текущий объём этапа; справа показана фактическая конверсия.</p></div></div>
-          ${renderGraphicFunnel()}
+          <div class="section-head"><div><h2>Платформенные сигналы</h2><p class="section-note">Показы, просмотры и приглашения — отдельная наблюдаемая воронка площадок; она не смешивается с конверсией процессов.</p></div></div>
+          <div class="grid cards">
+            ${metric('HH: показы', hhImpressions || '—', hhRows.length ? `последний сохранённый снимок по ${hhRows.length} резюме` : 'нет снимка')}
+            ${metric('HH: просмотры', hhViews || '—', hhImpressions ? `${pct(hhViews, hhImpressions)} от показов` : 'нет данных')}
+            ${metric('HH: приглашения', hhInvitations || '—', hhViews ? `${pct(hhInvitations, hhViews)} от просмотров` : 'нет данных')}
+          </div>
         </section>
         <section class="section analytics-section viz-panel">
-          <div class="section-head"><div><h2>Источники вакансий</h2><p class="section-note">Распределение текущего единого реестра по зафиксированным источникам.</p></div></div>
+          <div class="section-head"><div><h2>Источники текущего реестра</h2><p class="section-note">Распределение всех сохранённых вакансий; это текущее распределение, а не конверсия.</p></div></div>
           ${renderSourceDistribution()}
         </section>
       </div>
+
       <div class="section analytics-section">
-        <div class="section-head"><div><h2>Эффективность каналов</h2><p class="section-note">Отдельные мини-воронки по платформам и резюме. Если площадка не предоставляет показатель, отображается «—», а не искусственный ноль.</p></div></div>
+        <div class="section-head"><div><h2>Эффективность каналов профиля</h2><p class="section-note">Мини-воронки площадок. Отсутствующий показатель отображается как «—», а не как искусственный ноль.</p></div></div>
         ${renderChannelFunnels()}
       </div>
       <div class="section analytics-section">
-        <div class="section-head"><div><h2>Динамика платформенных метрик</h2><p class="section-note">До 12 последних сохранённых снимков. График расширяется автоматически по мере накопления append-only истории.</p></div></div>
+        <div class="section-head"><div><h2>Динамика платформенных метрик</h2><p class="section-note">До 12 последних append-only снимков.</p></div></div>
         ${renderTrendChart()}
       </div>
+
       <details class="section analytics-section details-section">
-        <summary><strong>Табличная детализация</strong><span>Точные значения и история</span></summary>
+        <summary><strong>Историческая сегментация и точные данные</strong><span>источник / ролевой трек / соответствие / рекомендация / компенсация</span></summary>
         <div class="details-body">
-          <h3>Наблюдаемая воронка</h3>${renderObservedFunnel()}
+          <h3>Историческая конверсия по сегментам</h3>
+          ${renderHistoricalSegments()}
           <h3>Метрики площадок и резюме</h3>${renderProfileMetrics()}
-          <h3>Результаты по источникам</h3>${renderChannelOutcomes()}
-          <h3>История снимков</h3>${renderHistory()}
+          <h3>История платформенных снимков</h3>${renderHistory()}
         </div>
       </details>`;
   }
