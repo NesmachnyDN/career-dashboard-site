@@ -7,15 +7,28 @@
   const numberOrDash = v => v === null || v === undefined ? '—' : String(v);
   const pctOrDash = v => v === null || v === undefined ? '—' : `${Number(v).toLocaleString('ru-RU',{maximumFractionDigits:1})}%`;
   const dateOrDash = v => v ? new Intl.DateTimeFormat('ru-RU',{dateStyle:'medium'}).format(new Date(v)) : '—';
-  let stream = 'all', mode = 'all', sortMode = 'actionable', localQuery = '';
+  let stream = 'all', mode = 'all', sortMode = 'downstream', localQuery = '';
 
   function compareSources(a,b) {
     const num = (v) => v === null || v === undefined ? -1 : Number(v);
-    if (sortMode === 'found') return num(b.found_candidates)-num(a.found_candidates) || num(b.saved_results)-num(a.saved_results) || String(a.name).localeCompare(String(b.name),'ru');
-    if (sortMode === 'yield') return num(b.actionable_yield_pct)-num(a.actionable_yield_pct) || num(b.actionable_candidates)-num(a.actionable_candidates) || String(a.name).localeCompare(String(b.name),'ru');
-    if (sortMode === 'checks') return num(b.checks)-num(a.checks) || num(b.found_candidates)-num(a.found_candidates) || String(a.name).localeCompare(String(b.name),'ru');
-    if (sortMode === 'name') return String(a.name).localeCompare(String(b.name),'ru');
-    return num(b.actionable_candidates)-num(a.actionable_candidates) || num(b.saved_results)-num(a.saved_results) || String(a.name).localeCompare(String(b.name),'ru');
+    const byName = () => String(a.name).localeCompare(String(b.name),'ru');
+    if (sortMode === 'downstream') {
+      return num(b.accepted)-num(a.accepted)
+        || num(b.offers)-num(a.offers)
+        || num(b.interviews)-num(a.interviews)
+        || num(b.recruiter_contacts)-num(a.recruiter_contacts)
+        || num(b.applications)-num(a.applications)
+        || num(b.application_conversion_pct)-num(a.application_conversion_pct)
+        || num(b.actionable_candidates)-num(a.actionable_candidates)
+        || byName();
+    }
+    if (sortMode === 'applications') return num(b.applications)-num(a.applications) || num(b.application_conversion_pct)-num(a.application_conversion_pct) || byName();
+    if (sortMode === 'recruiter') return num(b.recruiter_contacts)-num(a.recruiter_contacts) || num(b.recruiter_conversion_pct)-num(a.recruiter_conversion_pct) || byName();
+    if (sortMode === 'found') return num(b.found_candidates)-num(a.found_candidates) || num(b.saved_results)-num(a.saved_results) || byName();
+    if (sortMode === 'yield') return num(b.actionable_yield_pct)-num(a.actionable_yield_pct) || num(b.actionable_candidates)-num(a.actionable_candidates) || byName();
+    if (sortMode === 'checks') return num(b.checks)-num(a.checks) || num(b.found_candidates)-num(a.found_candidates) || byName();
+    if (sortMode === 'name') return byName();
+    return byName();
   }
 
   function checkCell(s) {
@@ -40,25 +53,26 @@
     const sum = data.summary || {};
 
     root.innerHTML = `<div class="grid cards source-metrics">
-      <div class="metric"><span class="metric-label">Активных фиксированных</span><strong>${sum.fixed_enabled||0}</strong><span class="metric-note">из ${sum.fixed_total||0} зарегистрированных</span></div>
-      <div class="metric"><span class="metric-label">Проверок источников</span><strong>${sum.source_checks||0}</strong><span class="metric-note">телеметрия по ${sum.telemetry_sources||0} источникам${sum.unavailable_attempts?`; недоступно: ${sum.unavailable_attempts}`:''}</span></div>
+      <div class="metric"><span class="metric-label">Проверок источников</span><strong>${sum.source_checks||0}</strong><span class="metric-note">по ${sum.telemetry_sources||0} источникам${sum.unavailable_attempts?`; недоступно: ${sum.unavailable_attempts}`:''}</span></div>
       <div class="metric"><span class="metric-label">Найдено кандидатов</span><strong>${sum.found_candidates||0}</strong><span class="metric-note">до дедупликации</span></div>
-      <div class="metric"><span class="metric-label">Новых уникальных</span><strong>${sum.new_unique_candidates||0}</strong><span class="metric-note">после дедупликации</span></div>
-      <div class="metric"><span class="metric-label">Квалифицировано</span><strong>${sum.qualified_candidates||0}</strong><span class="metric-note">прошли предметную оценку</span></div>
-      <div class="metric"><span class="metric-label">Целевых</span><strong>${sum.actionable_candidates||0}</strong><span class="metric-note">прошли практический action gate</span></div>
-      <div class="metric"><span class="metric-label">Начато взаимодействий</span><strong>${sum.interaction_started||0}</strong><span class="metric-note">из канонического applications/</span></div>
-      <div class="metric"><span class="metric-label">Динамических источников</span><strong>${sum.dynamic_observed||0}</strong><span class="metric-note">фактически наблюдались в запусках</span></div>
+      <div class="metric"><span class="metric-label">Целевых</span><strong>${sum.actionable_candidates||0}</strong><span class="metric-note">прошли action gate</span></div>
+      <div class="metric"><span class="metric-label">Атрибутировано вакансий</span><strong>${sum.attributed_vacancies||0}</strong><span class="metric-note">уникальные discovery identity</span></div>
+      <div class="metric"><span class="metric-label">Дошли до отклика</span><strong>${sum.applications||0}</strong><span class="metric-note">подтверждено Interaction Log</span></div>
+      <div class="metric"><span class="metric-label">Контакт с рекрутером</span><strong>${sum.recruiter_contacts||0}</strong><span class="metric-note">этап recruiter-screen</span></div>
+      <div class="metric"><span class="metric-label">Дошли до интервью</span><strong>${sum.interviews||0}</strong><span class="metric-note">hiring / technical / final</span></div>
+      <div class="metric"><span class="metric-label">Дошли до оффера</span><strong>${sum.offers||0}</strong><span class="metric-note">${sum.accepted?`принято: ${sum.accepted}`:'offer/contract discussion'}</span></div>
     </div>
+    ${sum.scheduled_unlinked_opportunities ? `<div class="view-note">Не атрибутировано к источнику: <strong>${sum.scheduled_unlinked_opportunities}</strong> opportunity из автопоиска без надёжного discovery_key. Они намеренно исключены из source conversion, чтобы не приписывать результат площадке задним числом.</div>` : ''}
     <div class="section">
       <div class="section-head"><div><h2>Источники сбора данных</h2><p class="section-note">Фиксированные источники берутся из реестров pipeline. Динамические появляются только после фактической проверки во время запуска.</p></div></div>
       <div class="source-controls">
         <select id="source-stream"><option value="all">Все направления</option>${streams.map(v=>`<option ${stream===v?'selected':''}>${escS(v)}</option>`).join('')}</select>
         <select id="source-mode"><option value="all">Все типы</option><option value="fixed" ${mode==='fixed'?'selected':''}>Фиксированные</option><option value="dynamic" ${mode==='dynamic'?'selected':''}>Найденные динамически</option><option value="dynamic-channel" ${mode==='dynamic-channel'?'selected':''}>Каналы динамического поиска</option></select>
-        <select id="source-sort"><option value="actionable" ${sortMode==='actionable'?'selected':''}>Сортировка: целевые</option><option value="found" ${sortMode==='found'?'selected':''}>Сортировка: найдено</option><option value="yield" ${sortMode==='yield'?'selected':''}>Сортировка: конверсия</option><option value="checks" ${sortMode==='checks'?'selected':''}>Сортировка: проверки</option><option value="name" ${sortMode==='name'?'selected':''}>Сортировка: название</option></select>
+        <select id="source-sort"><option value="downstream" ${sortMode==='downstream'?'selected':''}>Сортировка: downstream</option><option value="applications" ${sortMode==='applications'?'selected':''}>Сортировка: отклики</option><option value="recruiter" ${sortMode==='recruiter'?'selected':''}>Сортировка: рекрутер</option><option value="found" ${sortMode==='found'?'selected':''}>Сортировка: найдено</option><option value="yield" ${sortMode==='yield'?'selected':''}>Сортировка: actionable yield</option><option value="checks" ${sortMode==='checks'?'selected':''}>Сортировка: проверки</option><option value="name" ${sortMode==='name'?'selected':''}>Сортировка: название</option></select>
         <input id="source-query" type="search" placeholder="Фильтр источников…" value="${escS(localQuery)}">
       </div>
       <div class="source-table-wrap"><table class="source-table"><thead><tr>
-        <th>Источник</th><th>Направление</th><th>Модель</th><th>Покрытие</th><th>Проверок</th><th>Найдено</th><th>Новых</th><th>Квалиф.</th><th>Целевых</th><th>Сохранено</th><th>Контакты</th><th>Yield</th><th>Последняя проверка</th>
+        <th>Источник</th><th>Направление</th><th>Модель</th><th>Покрытие</th><th>Проверок</th><th>Найдено</th><th>Новых</th><th>Квалиф.</th><th>Целевых</th><th>Yield</th><th>Сохранено</th><th>Вакансий</th><th>Связано</th><th>Отклик</th><th>Рекрутер</th><th>Интервью</th><th>Оффер</th><th>В отклик</th><th>Рекр./откл.</th><th>Инт./рекр.</th><th>Оффер/инт.</th><th>Последняя проверка</th><th>Последняя находка</th><th>Последний прогресс</th>
       </tr></thead><tbody>
         ${filtered.map(s=>`<tr>
           <td><div class="source-name">${safe(s.entrypoint)?`<a href="${escS(s.entrypoint)}" target="_blank" rel="noopener">${escS(s.name)}</a>`:escS(s.name)}</div><div class="source-meta">${escS(stateLabel(s))}${s.parent?` · ${escS(s.parent)}`:''}${!s.telemetry_available&&s.saved_results?` · исторические данные`:''}</div></td>
@@ -69,12 +83,23 @@
           <td class="source-num">${escS(numberOrDash(s.found_candidates))}</td>
           <td class="source-num">${escS(numberOrDash(s.new_unique_candidates))}</td>
           <td class="source-num">${escS(numberOrDash(s.qualified_candidates))}</td>
-          <td class="source-num source-num-strong">${escS(numberOrDash(s.actionable_candidates))}</td>
-          <td class="source-num">${s.saved_results||0}</td>
-          <td class="source-num">${s.interaction_started||0}</td>
+          <td class="source-num">${escS(numberOrDash(s.actionable_candidates))}</td>
           <td class="source-num">${escS(pctOrDash(s.actionable_yield_pct))}</td>
+          <td class="source-num">${s.saved_results||0}</td>
+          <td class="source-num">${s.attributed_vacancies||0}</td>
+          <td class="source-num">${s.linked_opportunities||0}</td>
+          <td class="source-num source-num-strong">${s.applications||0}</td>
+          <td class="source-num source-num-strong">${s.recruiter_contacts||0}</td>
+          <td class="source-num source-num-strong">${s.interviews||0}</td>
+          <td class="source-num source-num-strong">${s.offers||0}${s.accepted?`<span class="source-subnum">принято: ${s.accepted}</span>`:''}</td>
+          <td class="source-num">${escS(pctOrDash(s.application_conversion_pct))}</td>
+          <td class="source-num">${escS(pctOrDash(s.recruiter_conversion_pct))}</td>
+          <td class="source-num">${escS(pctOrDash(s.interview_conversion_pct))}</td>
+          <td class="source-num">${escS(pctOrDash(s.offer_conversion_pct))}</td>
           <td>${escS(dateOrDash(s.last_checked_at))}</td>
-        </tr>`).join('') || '<tr><td colspan="13" class="empty">По фильтру источников нет.</td></tr>'}
+          <td>${escS(dateOrDash(s.last_finding_at))}</td>
+          <td>${escS(dateOrDash(s.last_progress_at))}</td>
+        </tr>`).join('') || '<tr><td colspan="24" class="empty">По фильтру источников нет.</td></tr>'}
       </tbody></table></div>
     </div>
     <div class="section source-method"><h2>Как читать эффективность</h2>
@@ -82,6 +107,9 @@
       <p>${escS(data.methodology?.finding_definition||'')}</p>
       <p>${escS(data.methodology?.actionable_definition||'')}</p>
       <p>${escS(data.methodology?.interaction_definition||'')}</p>
+      <p>${escS(data.methodology?.conversion_definition||'')}</p>
+      <p>${escS(data.methodology?.attribution_definition||'')}</p>
+      <p>${escS(data.methodology?.conversion_rate_definition||'')}</p>
       <p>${escS(data.methodology?.dynamic_definition||'')}</p>
       <p class="section-note">${escS(data.methodology?.legacy_definition||'')}</p>
     </div>`;
