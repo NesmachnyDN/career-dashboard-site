@@ -90,6 +90,12 @@ const RU = {
   'not-assessed': 'не оценено',
   'weak-fit': 'слабое соответствие',
   'rejected': 'отказ',
+  'pass': 'gate пройден',
+  'fail': 'gate не пройден',
+  'unresolved': 'gate не подтверждён',
+  'mandatory': 'обязательное',
+  'optional': 'желательное',
+  'unclear': 'статус неясен',
 
   // Opportunity stages
   'discovered': 'найдена',
@@ -865,6 +871,84 @@ function vacancySignalClass(value, type='fit') {
   return 'signal-neutral';
 }
 
+function matchEvidenceSignalClass(value) {
+  if (value === 'Direct') return 'signal-positive';
+  if (['Adjacent','Partial'].includes(value)) return 'signal-warning';
+  if (value === 'Unsupported') return 'signal-negative';
+  return 'signal-neutral';
+}
+
+function compensationGateSignalClass(value) {
+  if (value === 'pass') return 'signal-positive';
+  if (value === 'fail') return 'signal-negative';
+  if (value === 'unresolved') return 'signal-warning';
+  return 'signal-neutral';
+}
+
+function matchConfidenceLabel(value) {
+  return ({high:'высокая', medium:'средняя', low:'низкая'})[value] || value || 'не указана';
+}
+
+function vacancyFitFactors(v) {
+  const matching = v.matching;
+  if (!matching) return '';
+  const counts = matching.mandatory_counts || {};
+  const total = (matching.importance_counts || {}).mandatory || 0;
+  const factors = ['Direct','Adjacent','Partial','Unsupported','Unknown']
+    .filter(name => Number(counts[name] || 0) > 0)
+    .map(name => `${name} ${counts[name]}`);
+  const line = total
+    ? `Обязательные: ${total} · ${factors.join(' · ') || 'без классификации'}`
+    : 'Обязательные требования не размечены';
+  const confidence = matching.confidence
+    ? `Уверенность: ${matchConfidenceLabel(matching.confidence)}`
+    : '';
+  return `<div class="vacancy-fit-factors">${esc(line)}${confidence ? `<span>${esc(confidence)}</span>` : ''}</div>`;
+}
+
+function vacancyMatchingDetails(v) {
+  const matching = v.matching;
+  if (!matching) return '';
+  const requirements = matching.requirements || [];
+  const blockers = matching.hard_blockers || [];
+  const gate = matching.compensation_gate || {status:'unresolved'};
+  const blockerMarkup = blockers.length ? `
+    <div class="match-blockers">
+      <strong>Hard blockers</strong>
+      ${blockers.map(blocker => `<div><span class="signal-chip signal-negative">${esc(blocker.code || 'blocker')}</span><span>${esc(blocker.reason || '')}</span>${blocker.resolution ? `<small>Разрешение: ${esc(blocker.resolution)}</small>` : ''}</div>`).join('')}
+    </div>` : `
+    <div class="match-blockers match-blockers-clear"><strong>Hard blockers</strong><span>нет подтверждённых</span></div>`;
+  const rows = requirements.map(requirement => {
+    const refs = Array.isArray(requirement.evidence_refs) ? requirement.evidence_refs.filter(Boolean) : [];
+    const sourceWording = requirement.source_wording && requirement.source_wording !== requirement.requirement
+      ? `<div class="match-source-wording">${esc(requirement.source_wording)}</div>`
+      : '';
+    return `<tr>
+      <td><strong>${esc(requirement.requirement || '—')}</strong>${sourceWording}</td>
+      <td>${esc(ru(requirement.importance || 'unclear'))}${requirement.central ? '<div class="match-central">центральное</div>' : ''}</td>
+      <td>${esc(requirement.category || '—')}</td>
+      <td><span class="signal-chip ${matchEvidenceSignalClass(requirement.classification)}">${esc(requirement.classification || 'Unknown')}</span></td>
+      <td>${esc(requirement.evidence_summary || '—')}${refs.length ? `<div class="match-evidence-refs">${refs.map(esc).join(' · ')}</div>` : ''}</td>
+    </tr>`;
+  }).join('');
+  const gateReason = gate.reason ? `<div class="match-gate-reason">${esc(gate.reason)}</div>` : '';
+  const normalized = gate.normalized_compensation
+    ? `<div class="match-gate-reason">Нормализовано: ${esc(gate.normalized_compensation)}</div>`
+    : '';
+  return `<details class="vacancy-match-details">
+    <summary>Матрица требований и доказательств <span>${requirements.length}</span></summary>
+    <div class="match-summary-grid">
+      <div><span>Fit score</span><strong>${v.fit_score != null ? `${esc(v.fit_score)}%` : 'не рассчитан'}</strong></div>
+      <div><span>Hard blockers</span><strong>${esc(blockers.length)}</strong></div>
+      <div><span>Compensation gate</span><strong class="signal-chip ${compensationGateSignalClass(gate.status)}">${esc(ru(gate.status || 'unresolved'))}</strong></div>
+    </div>
+    ${matching.fit_summary ? `<p class="match-fit-summary">${esc(matching.fit_summary)}</p>` : ''}
+    ${blockerMarkup}
+    <div class="match-compensation-gate"><strong>Compensation gate</strong>${gateReason}${normalized}</div>
+    ${requirements.length ? `<div class="match-table-wrap"><table class="match-table"><thead><tr><th>Требование</th><th>Важность</th><th>Категория</th><th>Evidence</th><th>Подтверждение</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<div class="empty-inline">Матрица требований пока не заполнена.</div>'}
+  </details>`;
+}
+
 function vacancyAssessment(v) {
   const primary = v.recommendation || v.fit_status || 'not-assessed';
   const score = v.fit_score != null
@@ -873,13 +957,20 @@ function vacancyAssessment(v) {
   const fit = v.fit_status && v.recommendation && v.fit_status !== v.recommendation
     ? `<div class="vacancy-field-note">${esc(ru(v.fit_status))}</div>`
     : '';
-  return `<div class="vacancy-assessment">${score}<span class="signal-chip ${vacancySignalClass(primary)}">${esc(ru(primary))}</span>${fit}</div>`;
+  const blockers = v.matching?.hard_blocker_count
+    ? `<span class="signal-chip signal-negative">hard blockers: ${esc(v.matching.hard_blocker_count)}</span>`
+    : '';
+  return `<div class="vacancy-assessment">${score}<span class="signal-chip ${vacancySignalClass(primary)}">${esc(ru(primary))}</span>${fit}${vacancyFitFactors(v)}${blockers}</div>`;
 }
 
 function vacancyCompensation(v) {
   const rawStatus = v.compensation_status || 'unknown';
   const value = v.compensation && v.compensation !== 'unknown' ? ru(v.compensation) : '';
-  return `<span class="signal-chip ${vacancySignalClass(rawStatus,'compensation')}">${esc(ru(rawStatus))}</span>${value ? `<div class="vacancy-field-note">${esc(value)}</div>` : ''}`;
+  const gate = v.matching?.compensation_gate;
+  const gateMarkup = gate
+    ? `<div class="vacancy-compensation-gate"><span>Compensation gate</span><span class="signal-chip ${compensationGateSignalClass(gate.status)}">${esc(ru(gate.status || 'unresolved'))}</span></div>`
+    : '';
+  return `<span class="signal-chip ${vacancySignalClass(rawStatus,'compensation')}">${esc(ru(rawStatus))}</span>${value ? `<div class="vacancy-field-note">${esc(value)}</div>` : ''}${gateMarkup}`;
 }
 
 function vacancySort(a,b) {
@@ -990,6 +1081,7 @@ function vacancyCard(v, index=0) {
         ${sourceLink}
       </div>
     </div>
+    ${vacancyMatchingDetails(v)}
   </article>`;
 }
 
