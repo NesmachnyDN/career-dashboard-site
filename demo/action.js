@@ -1,6 +1,6 @@
 (() => {
   const originalRender = render;
-  titles.action = 'Центр действий';
+  titles.action = 'Действия';
   let actionFilter = 'all';
 
   const data = () => snapshot?.analytics?.action_center || {
@@ -138,7 +138,7 @@
     const filtered = all.filter(actionMatchesFilter).sort(actionSort);
 
     return `<div class="view-note action-safety-note">
-      Центр действий — производная проекция только для чтения. Он не отправляет сообщения, не откликается на вакансии и не меняет состояние репозитория. Подготовка только копирует контекст задачи для последующего явного решения.
+      Действия — оперативная очередь решений и следующих шагов. Здесь показано только то, что требует внимания сейчас: что сделать, к какому сроку и какие условия ещё не закрыты. Раздел только для чтения и ничего не отправляет автоматически.
     </div>
     <div class="grid cards action-metrics">
       ${metric('Требуют действия', all.length)}
@@ -147,7 +147,7 @@
       ${metric('Незакрытые условия', gates)}
     </div>
     <div class="section">
-      <div class="section-head"><div><h2>Решения и следующие шаги</h2><p class="section-note">Одно действие на процесс; источник — каноническое следующее действие.</p></div></div>
+      <div class="section-head"><div><h2>Что требует внимания</h2><p class="section-note">Одно текущее действие на процесс. Полная история взаимодействий находится в разделе «Процессы».</p></div></div>
       <div class="action-filter-row">
         ${filterButton('all', 'Все', all.length)}
         ${filterButton('overdue', 'Просрочено', overdue)}

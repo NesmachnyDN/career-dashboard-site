@@ -413,7 +413,7 @@ function startApp() {
   render();
 }
 
-const titles = {demo:'О демо',today:'Сегодня',health:'Состояние системы',vacancies:'Все вакансии',opportunities:'Отклики / контакты',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
+const titles = {demo:'О демо',today:'Сегодня',health:'Состояние системы',vacancies:'Все вакансии',opportunities:'Процессы',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
 function render() {
   $('#view-title').textContent = titles[currentView];
   const fn = {demo:renderDemo,today:renderToday,health:renderHealth,vacancies:renderVacancies,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
@@ -1203,12 +1203,11 @@ function opportunityIntelligenceDetails(o) {
   const brief = intel.brief || {};
   const readiness = intel.tailoring_readiness || {};
   const gates = Array.isArray(intel.unresolved_gates) ? intel.unresolved_gates : [];
-  const next = intel.next_action || {text:o.next_action || "unknown",date:o.next_action_date || "unknown"};
-  const nextDate = next.date && !["unknown","none","to-verify"].includes(next.date) ? ` · до ${esc(fmtDate(next.date))}` : "";
+
   return `<div class="opportunity-intelligence">
     <div class="opportunity-intelligence-head">
       <div>
-        <span class="vacancy-field-label">Opportunity brief</span>
+        <span class="vacancy-field-label">Состояние процесса</span>
         <strong>${esc(ru(brief.current_stage || o.current_stage || "unknown"))} · fit: ${esc(ru(brief.fit_status || o.fit_status || "not-assessed"))}</strong>
         <small>Hard blockers: ${esc(brief.hard_blocker_count || 0)} · неизвестных обязательных факторов: ${esc(brief.unknown_count || 0)}</small>
       </div>
@@ -1222,10 +1221,6 @@ function opportunityIntelligenceDetails(o) {
     <div class="opportunity-gates">
       <strong>Нерешённые gates / неизвестные</strong>
       ${gates.length ? gates.map(g=>`<div><span class="signal-chip ${opportunityIntelligenceSignalClass(g.status)}">${esc(ru(g.status || "unknown"))}</span><span>${esc(g.label || "")}</span></div>`).join("") : `<span class="opportunity-gates-clear">существенных нерешённых условий нет</span>`}
-    </div>
-    <div class="opportunity-single-action">
-      <span>Единственное следующее действие</span>
-      <strong>${esc(ru(next.text || "unknown"))}${nextDate}</strong>
     </div>
   </div>`;
 }
@@ -1274,7 +1269,7 @@ function opportunityQuickFilters(opps) {
     ['rejected','Отказы'],
     ['closed','Закрытые'],
   ];
-  return `<div class="status-filters" aria-label="Фильтр откликов по состоянию">${options.map(([value,label]) =>
+  return `<div class="status-filters" aria-label="Фильтр процессов по состоянию">${options.map(([value,label]) =>
     `<button type="button" class="status-filter ${opportunityStatusFilter === value ? 'active' : ''}" data-opportunity-status="${value}">${label}<strong>${counts[value]}</strong></button>`
   ).join('')}</div>`;
 }
@@ -1294,7 +1289,7 @@ function opportunityPagination(total, page, totalPages) {
     previous = p;
     return `${gap}<button type="button" class="page-button ${p===page?'active':''}" data-opportunity-page="${p}" ${p===page?'aria-current="page"':''}>${p}</button>`;
   }).join('');
-  return `<nav class="pagination" aria-label="Страницы откликов">
+  return `<nav class="pagination" aria-label="Страницы процессов">
     <button type="button" class="page-button" data-opportunity-page="${Math.max(1,page-1)}" ${page===1?'disabled':''}>← Назад</button>
     <div class="page-numbers">${numbered}</div>
     <button type="button" class="page-button" data-opportunity-page="${Math.min(totalPages,page+1)}" ${page===totalPages?'disabled':''}>Далее →</button>
@@ -1315,11 +1310,13 @@ function opportunityCard(o,index) {
   const interactions = o.interactions || [];
   const interactionCount = interactions.length;
   const sourceLink = link('Исходная вакансия',o.source_url);
-  const nextAction = ru(o.next_action || 'none');
-  const readiness = o.intelligence?.tailoring_readiness?.status;
-  const readinessPreview = readiness
-    ? `<span class="signal-chip ${opportunityIntelligenceSignalClass(readiness)}">${esc(ru(readiness))}</span>`
-    : '';
+  const lastInteraction = interactions
+    .slice()
+    .sort((a,b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0))[0];
+  const lastInteractionTitle = lastInteraction
+    ? ru(lastInteraction.title || lastInteraction.event || 'взаимодействие')
+    : 'контактов пока нет';
+  const lastInteractionDate = lastInteraction?.timestamp ? fmtDate(lastInteraction.timestamp) : '—';
   return `<article class="opportunity-card ${expanded?'expanded':''}">
     <button type="button" class="opportunity-preview" data-opportunity-toggle="${esc(key)}" aria-expanded="${expanded?'true':'false'}">
       <span class="opportunity-status">${opportunityStatusChip(o.current_stage)}</span>
@@ -1329,9 +1326,9 @@ function opportunityCard(o,index) {
         <span class="opportunity-preview-meta">${esc(ru(o.role_track || ''))} · обновлено ${esc(fmtDate(o.last_updated_at))}</span>
       </span>
       <span class="opportunity-next">
-        <small>Следующее действие:</small>
-        <span>${esc(nextAction)}${o.next_action_date && !['unknown','none','to-verify'].includes(o.next_action_date) ? ` · ${esc(fmtDate(o.next_action_date))}` : ''}</span>
-        ${readinessPreview}
+        <small>Последний контакт</small>
+        <span>${esc(lastInteractionTitle)}</span>
+        <small>${esc(lastInteractionDate)}</small>
       </span>
       <span class="opportunity-interactions"><strong>${interactionCount}</strong><small>${interactionCountLabel(interactionCount)}</small></span>
       <span class="opportunity-toggle-label">${expanded?'Свернуть':'Развернуть'} <i class="chevron" aria-hidden="true">⌄</i></span>
@@ -1350,7 +1347,7 @@ function opportunityCard(o,index) {
 
 function renderOpportunities() {
   const searchable = snapshot.opportunities.filter(containsQuery).sort(opportunitySort);
-  if (!searchable.length) return '<div class="empty">В разделе откликов и взаимодействий пока нет подходящих записей.</div>';
+  if (!searchable.length) return '<div class="empty">В разделе процессов пока нет подходящих записей.</div>';
 
   const exactStatuses = [...new Set(snapshot.opportunities.map(o=>o.current_stage).filter(Boolean))]
     .sort((a,b)=>ru(a).localeCompare(ru(b),'ru'));
@@ -1367,7 +1364,7 @@ function renderOpportunities() {
   const firstShown = filtered.length ? start + 1 : 0;
   const lastShown = Math.min(start + opportunityPageSize,filtered.length);
 
-  return `<div class="view-note">Здесь показаны вакансии, по которым уже были отклики или контакты. Карточки свернуты по умолчанию, чтобы список оставался компактным; нажмите на строку, чтобы открыть полную историю. Отказы всегда начинают просмотр в свернутом состоянии.</div>
+  return `<div class="view-note">Процессы — это реестр вакансий, по которым уже началось взаимодействие. Здесь важны текущее состояние и история контактов; текущие задачи и сроки вынесены отдельно в раздел «Действия».</div>
     <div class="opportunity-toolbar">
       ${opportunityQuickFilters(searchable)}
       <div class="filters opportunity-selects">
@@ -1388,7 +1385,7 @@ function renderOpportunities() {
       <span>Показано ${firstShown}–${lastShown} из ${filtered.length}</span>
       <span>Сначала: вакансии в работе и новые, затем закрытые</span>
     </div>
-    <div class="opportunity-list">${pageItems.map((o,index)=>opportunityCard(o,start+index)).join('') || '<div class="empty">По выбранным фильтрам откликов нет.</div>'}</div>
+    <div class="opportunity-list">${pageItems.map((o,index)=>opportunityCard(o,start+index)).join('') || '<div class="empty">По выбранным фильтрам процессов нет.</div>'}</div>
     ${opportunityPagination(filtered.length,opportunityPage,totalPages)}`;
 }
 
