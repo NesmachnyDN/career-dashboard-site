@@ -129,6 +129,52 @@
     </div>`;
   }
 
+  const targetStateLabel = state => ({
+    'active-process':'Активный процесс',
+    'actionable-signal':'Есть целевая вакансия',
+    'qualified-signal':'Есть релевантная вакансия',
+    'coverage-debt':'Нужно проверить',
+    'access-risk':'Проблема доступа',
+    'observed':'Есть находки',
+    'monitoring':'Мониторинг',
+  }[state] || state || '—');
+
+  function targetAccountsSection(data) {
+    const model = data?.target_accounts;
+    if (!model) return '';
+    const summary = model.summary || {};
+    const rows = model.accounts || [];
+    return `<div class="section">
+      <div class="section-head"><div><h2>Целевые работодатели</h2><p class="section-note">Account-centric представление поверх существующих employer source registries: один список стратегических компаний без дублирования URL и source facts. Приоритет high для mandatory employer sources и из watchlist priority.</p></div></div>
+      <div class="grid cards source-metrics">
+        <div class="metric"><span class="metric-label">Целевых работодателей</span><strong>${summary.total||0}</strong><span class="metric-note">high: ${summary.high_priority||0} · medium: ${summary.medium_priority||0}</span></div>
+        <div class="metric"><span class="metric-label">Требуют внимания</span><strong>${summary.needs_attention||0}</strong><span class="metric-note">coverage debt / access risk</span></div>
+        <div class="metric"><span class="metric-label">Активный процесс</span><strong>${summary.active_process||0}</strong><span class="metric-note">есть подтверждённый downstream</span></div>
+        <div class="metric"><span class="metric-label">Целевой сигнал</span><strong>${summary.actionable_signal||0}</strong><span class="metric-note">actionable за 28 дней</span></div>
+      </div>
+      <div class="source-table-wrap"><table class="source-table"><thead><tr>
+        <th>Работодатель</th><th>Приоритет</th><th>Контур</th><th>Состояние</th><th>Проверок 28д</th><th>Доступность</th><th>Квалиф.</th><th>Целевых</th><th>Отклик</th><th>Рекрутер</th><th>Интервью</th><th>Оффер</th><th>Последняя попытка</th><th>Последняя находка</th>
+      </tr></thead><tbody>
+        ${rows.map(account => `<tr>
+          <td><div class="source-name">${safe(account.entrypoint)?`<a href="${escS(account.entrypoint)}" target="_blank" rel="noopener">${escS(account.name)}</a>`:escS(account.name)}</div></td>
+          <td>${escS(account.priority)}</td>
+          <td>${escS(tierLabel(account.tier))}</td>
+          <td>${escS(targetStateLabel(account.state))}</td>
+          <td class="source-num">${account.checks_28d||0}</td>
+          <td class="source-num">${escS(pctOrDash(account.availability_pct))}</td>
+          <td class="source-num">${account.qualified_28d||0}</td>
+          <td class="source-num source-num-strong">${account.actionable_28d||0}</td>
+          <td class="source-num">${account.applications||0}</td>
+          <td class="source-num">${account.recruiter_contacts||0}</td>
+          <td class="source-num">${account.interviews||0}</td>
+          <td class="source-num">${account.offers||0}</td>
+          <td>${escS(dateOrDash(account.last_attempt_at))}</td>
+          <td>${escS(dateOrDash(account.last_finding_at))}</td>
+        </tr>`).join('') || '<tr><td colspan="14" class="empty">Целевые работодатели не настроены.</td></tr>'}
+      </tbody></table></div>
+    </div>`;
+  }
+
   function renderSources() {
     const root = document.querySelector('#view');
     const data = snapshot?.source_analytics;
@@ -155,7 +201,7 @@
       <div class="metric"><span class="metric-label">Дошли до оффера</span><strong>${sum.offers||0}</strong><span class="metric-note">${sum.accepted?`принято: ${sum.accepted}`:'offer/contract discussion'}</span></div>
     </div>
     ${sum.scheduled_unlinked_opportunities ? `<div class="view-note">Не атрибутировано к источнику: <strong>${sum.scheduled_unlinked_opportunities}</strong> opportunity из автопоиска без надёжного discovery_key. Они намеренно исключены из source conversion, чтобы не приписывать результат площадке задним числом.</div>` : ''}
-    ${stream === 'all' || stream === 'Основная работа' ? employerDirectSection(data, all) : ''}
+    ${stream === 'all' || stream === 'Основная работа' ? employerDirectSection(data, all) + targetAccountsSection(data) : ''}
     <div class="section">
       <div class="section-head"><div><h2>Источники сбора данных</h2><p class="section-note">Фиксированные источники берутся из реестров pipeline. Динамические появляются только после фактической проверки во время запуска.</p></div></div>
       <div class="source-controls">
@@ -204,6 +250,7 @@
       <p>${escS(data.methodology?.attribution_definition||'')}</p>
       <p>${escS(data.methodology?.conversion_rate_definition||'')}</p>
       <p>${escS(data.methodology?.employer_direct_definition||'')}</p>
+      <p>${escS(data.methodology?.target_account_definition||'')}</p>
       <p>${escS(data.methodology?.dynamic_definition||'')}</p>
       <p class="section-note">${escS(data.methodology?.legacy_definition||'')}</p>
     </div>`;
