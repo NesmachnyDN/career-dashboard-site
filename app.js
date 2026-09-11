@@ -1741,7 +1741,8 @@ function renderAnalytics() {
   <div class="section analytics-section">
     <div class="section-head"><div><h2>Как вакансии появились</h2><p class="section-note">Происхождение вакансии фиксируется отдельно от её текущего состояния.</p></div></div>
     <div class="card chart-card">${bars(snapshot.analytics.vacancy_origin_counts, origin => ({view:'vacancies',origin}), ()=>'origin')}</div>
-  </div>`;
+  </div>
+  ${renderProductValidation()}`;
 }
 
 function renderRuns() {
