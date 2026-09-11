@@ -58,6 +58,57 @@
     return value === null || value === undefined ? '—' : `${value}${suffix}`;
   }
 
+  const priorityClassLabel = value => ({
+    'coverage-debt':'Нужно проверить',
+    'downstream-progress':'Downstream-прогресс',
+    'actionable-yield':'Целевой yield',
+    'qualified-yield':'Квалифицированный yield',
+    'exploration-needed':'Нужно исследовать',
+    'observed-yield':'Есть находки',
+    'access-risk':'Риск доступа',
+    'low-yield-monitoring':'Низкий yield / мониторинг',
+  }[value] || value || '—');
+
+  function sourcePrioritizationSection(data) {
+    const model = data?.source_prioritization;
+    if (!model) return '';
+    const summary = model.summary || {};
+    const rows = model.exploratory_queue || [];
+    return `<div class="section">
+      <div class="section-head"><div><h2>Приоритет проверки источников</h2><p class="section-note">Сначала всегда проверяются все обязательные источники (${model.mandatory_count||0}). Очередь ниже управляет только дополнительными проверками: 7-дневный долг ротации → downstream → целевой/квалифицированный yield → исследование → слабые сигналы. Низкий yield не отключает источник автоматически.</p></div></div>
+      <div class="grid cards source-metrics">
+        <div class="metric"><span class="metric-label">Обязательных</span><strong>${model.mandatory_count||0}</strong><span class="metric-note">всегда вне очереди и проверяются первыми</span></div>
+        <div class="metric"><span class="metric-label">Дополнительных в очереди</span><strong>${summary.exploratory_count||0}</strong><span class="metric-note">конкретные проверяемые источники</span></div>
+        <div class="metric"><span class="metric-label">Долг ротации</span><strong>${summary.coverage_debt||0}</strong><span class="metric-note">нет попытки за ${model.rotation_window_days||7} дней</span></div>
+        <div class="metric"><span class="metric-label">Доказали полезность</span><strong>${summary.proven_useful||0}</strong><span class="metric-note">downstream / actionable / qualified</span></div>
+        <div class="metric"><span class="metric-label">Нужно исследовать</span><strong>${summary.exploration_needed||0}</strong><span class="metric-note">ещё нет измерения в текущем окне</span></div>
+        <div class="metric"><span class="metric-label">Риск доступа</span><strong>${summary.access_risk||0}</strong><span class="metric-note">только недоступные попытки</span></div>
+      </div>
+      <div class="source-table-wrap"><table class="source-table"><thead><tr>
+        <th>#</th><th>Источник</th><th>Класс</th><th>Стратег. приоритет</th><th>Контур</th><th>Попыток 28д</th><th>Проверок</th><th>Новых</th><th>Квалиф.</th><th>Целевых</th><th>Отклик</th><th>Рекрутер</th><th>Интервью</th><th>Оффер</th><th>Последняя попытка</th><th>Почему сейчас</th>
+      </tr></thead><tbody>
+        ${rows.map(row => `<tr>
+          <td class="source-num source-num-strong">${row.rank}</td>
+          <td><div class="source-name">${escS(row.name)}</div><div class="source-meta">${escS(row.source_ref||'')}</div></td>
+          <td>${escS(priorityClassLabel(row.priority_class))}</td>
+          <td>${escS(row.strategic_priority || '—')}</td>
+          <td>${escS(tierLabel(row.tier))}</td>
+          <td class="source-num">${row.attempts_28d||0}</td>
+          <td class="source-num">${row.checks_28d||0}</td>
+          <td class="source-num">${row.new_unique_28d||0}</td>
+          <td class="source-num">${row.qualified_28d||0}</td>
+          <td class="source-num source-num-strong">${row.actionable_28d||0}</td>
+          <td class="source-num">${row.applications||0}</td>
+          <td class="source-num">${row.recruiter_contacts||0}</td>
+          <td class="source-num">${row.interviews||0}</td>
+          <td class="source-num">${row.offers||0}</td>
+          <td>${escS(dateOrDash(row.last_attempt_at))}</td>
+          <td>${escS(row.reason||'—')}</td>
+        </tr>`).join('') || '<tr><td colspan="16" class="empty">Дополнительных конкретных источников для приоритизации нет.</td></tr>'}
+      </tbody></table></div>
+    </div>`;
+  }
+
   function employerDirectSection(data, all) {
     const model = data?.employer_direct;
     if (!model) return '';
@@ -201,7 +252,7 @@
       <div class="metric"><span class="metric-label">Дошли до оффера</span><strong>${sum.offers||0}</strong><span class="metric-note">${sum.accepted?`принято: ${sum.accepted}`:'offer/contract discussion'}</span></div>
     </div>
     ${sum.scheduled_unlinked_opportunities ? `<div class="view-note">Не атрибутировано к источнику: <strong>${sum.scheduled_unlinked_opportunities}</strong> opportunity из автопоиска без надёжного discovery_key. Они намеренно исключены из source conversion, чтобы не приписывать результат площадке задним числом.</div>` : ''}
-    ${stream === 'all' || stream === 'Основная работа' ? employerDirectSection(data, all) + targetAccountsSection(data) : ''}
+    ${stream === 'all' || stream === 'Основная работа' ? sourcePrioritizationSection(data) + employerDirectSection(data, all) + targetAccountsSection(data) : ''}
     <div class="section">
       <div class="section-head"><div><h2>Источники сбора данных</h2><p class="section-note">Фиксированные источники берутся из реестров pipeline. Динамические появляются только после фактической проверки во время запуска.</p></div></div>
       <div class="source-controls">
@@ -251,6 +302,7 @@
       <p>${escS(data.methodology?.conversion_rate_definition||'')}</p>
       <p>${escS(data.methodology?.employer_direct_definition||'')}</p>
       <p>${escS(data.methodology?.target_account_definition||'')}</p>
+      <p>${escS(data.methodology?.prioritization_definition||'')}</p>
       <p>${escS(data.methodology?.dynamic_definition||'')}</p>
       <p class="section-note">${escS(data.methodology?.legacy_definition||'')}</p>
     </div>`;
