@@ -37,6 +37,98 @@
     return `<strong>${escS(numberOrDash(s.checks))}</strong>${unavailable?`<span class="source-subnum">+ ${unavailable} недоступ.</span>`:''}`;
   }
 
+  const effectivenessSignalLabel = signal => ({
+    'downstream-progress':'Есть downstream-прогресс',
+    'interaction':'Есть взаимодействие',
+    'actionable-yield':'Есть целевые вакансии',
+    'qualified-yield':'Есть квалифицированные',
+    'observed-only':'Есть находки без квалификации',
+    'zero-qualified-yield':'Нет квалифицированных',
+    'unavailable-only':'Только недоступность',
+    'not-covered':'Не покрыт за 28 дней',
+  }[signal] || signal || '—');
+
+  const tierLabel = tier => ({
+    mandatory:'Обязательный',
+    rotation:'Ротация',
+    exploratory:'Дополнительный',
+  }[tier] || tier || '—');
+
+  function cohortValue(value, suffix='') {
+    return value === null || value === undefined ? '—' : `${value}${suffix}`;
+  }
+
+  function employerDirectSection(data, all) {
+    const model = data?.employer_direct;
+    if (!model) return '';
+    const employer = model.summary || {};
+    const benchmark = model.benchmark || {};
+    const rows = all
+      .filter(s => s.source_group === 'employer-direct' && s.enabled !== false)
+      .sort((a,b) => {
+        const aw = a.window_28d || {}, bw = b.window_28d || {};
+        const num = value => Number(value || 0);
+        return num(bw.accepted)-num(aw.accepted)
+          || num(bw.offers)-num(aw.offers)
+          || num(bw.interviews)-num(aw.interviews)
+          || num(bw.recruiter_contacts)-num(aw.recruiter_contacts)
+          || num(bw.applications)-num(aw.applications)
+          || num(bw.actionable)-num(aw.actionable)
+          || num(bw.qualified)-num(aw.qualified)
+          || num(bw.new_unique)-num(aw.new_unique)
+          || num(bw.checks)-num(aw.checks)
+          || String(a.name).localeCompare(String(b.name),'ru');
+      });
+
+    const comparisonRows = [
+      ['Успешных проверок','checks'],
+      ['Доступность','availability_pct','%'],
+      ['Новых / проверку','new_unique_per_check'],
+      ['Квалифицированных / проверку','qualified_per_check'],
+      ['Целевых / проверку','actionable_per_check'],
+      ['Конверсия в отклик','application_conversion_pct','%'],
+    ];
+
+    return `<div class="section">
+      <div class="section-head"><div><h2>Employer-direct effectiveness</h2><p class="section-note">Окно ${model.window_days || 28} дней на дату ${escS(dateOrDash(model.as_of))}. Официальные карьерные источники сравниваются с HH.ru + Getmatch + Habr Career + Setka. Низкий yield не является автоматическим основанием отключать источник.</p></div></div>
+      <div class="grid cards source-metrics">
+        <div class="metric"><span class="metric-label">Employer-direct источников</span><strong>${employer.source_count||0}</strong><span class="metric-note">попытки были по ${employer.attempted_sources||0}</span></div>
+        <div class="metric"><span class="metric-label">Ротация за 7 дней</span><strong>${model.rotation_attempted_7d||0}/${model.rotation_enabled||0}</strong><span class="metric-note">успешно проверено: ${model.rotation_checked_7d||0}</span></div>
+        <div class="metric"><span class="metric-label">Доступность employer-direct</span><strong>${cohortValue(employer.availability_pct,'%')}</strong><span class="metric-note">${employer.checks||0} успешных из ${employer.attempts||0} попыток</span></div>
+        <div class="metric"><span class="metric-label">Целевых / проверку</span><strong>${cohortValue(employer.actionable_per_check)}</strong><span class="metric-note">benchmark: ${cohortValue(benchmark.actionable_per_check)}</span></div>
+        <div class="metric"><span class="metric-label">Продуктивных источников</span><strong>${model.productive_sources||0}</strong><span class="metric-note">из ${employer.source_count||0} employer-direct</span></div>
+        <div class="metric"><span class="metric-label">Без qualified yield</span><strong>${model.zero_qualified_sources||0}</strong><span class="metric-note">при хотя бы одной успешной проверке</span></div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Метрика за 28 дней</th><th>Employer-direct</th><th>HH / Getmatch / Habr / Setka</th></tr></thead>
+        <tbody>${comparisonRows.map(([label,key,suffix=''])=>`<tr><td>${escS(label)}</td><td class="source-num">${escS(cohortValue(employer[key],suffix))}</td><td class="source-num">${escS(cohortValue(benchmark[key],suffix))}</td></tr>`).join('')}</tbody>
+      </table></div>
+      <div class="source-table-wrap"><table class="source-table"><thead><tr>
+        <th>Работодатель</th><th>Контур</th><th>Приоритет</th><th>Попыток</th><th>Доступность</th><th>Новых</th><th>Квалиф.</th><th>Целевых</th><th>Отклик</th><th>Рекрутер</th><th>Интервью</th><th>Оффер</th><th>Сигнал</th><th>Последняя попытка</th>
+      </tr></thead><tbody>
+        ${rows.map(s => {
+          const w = s.window_28d || {};
+          return `<tr>
+            <td><div class="source-name">${safe(s.entrypoint)?`<a href="${escS(s.entrypoint)}" target="_blank" rel="noopener">${escS(s.name)}</a>`:escS(s.name)}</div></td>
+            <td>${escS(tierLabel(s.employer_direct_tier))}</td>
+            <td>${escS(s.priority || '—')}</td>
+            <td class="source-num">${w.attempts||0}</td>
+            <td class="source-num">${escS(pctOrDash(w.availability_pct))}</td>
+            <td class="source-num">${w.new_unique||0}</td>
+            <td class="source-num">${w.qualified||0}</td>
+            <td class="source-num source-num-strong">${w.actionable||0}</td>
+            <td class="source-num">${w.applications||0}</td>
+            <td class="source-num">${w.recruiter_contacts||0}</td>
+            <td class="source-num">${w.interviews||0}</td>
+            <td class="source-num">${w.offers||0}</td>
+            <td>${escS(effectivenessSignalLabel(w.signal))}</td>
+            <td>${escS(dateOrDash(w.last_attempt_at))}</td>
+          </tr>`;
+        }).join('') || '<tr><td colspan="14" class="empty">Employer-direct источники не настроены.</td></tr>'}
+      </tbody></table></div>
+    </div>`;
+  }
+
   function renderSources() {
     const root = document.querySelector('#view');
     const data = snapshot?.source_analytics;
@@ -63,6 +155,7 @@
       <div class="metric"><span class="metric-label">Дошли до оффера</span><strong>${sum.offers||0}</strong><span class="metric-note">${sum.accepted?`принято: ${sum.accepted}`:'offer/contract discussion'}</span></div>
     </div>
     ${sum.scheduled_unlinked_opportunities ? `<div class="view-note">Не атрибутировано к источнику: <strong>${sum.scheduled_unlinked_opportunities}</strong> opportunity из автопоиска без надёжного discovery_key. Они намеренно исключены из source conversion, чтобы не приписывать результат площадке задним числом.</div>` : ''}
+    ${employerDirectSection(data, all)}
     <div class="section">
       <div class="section-head"><div><h2>Источники сбора данных</h2><p class="section-note">Фиксированные источники берутся из реестров pipeline. Динамические появляются только после фактической проверки во время запуска.</p></div></div>
       <div class="source-controls">
@@ -110,6 +203,7 @@
       <p>${escS(data.methodology?.conversion_definition||'')}</p>
       <p>${escS(data.methodology?.attribution_definition||'')}</p>
       <p>${escS(data.methodology?.conversion_rate_definition||'')}</p>
+      <p>${escS(data.methodology?.employer_direct_definition||'')}</p>
       <p>${escS(data.methodology?.dynamic_definition||'')}</p>
       <p class="section-note">${escS(data.methodology?.legacy_definition||'')}</p>
     </div>`;
