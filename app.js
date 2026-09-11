@@ -77,6 +77,11 @@ const RU = {
   'low-priority': 'низкий приоритет',
   'skip': 'пропустить',
   'pursue-after-gates': 'рассматривать после проверки условий',
+  'assess': 'нужно оценить',
+  'closed': 'закрыта',
+  'blocked': 'заблокировано',
+  'hold': 'сначала закрыть условия',
+  'ready': 'готово',
   'TAKE': 'брать',
   'CONSIDER': 'рассмотреть',
   'SKIP': 'пропустить',
@@ -1198,6 +1203,46 @@ function opportunityStatusChip(stage) {
   return `<span class="status-chip ${opportunityStatusClass(value)}">${esc(ru(value))}</span>`;
 }
 
+function opportunityIntelligenceSignalClass(value) {
+  if (["ready","pass","pursue"].includes(value)) return "signal-positive";
+  if (["hold","unresolved","conditional","assess"].includes(value)) return "signal-warning";
+  if (["blocked","fail","skip"].includes(value)) return "signal-negative";
+  return "signal-neutral";
+}
+
+function opportunityIntelligenceDetails(o) {
+  const intel = o.intelligence;
+  if (!intel) return `<div class="opportunity-intelligence-empty">Opportunity intelligence пока недоступен для этой исторической записи.</div>`;
+  const brief = intel.brief || {};
+  const readiness = intel.tailoring_readiness || {};
+  const gates = Array.isArray(intel.unresolved_gates) ? intel.unresolved_gates : [];
+  const next = intel.next_action || {text:o.next_action || "unknown",date:o.next_action_date || "unknown"};
+  const nextDate = next.date && !["unknown","none","to-verify"].includes(next.date) ? ` · до ${esc(fmtDate(next.date))}` : "";
+  return `<div class="opportunity-intelligence">
+    <div class="opportunity-intelligence-head">
+      <div>
+        <span class="vacancy-field-label">Opportunity brief</span>
+        <strong>${esc(ru(brief.current_stage || o.current_stage || "unknown"))} · fit: ${esc(ru(brief.fit_status || o.fit_status || "not-assessed"))}</strong>
+        <small>Hard blockers: ${esc(brief.hard_blocker_count || 0)} · неизвестных обязательных факторов: ${esc(brief.unknown_count || 0)}</small>
+      </div>
+      <div class="opportunity-intelligence-kpis">
+        <span><small>Рекомендация</small><b class="signal-chip ${opportunityIntelligenceSignalClass(intel.recommendation)}">${esc(ru(intel.recommendation || "assess"))}</b></span>
+        <span><small>Compensation gate</small><b class="signal-chip ${opportunityIntelligenceSignalClass(intel.compensation_gate?.status)}">${esc(ru(intel.compensation_gate?.status || "unresolved"))}</b></span>
+        <span><small>Готовность к адаптации</small><b class="signal-chip ${opportunityIntelligenceSignalClass(readiness.status)}">${esc(ru(readiness.status || "hold"))}</b></span>
+      </div>
+    </div>
+    <div class="opportunity-readiness-reason">${esc(readiness.reason || "")}</div>
+    <div class="opportunity-gates">
+      <strong>Нерешённые gates / неизвестные</strong>
+      ${gates.length ? gates.map(g=>`<div><span class="signal-chip ${opportunityIntelligenceSignalClass(g.status)}">${esc(ru(g.status || "unknown"))}</span><span>${esc(g.label || "")}</span></div>`).join("") : `<span class="opportunity-gates-clear">существенных нерешённых условий нет</span>`}
+    </div>
+    <div class="opportunity-single-action">
+      <span>Единственное следующее действие</span>
+      <strong>${esc(ru(next.text || "unknown"))}${nextDate}</strong>
+    </div>
+  </div>`;
+}
+
 function opportunityKey(o, index) {
   return String(o.opportunity_id || o.id || o.title || `opportunity-${index}`);
 }
@@ -1284,6 +1329,10 @@ function opportunityCard(o,index) {
   const interactionCount = interactions.length;
   const sourceLink = link('Исходная вакансия',o.source_url);
   const nextAction = ru(o.next_action || 'none');
+  const readiness = o.intelligence?.tailoring_readiness?.status;
+  const readinessPreview = readiness
+    ? `<span class="signal-chip ${opportunityIntelligenceSignalClass(readiness)}">${esc(ru(readiness))}</span>`
+    : '';
   return `<article class="opportunity-card ${expanded?'expanded':''}">
     <button type="button" class="opportunity-preview" data-opportunity-toggle="${esc(key)}" aria-expanded="${expanded?'true':'false'}">
       <span class="opportunity-status">${opportunityStatusChip(o.current_stage)}</span>
@@ -1295,6 +1344,7 @@ function opportunityCard(o,index) {
       <span class="opportunity-next">
         <small>Следующее действие:</small>
         <span>${esc(nextAction)}${o.next_action_date && !['unknown','none','to-verify'].includes(o.next_action_date) ? ` · ${esc(fmtDate(o.next_action_date))}` : ''}</span>
+        ${readinessPreview}
       </span>
       <span class="opportunity-interactions"><strong>${interactionCount}</strong><small>${interactionCountLabel(interactionCount)}</small></span>
       <span class="opportunity-toggle-label">${expanded?'Свернуть':'Развернуть'} <i class="chevron" aria-hidden="true">⌄</i></span>
@@ -1305,6 +1355,7 @@ function opportunityCard(o,index) {
         ${sourceLink?`<div class="actions">${sourceLink}</div>`:''}
       </div>
       ${o.compensation?`<p class="meta">Компенсация: ${esc(ru(o.compensation))}</p>`:''}
+      ${opportunityIntelligenceDetails(o)}
       <div class="timeline">${interactions.slice().reverse().map(i=>`<div class="timeline-item"><h4>${esc(ru(i.title))}</h4><div class="meta">${esc(fmtDate(i.timestamp))} · ${esc(ru(i.direction||''))} · ${esc(ru(i.channel||''))}</div><div class="summary">${esc(displayText(i.event||''))}</div>${i.follow_up?`<div class="meta">Дальше: ${esc(ru(i.follow_up))}</div>`:''}</div>`).join('')||'<div class="meta">История взаимодействий пока пуста.</div>'}</div>
     </div>` : ''}
   </article>`;
