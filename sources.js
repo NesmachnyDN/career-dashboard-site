@@ -155,7 +155,7 @@
       <div class="metric"><span class="metric-label">Дошли до оффера</span><strong>${sum.offers||0}</strong><span class="metric-note">${sum.accepted?`принято: ${sum.accepted}`:'offer/contract discussion'}</span></div>
     </div>
     ${sum.scheduled_unlinked_opportunities ? `<div class="view-note">Не атрибутировано к источнику: <strong>${sum.scheduled_unlinked_opportunities}</strong> opportunity из автопоиска без надёжного discovery_key. Они намеренно исключены из source conversion, чтобы не приписывать результат площадке задним числом.</div>` : ''}
-    ${employerDirectSection(data, all)}
+    ${stream === 'all' || stream === 'Основная работа' ? employerDirectSection(data, all) : ''}
     <div class="section">
       <div class="section-head"><div><h2>Источники сбора данных</h2><p class="section-note">Фиксированные источники берутся из реестров pipeline. Динамические появляются только после фактической проверки во время запуска.</p></div></div>
       <div class="source-controls">
