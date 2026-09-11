@@ -785,8 +785,19 @@ function itemsFromRuns(runs) {
   return [...newest.values()].filter(item => item.content_status !== 'dismissed');
 }
 
+function runStatusLabel(status) {
+  return ({
+    'no-findings': 'нет результатов',
+    'partial': 'частично',
+    'success': 'успешно',
+    'failed': 'ошибка',
+    'queued': 'в очереди',
+    'running': 'выполняется',
+  })[status] || ru(status);
+}
+
 function runTable(runs, emptyText) {
-  return `<div class="table-wrap"><table><thead><tr><th>Автоматизация</th><th>Запуск</th><th>Статус</th><th>Завершено</th><th>Результаты</th><th>Итог</th></tr></thead><tbody>${runs.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${esc(r.run_id)}</td><td>${badge(ru(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td><td>${esc(displayText(r.summary||''))}</td></tr>`).join('')||`<tr><td colspan="6">${esc(emptyText)}</td></tr>`}</tbody></table></div>`;
+  return `<div class="table-wrap"><table class="run-table"><thead><tr><th>Автоматизация</th><th>Запуск</th><th class="run-status-col">Статус</th><th>Завершено</th><th>Результаты</th><th>Итог</th></tr></thead><tbody>${runs.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${esc(r.run_id)}</td><td class="run-status-col">${badge(runStatusLabel(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td><td>${esc(displayText(r.summary||''))}</td></tr>`).join('')||`<tr><td colspan="6">${esc(emptyText)}</td></tr>`}</tbody></table></div>`;
 }
 
 function renderToday() {

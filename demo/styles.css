@@ -128,6 +128,18 @@ table { width: 100%; border-collapse: collapse; min-width: 780px; }
 th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; font-size: 13px; }
 th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
 tr:last-child td { border-bottom: 0; }
+.run-table .run-status-col {
+  width: 132px;
+  min-width: 132px;
+  text-align: center;
+  vertical-align: middle;
+}
+.run-table .run-status-col .badge {
+  min-width: 96px;
+  justify-content: center;
+  white-space: nowrap;
+  line-height: 1.1;
+}
 .timeline { border-left: 2px solid var(--line); margin: 12px 0 0 5px; padding-left: 16px; }
 .timeline-item { position: relative; padding: 0 0 16px; }
 .timeline-item::before {
