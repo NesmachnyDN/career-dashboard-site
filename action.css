@@ -1,0 +1,212 @@
+.action-safety-note {
+  border-left: 3px solid var(--accent);
+}
+
+.action-metrics {
+  margin-bottom: 18px;
+}
+
+.action-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.action-filter {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 11px;
+  background: var(--card);
+  color: inherit;
+  cursor: pointer;
+}
+
+.action-filter.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.action-filter strong {
+  font-size: 11px;
+  opacity: .72;
+}
+
+.action-list {
+  display: grid;
+  gap: 12px;
+}
+
+.action-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 15px;
+  background: var(--card);
+  display: grid;
+  gap: 13px;
+}
+
+.action-card.action-overdue {
+  border-left: 4px solid #c94545;
+}
+
+.action-card.action-today {
+  border-left: 4px solid #b7791f;
+}
+
+.action-card-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.action-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 7px;
+}
+
+.action-chip,
+.action-stage {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(127,127,127,.10);
+}
+
+.action-chip.deadline-overdue {
+  background: rgba(201,69,69,.13);
+}
+
+.action-chip.deadline-today,
+.action-chip.deadline-to-verify {
+  background: rgba(183,121,31,.13);
+}
+
+.action-chip.kind-decision {
+  background: rgba(128,90,213,.13);
+}
+
+.action-chip.kind-follow-up {
+  background: rgba(49,130,206,.13);
+}
+
+.action-company {
+  display: block;
+  font-size: 16px;
+}
+
+.action-role {
+  margin-top: 3px;
+  font-size: 13px;
+  opacity: .76;
+}
+
+.action-next {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 11px;
+  background: rgba(127,127,127,.055);
+}
+
+.action-next > span,
+.action-signals span {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  opacity: .62;
+}
+
+.action-next strong {
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.action-next small {
+  opacity: .65;
+}
+
+.action-signals {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 10px;
+}
+
+.action-signals > div {
+  display: grid;
+  gap: 4px;
+}
+
+.action-signals strong {
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.action-gates {
+  display: grid;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+.action-gates span {
+  padding-left: 12px;
+  position: relative;
+}
+
+.action-gates span::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+}
+
+.action-data-warning {
+  font-size: 12px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: rgba(201,69,69,.09);
+}
+
+.action-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.action-card-actions button {
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: transparent;
+  color: inherit;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.action-card-actions button:last-child {
+  border-color: var(--accent);
+}
+
+@media (max-width: 720px) {
+  .action-card-head {
+    display: grid;
+  }
+
+  .action-stage {
+    justify-self: start;
+  }
+
+  .action-signals {
+    grid-template-columns: 1fr;
+  }
+}

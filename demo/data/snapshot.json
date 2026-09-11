@@ -1,0 +1,4567 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-11T07:52:16.561139+00:00",
+  "vacancies": [
+    {
+      "vacancy_key": "opportunity:DEMO-OPP-001",
+      "company": "Northstar Bank",
+      "role": "Enterprise Architect",
+      "title": "Northstar Bank — Enterprise Architect",
+      "status": "technical-or-architecture-interview",
+      "status_group": "active",
+      "origin": "scheduled-search",
+      "source_name": "Demo Job Board",
+      "source_url": "https://jobs.example.test/1001",
+      "first_seen_at": "2026-09-06",
+      "last_activity_at": "2026-09-11T06:52:16.510143+00:00",
+      "fit_score": 88,
+      "fit_status": "qualified",
+      "recommendation": "pursue",
+      "compensation": "synthetic approved range",
+      "compensation_status": "qualified",
+      "next_action": "Подготовить архитектурный кейс к интервью",
+      "next_action_date": "2026-09-13",
+      "contact_name": null,
+      "interaction_count": 3,
+      "opportunity_id": "DEMO-OPP-001",
+      "discovery_key": "demo-board:1001",
+      "is_opportunity": true,
+      "priority": "high",
+      "summary": "Сильное соответствие architecture-first роли; компенсационный gate пройден в синтетическом сценарии.",
+      "matching": {
+        "role_track": "architecture-first",
+        "fit_summary": "Ключевые требования подтверждены синтетическими evidence records.",
+        "confidence": "high",
+        "requirements": [
+          {
+            "requirement": "Enterprise architecture ownership",
+            "importance": "mandatory",
+            "category": "architecture",
+            "classification": "Direct",
+            "evidence_summary": "Синтетический профиль подтверждает архитектурную ответственность.",
+            "central": true
+          },
+          {
+            "requirement": "Integration architecture",
+            "importance": "mandatory",
+            "category": "integration",
+            "classification": "Direct",
+            "evidence_summary": "Синтетический профиль содержит integration architecture case."
+          },
+          {
+            "requirement": "Cloud landing-zone ownership",
+            "importance": "optional",
+            "category": "cloud",
+            "classification": "Adjacent",
+            "evidence_summary": "Есть смежный опыт, но не заявлен production ownership."
+          }
+        ],
+        "classification_counts": {
+          "Direct": 2,
+          "Adjacent": 1,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "importance_counts": {
+          "mandatory": 2,
+          "optional": 1,
+          "unclear": 0
+        },
+        "mandatory_counts": {
+          "Direct": 2,
+          "Adjacent": 0,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "unsupported_mandatory": [],
+        "unknown_mandatory": [],
+        "hard_blockers": [],
+        "hard_blocker_count": 0,
+        "compensation_gate": {
+          "status": "pass",
+          "reason": "Синтетический диапазон прошёл policy gate.",
+          "normalized_compensation": "demo-qualified"
+        }
+      },
+      "intelligence": {
+        "brief": {
+          "current_stage": "technical-or-architecture-interview",
+          "recommendation": "pursue",
+          "fit_status": "qualified",
+          "compensation_gate": "pass",
+          "hard_blocker_count": 0,
+          "unknown_count": 0
+        },
+        "recommendation": "pursue",
+        "compensation_gate": {
+          "status": "pass",
+          "source": "canonical-opportunity",
+          "reason": "Синтетический диапазон прошёл policy gate.",
+          "normalized_compensation": "demo-qualified"
+        },
+        "hard_blockers": [],
+        "unknowns": [],
+        "unresolved_gates": [],
+        "next_action": {
+          "text": "Подготовить архитектурный кейс к интервью",
+          "date": "2026-09-13",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "ready",
+          "reason": "Материальные qualification gates закрыты; адаптацию материалов можно начинать."
+        }
+      }
+    },
+    {
+      "vacancy_key": "discovery:orbit:1001",
+      "company": "Northstar Bank",
+      "role": "Enterprise Architect",
+      "title": "Northstar Bank — Enterprise Architect",
+      "status": "promoted",
+      "status_group": "active",
+      "origin": "scheduled-search",
+      "source_name": "Orbit Jobs",
+      "source_url": "https://jobs.example.test/vacancies/1001",
+      "first_seen_at": "2026-09-11T06:58:16.510143+00:00",
+      "last_activity_at": "2026-09-11T06:58:16.510143+00:00",
+      "fit_score": 88,
+      "fit_status": null,
+      "recommendation": "pursue",
+      "compensation": null,
+      "compensation_status": "qualified",
+      "next_action": "см. отклики / контакты",
+      "next_action_date": null,
+      "contact_name": null,
+      "interaction_count": 0,
+      "opportunity_id": null,
+      "discovery_key": "orbit:1001",
+      "is_opportunity": false,
+      "priority": "high",
+      "summary": "Сильное соответствие архитектурному треку; процесс уже начат.",
+      "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
+      "matching": {
+        "role_track": "architecture-first",
+        "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+        "confidence": "high",
+        "requirements": [
+          {
+            "requirement": "Enterprise architecture ownership",
+            "importance": "mandatory",
+            "category": "architecture",
+            "classification": "Direct",
+            "evidence_summary": "Synthetic verified architecture ownership evidence.",
+            "central": true
+          },
+          {
+            "requirement": "Event-driven integration",
+            "importance": "mandatory",
+            "category": "integration",
+            "classification": "Direct",
+            "evidence_summary": "Synthetic integration architecture evidence."
+          },
+          {
+            "requirement": "Public cloud ownership",
+            "importance": "optional",
+            "category": "cloud",
+            "classification": "Partial",
+            "evidence_summary": "Adjacent knowledge only; no unsupported production claim."
+          }
+        ],
+        "classification_counts": {
+          "Direct": 2,
+          "Adjacent": 0,
+          "Partial": 1,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "importance_counts": {
+          "mandatory": 2,
+          "optional": 1,
+          "unclear": 0
+        },
+        "mandatory_counts": {
+          "Direct": 2,
+          "Adjacent": 0,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "unsupported_mandatory": [],
+        "unknown_mandatory": [],
+        "hard_blockers": [],
+        "hard_blocker_count": 0,
+        "compensation_gate": {
+          "status": "pass",
+          "reason": "Synthetic compensation gate passed."
+        }
+      }
+    },
+    {
+      "vacancy_key": "discovery:demo-board:3003",
+      "company": "Atlas Retail",
+      "role": "Platform Architect",
+      "title": "Atlas Retail — Platform Architect",
+      "status": "reviewing",
+      "status_group": "consideration",
+      "origin": "scheduled-search",
+      "source_name": "Demo Job Board",
+      "source_url": "https://jobs.example.test/3003",
+      "first_seen_at": "2026-09-11T04:52:16.510143+00:00",
+      "last_activity_at": "2026-09-11T04:52:16.510143+00:00",
+      "fit_score": 74,
+      "fit_status": null,
+      "recommendation": "conditional",
+      "compensation": null,
+      "compensation_status": "compensation-unknown",
+      "next_action": "решить, откликаться ли",
+      "next_action_date": null,
+      "contact_name": null,
+      "interaction_count": 0,
+      "opportunity_id": null,
+      "discovery_key": "demo-board:3003",
+      "is_opportunity": false,
+      "priority": "normal",
+      "summary": "Роль сохранена для демонстрации pre-application decision state.",
+      "status_reason": null,
+      "matching": {
+        "role_track": "architecture-first",
+        "fit_summary": "Architecture ownership подтверждён частично; platform scope требует проверки.",
+        "confidence": "medium",
+        "requirements": [
+          {
+            "requirement": "Platform architecture",
+            "importance": "mandatory",
+            "category": "architecture",
+            "classification": "Partial",
+            "evidence_summary": "Подтверждён смежный platform-design опыт, но ownership уже по объёму."
+          }
+        ],
+        "classification_counts": {
+          "Direct": 0,
+          "Adjacent": 0,
+          "Partial": 1,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "importance_counts": {
+          "mandatory": 1,
+          "optional": 0,
+          "unclear": 0
+        },
+        "mandatory_counts": {
+          "Direct": 0,
+          "Adjacent": 0,
+          "Partial": 1,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "unsupported_mandatory": [],
+        "unknown_mandatory": [],
+        "hard_blockers": [],
+        "hard_blocker_count": 0,
+        "compensation_gate": {
+          "status": "unresolved",
+          "reason": "Диапазон не указан."
+        }
+      }
+    },
+    {
+      "vacancy_key": "opportunity:DEMO-OPP-002",
+      "company": "Orion Platforms",
+      "role": "Solution Architect",
+      "title": "Orion Platforms — Solution Architect",
+      "status": "qualified",
+      "status_group": "consideration",
+      "origin": "scheduled-search",
+      "source_name": "Orion Careers",
+      "source_url": "https://careers.example.test/orion/sa-42",
+      "first_seen_at": "2026-09-09",
+      "last_activity_at": "2026-09-11T06:58:16.510143+00:00",
+      "fit_score": 82,
+      "fit_status": "qualified",
+      "recommendation": "conditional",
+      "compensation": null,
+      "compensation_status": "compensation-unknown",
+      "next_action": "Уточнить утверждённый диапазон компенсации до tailoring",
+      "next_action_date": "to-verify",
+      "contact_name": null,
+      "interaction_count": 0,
+      "opportunity_id": "DEMO-OPP-002",
+      "discovery_key": "orion-careers:sa-42",
+      "is_opportunity": true,
+      "priority": "high",
+      "summary": "Подходит по solution architecture, но компенсация должна быть подтверждена до затрат на tailoring.",
+      "matching": {
+        "role_track": "architecture-first",
+        "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+        "confidence": "high",
+        "requirements": [
+          {
+            "requirement": "Solution architecture",
+            "importance": "mandatory",
+            "category": "architecture",
+            "classification": "Direct",
+            "evidence_summary": "Synthetic direct architecture evidence.",
+            "central": true
+          },
+          {
+            "requirement": "Domain-specific billing platform",
+            "importance": "mandatory",
+            "category": "domain",
+            "classification": "Adjacent",
+            "evidence_summary": "Adjacent enterprise-platform experience; exact domain not claimed."
+          },
+          {
+            "requirement": "English stakeholder calls",
+            "importance": "unclear",
+            "category": "language",
+            "classification": "Unknown",
+            "evidence_summary": "Must be verified for the concrete process."
+          }
+        ],
+        "classification_counts": {
+          "Direct": 1,
+          "Adjacent": 1,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 1
+        },
+        "importance_counts": {
+          "mandatory": 2,
+          "optional": 0,
+          "unclear": 1
+        },
+        "mandatory_counts": {
+          "Direct": 1,
+          "Adjacent": 1,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 0
+        },
+        "unsupported_mandatory": [],
+        "unknown_mandatory": [],
+        "hard_blockers": [],
+        "hard_blocker_count": 0,
+        "compensation_gate": {
+          "status": "unresolved",
+          "reason": "Диапазон не опубликован."
+        }
+      },
+      "intelligence": {
+        "brief": {
+          "current_stage": "qualified",
+          "recommendation": "pursue",
+          "fit_status": "qualified",
+          "compensation_gate": "unresolved",
+          "hard_blocker_count": 0,
+          "unknown_count": 0
+        },
+        "recommendation": "pursue",
+        "compensation_gate": {
+          "status": "unresolved",
+          "source": "canonical-opportunity",
+          "reason": "Диапазон не опубликован."
+        },
+        "hard_blockers": [],
+        "unknowns": [],
+        "unresolved_gates": [
+          {
+            "kind": "compensation",
+            "status": "unresolved",
+            "label": "Диапазон не опубликован."
+          }
+        ],
+        "next_action": {
+          "text": "Уточнить утверждённый диапазон компенсации до tailoring",
+          "date": "to-verify",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "hold",
+          "reason": "Сначала нужно закрыть существенные qualification gates или пробелы в evidence."
+        }
+      }
+    },
+    {
+      "vacancy_key": "opportunity:DEMO-OPP-002",
+      "company": "Meridian Insurance",
+      "role": "Solution Architect",
+      "title": "Meridian Insurance — Solution Architect",
+      "status": "qualified",
+      "status_group": "consideration",
+      "origin": "recruiter-inbound",
+      "source_name": "Professional Network",
+      "source_url": "https://network.example.test/jobs/2002",
+      "first_seen_at": "2026-09-09",
+      "last_activity_at": "2026-09-11T04:52:16.510143+00:00",
+      "fit_score": 81,
+      "fit_status": "qualified",
+      "recommendation": "conditional",
+      "compensation": null,
+      "compensation_status": "compensation-unknown",
+      "next_action": "Уточнить утверждённый диапазон компенсации",
+      "next_action_date": "to-verify",
+      "contact_name": null,
+      "interaction_count": 0,
+      "opportunity_id": "DEMO-OPP-002",
+      "discovery_key": "demo-network:2002",
+      "is_opportunity": true,
+      "priority": "high",
+      "summary": "Архитектурный fit подтверждён, но диапазон компенсации остаётся неизвестным.",
+      "matching": {
+        "role_track": "architecture-first",
+        "fit_summary": "Основной solution architecture контур подтверждён; один доменный пункт требует уточнения.",
+        "confidence": "medium",
+        "requirements": [
+          {
+            "requirement": "Solution architecture",
+            "importance": "mandatory",
+            "category": "architecture",
+            "classification": "Direct",
+            "evidence_summary": "Синтетический architecture case подтверждает требование.",
+            "central": true
+          },
+          {
+            "requirement": "Insurance domain depth",
+            "importance": "mandatory",
+            "category": "domain",
+            "classification": "Unknown",
+            "evidence_summary": "Доменная глубина намеренно оставлена неизвестной."
+          }
+        ],
+        "classification_counts": {
+          "Direct": 1,
+          "Adjacent": 0,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 1
+        },
+        "importance_counts": {
+          "mandatory": 2,
+          "optional": 0,
+          "unclear": 0
+        },
+        "mandatory_counts": {
+          "Direct": 1,
+          "Adjacent": 0,
+          "Partial": 0,
+          "Unsupported": 0,
+          "Unknown": 1
+        },
+        "unsupported_mandatory": [],
+        "unknown_mandatory": [
+          "Insurance domain depth"
+        ],
+        "hard_blockers": [],
+        "hard_blocker_count": 0,
+        "compensation_gate": {
+          "status": "unresolved",
+          "reason": "Approved range отсутствует в синтетической карточке."
+        }
+      },
+      "intelligence": {
+        "brief": {
+          "current_stage": "qualified",
+          "recommendation": "pursue",
+          "fit_status": "qualified",
+          "compensation_gate": "unresolved",
+          "hard_blocker_count": 0,
+          "unknown_count": 1
+        },
+        "recommendation": "pursue",
+        "compensation_gate": {
+          "status": "unresolved",
+          "source": "canonical-opportunity",
+          "reason": "Approved range отсутствует в синтетической карточке."
+        },
+        "hard_blockers": [],
+        "unknowns": [
+          {
+            "kind": "mandatory-requirement",
+            "label": "Insurance domain depth"
+          }
+        ],
+        "unresolved_gates": [
+          {
+            "kind": "compensation",
+            "status": "unresolved",
+            "label": "Approved range отсутствует в синтетической карточке."
+          },
+          {
+            "kind": "mandatory-requirement",
+            "status": "unknown",
+            "label": "Insurance domain depth"
+          }
+        ],
+        "next_action": {
+          "text": "Уточнить утверждённый диапазон компенсации",
+          "date": "to-verify",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "hold",
+          "reason": "Сначала нужно закрыть существенные qualification gates или пробелы в evidence."
+        }
+      }
+    },
+    {
+      "vacancy_key": "opportunity:DEMO-OPP-003",
+      "company": "Atlas Systems",
+      "role": "Platform Architect",
+      "title": "Atlas Systems — Platform Architect",
+      "status": "rejected",
+      "status_group": "closed",
+      "origin": "manual-search",
+      "source_name": "Orbit Jobs",
+      "source_url": "https://jobs.example.test/vacancies/0901",
+      "first_seen_at": "2026-09-01",
+      "last_activity_at": "2026-09-08T07:52:16.510143+00:00",
+      "fit_score": null,
+      "fit_status": "qualified",
+      "recommendation": null,
+      "compensation": null,
+      "compensation_status": "qualified",
+      "next_action": "none",
+      "next_action_date": "none",
+      "contact_name": null,
+      "interaction_count": 2,
+      "opportunity_id": "DEMO-OPP-003",
+      "discovery_key": "orbit:0901",
+      "is_opportunity": true,
+      "priority": null,
+      "summary": null,
+      "matching": null,
+      "intelligence": {
+        "brief": {
+          "current_stage": "rejected",
+          "recommendation": "closed",
+          "fit_status": "qualified",
+          "compensation_gate": "pass",
+          "hard_blocker_count": 0,
+          "unknown_count": 0
+        },
+        "recommendation": "closed",
+        "compensation_gate": {
+          "status": "pass",
+          "source": "canonical-opportunity"
+        },
+        "hard_blockers": [],
+        "unknowns": [],
+        "unresolved_gates": [],
+        "next_action": {
+          "text": "none",
+          "date": "none",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "not-applicable",
+          "reason": "Возможность закрыта; новая адаптация материалов не требуется."
+        }
+      }
+    },
+    {
+      "vacancy_key": "discovery:orbit:1003",
+      "company": "Helios Tech",
+      "role": "Senior System Analyst",
+      "title": "Helios Tech — Senior System Analyst",
+      "status": "dismissed",
+      "status_group": "closed",
+      "origin": "scheduled-search",
+      "source_name": "Orbit Jobs",
+      "source_url": "https://jobs.example.test/vacancies/1003",
+      "first_seen_at": "2026-09-11T06:58:16.510143+00:00",
+      "last_activity_at": "2026-09-11T06:58:16.510143+00:00",
+      "fit_score": 35,
+      "fit_status": null,
+      "recommendation": "skip",
+      "compensation": null,
+      "compensation_status": "not-applicable",
+      "next_action": "нет",
+      "next_action_date": null,
+      "contact_name": null,
+      "interaction_count": 0,
+      "opportunity_id": null,
+      "discovery_key": "orbit:1003",
+      "is_opportunity": false,
+      "priority": "low",
+      "summary": "Роль не соответствует architecture-first track.",
+      "status_reason": "Synthetic hard blocker: role is dominated by system analysis.",
+      "matching": {
+        "role_track": "architecture-first",
+        "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+        "confidence": "high",
+        "requirements": [
+          {
+            "requirement": "System analysis ownership",
+            "importance": "mandatory",
+            "category": "role-track",
+            "classification": "Unsupported",
+            "evidence_summary": "Outside target role track.",
+            "central": true
+          }
+        ],
+        "classification_counts": {
+          "Direct": 0,
+          "Adjacent": 0,
+          "Partial": 0,
+          "Unsupported": 1,
+          "Unknown": 0
+        },
+        "importance_counts": {
+          "mandatory": 1,
+          "optional": 0,
+          "unclear": 0
+        },
+        "mandatory_counts": {
+          "Direct": 0,
+          "Adjacent": 0,
+          "Partial": 0,
+          "Unsupported": 1,
+          "Unknown": 0
+        },
+        "unsupported_mandatory": [
+          "System analysis ownership"
+        ],
+        "unknown_mandatory": [],
+        "hard_blockers": [
+          {
+            "code": "role-track",
+            "reason": "Основная работа — системный анализ, а не архитектура."
+          }
+        ],
+        "hard_blocker_count": 1,
+        "compensation_gate": {
+          "status": "not-applicable",
+          "reason": "Compensation is irrelevant after a role-track blocker."
+        }
+      }
+    }
+  ],
+  "opportunities": [
+    {
+      "title": "Meridian Insurance — Solution Architect",
+      "opportunity_id": "DEMO-OPP-002",
+      "company": "Meridian Insurance",
+      "role": "Solution Architect",
+      "origin": "recruiter-inbound",
+      "discovery_key": "demo-network:2002",
+      "source": "Professional Network",
+      "source_url": "https://network.example.test/jobs/2002",
+      "first_seen_at": "2026-09-09",
+      "current_stage": "qualified",
+      "fit_status": "qualified",
+      "compensation_status": "compensation-unknown",
+      "next_action": "Уточнить утверждённый диапазон компенсации",
+      "next_action_date": "to-verify",
+      "last_updated_at": "2026-09-10",
+      "interactions": [],
+      "funnel_source": "Professional Network",
+      "funnel_source_basis": "canonical-opportunity-source",
+      "intelligence": {
+        "brief": {
+          "current_stage": "qualified",
+          "recommendation": "pursue",
+          "fit_status": "qualified",
+          "compensation_gate": "unresolved",
+          "hard_blocker_count": 0,
+          "unknown_count": 1
+        },
+        "recommendation": "pursue",
+        "compensation_gate": {
+          "status": "unresolved",
+          "source": "canonical-opportunity",
+          "reason": "Approved range отсутствует в синтетической карточке."
+        },
+        "hard_blockers": [],
+        "unknowns": [
+          {
+            "kind": "mandatory-requirement",
+            "label": "Insurance domain depth"
+          }
+        ],
+        "unresolved_gates": [
+          {
+            "kind": "compensation",
+            "status": "unresolved",
+            "label": "Approved range отсутствует в синтетической карточке."
+          },
+          {
+            "kind": "mandatory-requirement",
+            "status": "unknown",
+            "label": "Insurance domain depth"
+          }
+        ],
+        "next_action": {
+          "text": "Уточнить утверждённый диапазон компенсации",
+          "date": "to-verify",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "hold",
+          "reason": "Сначала нужно закрыть существенные qualification gates или пробелы в evidence."
+        }
+      }
+    },
+    {
+      "title": "Northstar Bank — Enterprise Architect",
+      "opportunity_id": "DEMO-OPP-001",
+      "company": "Northstar Bank",
+      "role": "Enterprise Architect",
+      "origin": "scheduled-search",
+      "discovery_key": "demo-board:1001",
+      "source": "Demo Job Board",
+      "source_url": "https://jobs.example.test/1001",
+      "first_seen_at": "2026-09-06",
+      "current_stage": "technical-or-architecture-interview",
+      "fit_status": "qualified",
+      "compensation_status": "qualified",
+      "next_action": "Подготовить архитектурный кейс к интервью",
+      "next_action_date": "2026-09-13",
+      "last_updated_at": "2026-09-10",
+      "interactions": [
+        {
+          "interaction_id": "INT-DEMO-001",
+          "title": "Application submitted",
+          "timestamp": "2026-09-08T05:52:16.510143+00:00",
+          "direction": "outbound",
+          "channel": "platform",
+          "event": "Application submitted.",
+          "stage_after_event": "applied"
+        },
+        {
+          "interaction_id": "INT-DEMO-002",
+          "title": "Recruiter screen completed",
+          "timestamp": "2026-09-09T07:52:16.510143+00:00",
+          "direction": "inbound",
+          "channel": "video",
+          "event": "Recruiter screen completed.",
+          "stage_after_event": "recruiter-screen"
+        },
+        {
+          "interaction_id": "INT-DEMO-003",
+          "title": "Architecture interview scheduled",
+          "timestamp": "2026-09-11T06:52:16.510143+00:00",
+          "direction": "inbound",
+          "channel": "email",
+          "event": "Architecture interview scheduled.",
+          "stage_after_event": "technical-or-architecture-interview"
+        }
+      ],
+      "funnel_source": "Demo Job Board",
+      "funnel_source_basis": "canonical-opportunity-source",
+      "intelligence": {
+        "brief": {
+          "current_stage": "technical-or-architecture-interview",
+          "recommendation": "pursue",
+          "fit_status": "qualified",
+          "compensation_gate": "pass",
+          "hard_blocker_count": 0,
+          "unknown_count": 0
+        },
+        "recommendation": "pursue",
+        "compensation_gate": {
+          "status": "pass",
+          "source": "canonical-opportunity",
+          "reason": "Синтетический диапазон прошёл policy gate.",
+          "normalized_compensation": "demo-qualified"
+        },
+        "hard_blockers": [],
+        "unknowns": [],
+        "unresolved_gates": [],
+        "next_action": {
+          "text": "Подготовить архитектурный кейс к интервью",
+          "date": "2026-09-13",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "ready",
+          "reason": "Материальные qualification gates закрыты; адаптацию материалов можно начинать."
+        }
+      }
+    },
+    {
+      "title": "Orion Platforms — Solution Architect",
+      "opportunity_id": "DEMO-OPP-002",
+      "company": "Orion Platforms",
+      "role": "Solution Architect",
+      "origin": "scheduled-search",
+      "discovery_key": "orion-careers:sa-42",
+      "source": "Orion Careers",
+      "source_url": "https://careers.example.test/orion/sa-42",
+      "first_seen_at": "2026-09-09",
+      "current_stage": "qualified",
+      "fit_status": "qualified",
+      "compensation_status": "compensation-unknown",
+      "next_action": "Уточнить утверждённый диапазон компенсации до tailoring",
+      "next_action_date": "to-verify",
+      "last_updated_at": "2026-09-10",
+      "interactions": [],
+      "funnel_source": "Orion Careers",
+      "funnel_source_basis": "canonical-opportunity-source",
+      "intelligence": {
+        "brief": {
+          "current_stage": "qualified",
+          "recommendation": "pursue",
+          "fit_status": "qualified",
+          "compensation_gate": "unresolved",
+          "hard_blocker_count": 0,
+          "unknown_count": 0
+        },
+        "recommendation": "pursue",
+        "compensation_gate": {
+          "status": "unresolved",
+          "source": "canonical-opportunity",
+          "reason": "Диапазон не опубликован."
+        },
+        "hard_blockers": [],
+        "unknowns": [],
+        "unresolved_gates": [
+          {
+            "kind": "compensation",
+            "status": "unresolved",
+            "label": "Диапазон не опубликован."
+          }
+        ],
+        "next_action": {
+          "text": "Уточнить утверждённый диапазон компенсации до tailoring",
+          "date": "to-verify",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "hold",
+          "reason": "Сначала нужно закрыть существенные qualification gates или пробелы в evidence."
+        }
+      }
+    },
+    {
+      "title": "Atlas Systems — Platform Architect",
+      "opportunity_id": "DEMO-OPP-003",
+      "company": "Atlas Systems",
+      "role": "Platform Architect",
+      "origin": "manual-search",
+      "discovery_key": "orbit:0901",
+      "source": "Orbit Jobs",
+      "source_url": "https://jobs.example.test/vacancies/0901",
+      "first_seen_at": "2026-09-01",
+      "current_stage": "rejected",
+      "fit_status": "qualified",
+      "compensation_status": "qualified",
+      "next_action": "none",
+      "next_action_date": "none",
+      "last_updated_at": "2026-09-07",
+      "interactions": [
+        {
+          "interaction_id": "INT-DEMO-003",
+          "title": "Отклик отправлен",
+          "timestamp": "2026-09-03T06:52:16.510143+00:00",
+          "direction": "outbound",
+          "channel": "platform",
+          "event": "Synthetic application submitted.",
+          "stage_after_event": "applied"
+        },
+        {
+          "interaction_id": "INT-DEMO-004",
+          "title": "Отказ после интервью",
+          "timestamp": "2026-09-08T07:52:16.510143+00:00",
+          "direction": "inbound",
+          "channel": "platform",
+          "event": "Synthetic process closed.",
+          "stage_after_event": "rejected"
+        }
+      ],
+      "funnel_source": "Orbit Jobs",
+      "funnel_source_basis": "canonical-opportunity-source",
+      "intelligence": {
+        "brief": {
+          "current_stage": "rejected",
+          "recommendation": "closed",
+          "fit_status": "qualified",
+          "compensation_gate": "pass",
+          "hard_blocker_count": 0,
+          "unknown_count": 0
+        },
+        "recommendation": "closed",
+        "compensation_gate": {
+          "status": "pass",
+          "source": "canonical-opportunity"
+        },
+        "hard_blockers": [],
+        "unknowns": [],
+        "unresolved_gates": [],
+        "next_action": {
+          "text": "none",
+          "date": "none",
+          "source": "canonical-opportunity"
+        },
+        "tailoring_readiness": {
+          "status": "not-applicable",
+          "reason": "Возможность закрыта; новая адаптация материалов не требуется."
+        }
+      }
+    }
+  ],
+  "automation": {
+    "active_items": [
+      {
+        "item_id": "demo-email-001",
+        "kind": "email",
+        "dedupe_key": "demo-mail:001",
+        "title": "Northstar Bank: интервью назначено",
+        "priority": "urgent",
+        "summary": "Синтетическое уведомление: требуется подготовка архитектурных кейсов; отправка ответов из demo отключена.",
+        "source_name": "Demo Mailbox",
+        "source_url": "https://mail.example.test/message/001",
+        "workflow": "career-mail-monitoring",
+        "run_id": "demo-career-mail-monitoring-20260911",
+        "observed_at": "2026-09-11T07:33:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-post-001",
+        "kind": "post",
+        "dedupe_key": "https://content.example.test/adr|Setka|post",
+        "title": "ADR как инструмент управления изменениями",
+        "publication_title": "Что должно быть в ADR",
+        "priority": "normal",
+        "summary": "Synthetic content package demonstrating human-authorized publishing.",
+        "source_name": "Architecture Journal",
+        "source_url": "https://content.example.test/adr",
+        "target_platform": "Setka",
+        "brand_topic": "architecture-governance",
+        "copy_text": "Синтетический текст для демонстрации: ADR полезен не как архив решения, а как управляемая запись контекста, альтернатив, последствий и условий пересмотра.",
+        "content_status": "published",
+        "published_url": "https://social.example.test/posts/adr-demo",
+        "published_at": "2026-09-10T08:52:16.510143+00:00",
+        "expires_at": "2026-09-19T22:52:16.510143+00:00",
+        "workflow": "daily-brand-scan",
+        "run_id": "demo-daily-brand-scan-20260911",
+        "observed_at": "2026-09-11T07:16:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-side-001",
+        "kind": "side-income",
+        "dedupe_key": "task-market:arch-review-001",
+        "title": "Architecture review for integration platform",
+        "priority": "normal",
+        "summary": "Ограниченная по объёму синтетическая задача: review схемы интеграций и ADR.",
+        "source_name": "Task Market",
+        "source_url": "https://tasks.example.test/arch-review-001",
+        "recommendation": "CONSIDER",
+        "expires_at": "2026-09-19T22:52:16.510143+00:00",
+        "workflow": "side-income-screening",
+        "run_id": "demo-side-income-screening-20260911",
+        "observed_at": "2026-09-11T07:05:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vac-1001",
+        "kind": "vacancy",
+        "dedupe_key": "orbit:1001",
+        "title": "Northstar Bank — Enterprise Architect",
+        "priority": "high",
+        "summary": "Сильное соответствие архитектурному треку; процесс уже начат.",
+        "source_name": "Orbit Jobs",
+        "source_url": "https://jobs.example.test/vacancies/1001",
+        "company": "Northstar Bank",
+        "role": "Enterprise Architect",
+        "recommendation": "pursue",
+        "fit_score": 88,
+        "compensation_status": "qualified",
+        "discovery_status": "promoted",
+        "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
+        "origin": "scheduled-search",
+        "expires_at": "2026-09-30T22:52:16.510143+00:00",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "Enterprise architecture ownership",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Synthetic verified architecture ownership evidence.",
+              "central": true
+            },
+            {
+              "requirement": "Event-driven integration",
+              "importance": "mandatory",
+              "category": "integration",
+              "classification": "Direct",
+              "evidence_summary": "Synthetic integration architecture evidence."
+            },
+            {
+              "requirement": "Public cloud ownership",
+              "importance": "optional",
+              "category": "cloud",
+              "classification": "Partial",
+              "evidence_summary": "Adjacent knowledge only; no unsupported production claim."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "pass",
+            "reason": "Synthetic compensation gate passed."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T06:58:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vac-1002",
+        "kind": "vacancy",
+        "dedupe_key": "orion-careers:sa-42",
+        "title": "Orion Platforms — Solution Architect",
+        "priority": "high",
+        "summary": "Подходит по solution architecture, но компенсация должна быть подтверждена до затрат на tailoring.",
+        "source_name": "Orion Careers",
+        "source_url": "https://careers.example.test/orion/sa-42",
+        "company": "Orion Platforms",
+        "role": "Solution Architect",
+        "recommendation": "conditional",
+        "fit_score": 82,
+        "compensation_status": "compensation-unknown",
+        "discovery_status": "promoted",
+        "status_reason": "Synthetic employer-direct vacancy.",
+        "origin": "scheduled-search",
+        "expires_at": "2026-09-30T22:52:16.510143+00:00",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "Solution architecture",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Synthetic direct architecture evidence.",
+              "central": true
+            },
+            {
+              "requirement": "Domain-specific billing platform",
+              "importance": "mandatory",
+              "category": "domain",
+              "classification": "Adjacent",
+              "evidence_summary": "Adjacent enterprise-platform experience; exact domain not claimed."
+            },
+            {
+              "requirement": "English stakeholder calls",
+              "importance": "unclear",
+              "category": "language",
+              "classification": "Unknown",
+              "evidence_summary": "Must be verified for the concrete process."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "unresolved",
+            "reason": "Диапазон не опубликован."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T06:58:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vac-1003",
+        "kind": "vacancy",
+        "dedupe_key": "orbit:1003",
+        "title": "Helios Tech — Senior System Analyst",
+        "priority": "low",
+        "summary": "Роль не соответствует architecture-first track.",
+        "source_name": "Orbit Jobs",
+        "source_url": "https://jobs.example.test/vacancies/1003",
+        "company": "Helios Tech",
+        "role": "Senior System Analyst",
+        "recommendation": "skip",
+        "fit_score": 35,
+        "compensation_status": "not-applicable",
+        "discovery_status": "dismissed",
+        "status_reason": "Synthetic hard blocker: role is dominated by system analysis.",
+        "origin": "scheduled-search",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "System analysis ownership",
+              "importance": "mandatory",
+              "category": "role-track",
+              "classification": "Unsupported",
+              "evidence_summary": "Outside target role track.",
+              "central": true
+            }
+          ],
+          "hard_blockers": [
+            {
+              "code": "role-track",
+              "reason": "Основная работа — системный анализ, а не архитектура."
+            }
+          ],
+          "compensation_gate": {
+            "status": "not-applicable",
+            "reason": "Compensation is irrelevant after a role-track blocker."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T06:58:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-post-integration",
+        "kind": "post",
+        "dedupe_key": "https://content.example.test/integration|LinkedIn|post",
+        "title": "Граница ответственности интеграционной платформы",
+        "publication_title": "Граница платформы важнее списка технологий",
+        "priority": "normal",
+        "summary": "Синтетический draft; внешняя публикация не выполняется автоматически.",
+        "source_name": "Architecture Feed",
+        "source_url": "https://content.example.test/integration",
+        "target_platform": "LinkedIn",
+        "brand_topic": "enterprise-integration",
+        "copy_text": "Synthetic draft: platform boundaries should be explicit before integration technology is selected.",
+        "content_status": "unpublished",
+        "workflow": "daily-brand-scan",
+        "run_id": "demo-daily-brand-scan-20260911",
+        "observed_at": "2026-09-11T05:22:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-side-001",
+        "kind": "side-income",
+        "dedupe_key": "demo-contracts:arch-review-001",
+        "title": "Architecture review for integration platform",
+        "priority": "normal",
+        "summary": "Фиксированный scope: review целевой архитектуры и список рисков, без production ownership.",
+        "source_name": "Demo Contract Board",
+        "source_url": "https://contracts.example.test/tasks/arch-review-001",
+        "recommendation": "TAKE",
+        "compensation": "synthetic fixed-fee",
+        "deadline": "2026-09-17",
+        "workflow": "side-income-screening",
+        "run_id": "demo-side-income-screening-20260911",
+        "observed_at": "2026-09-11T05:07:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vacancy-1001",
+        "kind": "vacancy",
+        "dedupe_key": "demo-board:1001",
+        "title": "Northstar Bank — Enterprise Architect",
+        "priority": "high",
+        "summary": "Сильное соответствие architecture-first роли; компенсационный gate пройден в синтетическом сценарии.",
+        "source_name": "Demo Job Board",
+        "source_url": "https://jobs.example.test/1001",
+        "company": "Northstar Bank",
+        "role": "Enterprise Architect",
+        "recommendation": "pursue",
+        "fit_score": 88,
+        "compensation": "synthetic approved range",
+        "compensation_status": "qualified",
+        "discovery_status": "promoted",
+        "origin": "scheduled-search",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Ключевые требования подтверждены синтетическими evidence records.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "Enterprise architecture ownership",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Синтетический профиль подтверждает архитектурную ответственность.",
+              "central": true
+            },
+            {
+              "requirement": "Integration architecture",
+              "importance": "mandatory",
+              "category": "integration",
+              "classification": "Direct",
+              "evidence_summary": "Синтетический профиль содержит integration architecture case."
+            },
+            {
+              "requirement": "Cloud landing-zone ownership",
+              "importance": "optional",
+              "category": "cloud",
+              "classification": "Adjacent",
+              "evidence_summary": "Есть смежный опыт, но не заявлен production ownership."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "pass",
+            "reason": "Синтетический диапазон прошёл policy gate.",
+            "normalized_compensation": "demo-qualified"
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T04:52:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vacancy-2002",
+        "kind": "vacancy",
+        "dedupe_key": "demo-network:2002",
+        "title": "Meridian Insurance — Solution Architect",
+        "priority": "high",
+        "summary": "Архитектурный fit подтверждён, но диапазон компенсации остаётся неизвестным.",
+        "source_name": "Professional Network",
+        "source_url": "https://network.example.test/jobs/2002",
+        "company": "Meridian Insurance",
+        "role": "Solution Architect",
+        "recommendation": "conditional",
+        "fit_score": 81,
+        "compensation_status": "compensation-unknown",
+        "discovery_status": "promoted",
+        "origin": "recruiter-inbound",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Основной solution architecture контур подтверждён; один доменный пункт требует уточнения.",
+          "confidence": "medium",
+          "requirements": [
+            {
+              "requirement": "Solution architecture",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Синтетический architecture case подтверждает требование.",
+              "central": true
+            },
+            {
+              "requirement": "Insurance domain depth",
+              "importance": "mandatory",
+              "category": "domain",
+              "classification": "Unknown",
+              "evidence_summary": "Доменная глубина намеренно оставлена неизвестной."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "unresolved",
+            "reason": "Approved range отсутствует в синтетической карточке."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T04:52:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vacancy-3003",
+        "kind": "vacancy",
+        "dedupe_key": "demo-board:3003",
+        "title": "Atlas Retail — Platform Architect",
+        "priority": "normal",
+        "summary": "Роль сохранена для демонстрации pre-application decision state.",
+        "source_name": "Demo Job Board",
+        "source_url": "https://jobs.example.test/3003",
+        "company": "Atlas Retail",
+        "role": "Platform Architect",
+        "recommendation": "conditional",
+        "fit_score": 74,
+        "compensation_status": "compensation-unknown",
+        "discovery_status": "reviewing",
+        "origin": "scheduled-search",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Architecture ownership подтверждён частично; platform scope требует проверки.",
+          "confidence": "medium",
+          "requirements": [
+            {
+              "requirement": "Platform architecture",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Partial",
+              "evidence_summary": "Подтверждён смежный platform-design опыт, но ownership уже по объёму."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "unresolved",
+            "reason": "Диапазон не указан."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T04:52:16.510143+00:00"
+      }
+    ],
+    "content_items": [
+      {
+        "item_id": "demo-post-integration",
+        "kind": "post",
+        "dedupe_key": "https://content.example.test/integration|LinkedIn|post",
+        "title": "Граница ответственности интеграционной платформы",
+        "publication_title": "Граница платформы важнее списка технологий",
+        "priority": "normal",
+        "summary": "Синтетический draft; внешняя публикация не выполняется автоматически.",
+        "source_name": "Architecture Feed",
+        "source_url": "https://content.example.test/integration",
+        "target_platform": "LinkedIn",
+        "brand_topic": "enterprise-integration",
+        "copy_text": "Synthetic draft: platform boundaries should be explicit before integration technology is selected.",
+        "content_status": "unpublished",
+        "workflow": "daily-brand-scan",
+        "run_id": "demo-daily-brand-scan-20260911",
+        "observed_at": "2026-09-11T05:22:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-post-001",
+        "kind": "post",
+        "dedupe_key": "https://content.example.test/adr|Setka|post",
+        "title": "ADR как инструмент управления изменениями",
+        "publication_title": "Что должно быть в ADR",
+        "priority": "normal",
+        "summary": "Synthetic content package demonstrating human-authorized publishing.",
+        "source_name": "Architecture Journal",
+        "source_url": "https://content.example.test/adr",
+        "target_platform": "Setka",
+        "brand_topic": "architecture-governance",
+        "copy_text": "Синтетический текст для демонстрации: ADR полезен не как архив решения, а как управляемая запись контекста, альтернатив, последствий и условий пересмотра.",
+        "content_status": "published",
+        "published_url": "https://social.example.test/posts/adr-demo",
+        "published_at": "2026-09-10T08:52:16.510143+00:00",
+        "expires_at": "2026-09-19T22:52:16.510143+00:00",
+        "workflow": "daily-brand-scan",
+        "run_id": "demo-daily-brand-scan-20260911",
+        "observed_at": "2026-09-11T07:16:16.510143+00:00"
+      }
+    ],
+    "discovered_vacancies": [
+      {
+        "item_id": "demo-vacancy-3003",
+        "kind": "vacancy",
+        "dedupe_key": "demo-board:3003",
+        "title": "Atlas Retail — Platform Architect",
+        "priority": "normal",
+        "summary": "Роль сохранена для демонстрации pre-application decision state.",
+        "source_name": "Demo Job Board",
+        "source_url": "https://jobs.example.test/3003",
+        "company": "Atlas Retail",
+        "role": "Platform Architect",
+        "recommendation": "conditional",
+        "fit_score": 74,
+        "compensation_status": "compensation-unknown",
+        "discovery_status": "reviewing",
+        "origin": "scheduled-search",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Architecture ownership подтверждён частично; platform scope требует проверки.",
+          "confidence": "medium",
+          "requirements": [
+            {
+              "requirement": "Platform architecture",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Partial",
+              "evidence_summary": "Подтверждён смежный platform-design опыт, но ownership уже по объёму."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "unresolved",
+            "reason": "Диапазон не указан."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T04:52:16.510143+00:00",
+        "backfill": false,
+        "originally_seen_at": "2026-09-11T04:52:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vac-1001",
+        "kind": "vacancy",
+        "dedupe_key": "orbit:1001",
+        "title": "Northstar Bank — Enterprise Architect",
+        "priority": "high",
+        "summary": "Сильное соответствие архитектурному треку; процесс уже начат.",
+        "source_name": "Orbit Jobs",
+        "source_url": "https://jobs.example.test/vacancies/1001",
+        "company": "Northstar Bank",
+        "role": "Enterprise Architect",
+        "recommendation": "pursue",
+        "fit_score": 88,
+        "compensation_status": "qualified",
+        "discovery_status": "promoted",
+        "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
+        "origin": "scheduled-search",
+        "expires_at": "2026-09-30T22:52:16.510143+00:00",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "Enterprise architecture ownership",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Synthetic verified architecture ownership evidence.",
+              "central": true
+            },
+            {
+              "requirement": "Event-driven integration",
+              "importance": "mandatory",
+              "category": "integration",
+              "classification": "Direct",
+              "evidence_summary": "Synthetic integration architecture evidence."
+            },
+            {
+              "requirement": "Public cloud ownership",
+              "importance": "optional",
+              "category": "cloud",
+              "classification": "Partial",
+              "evidence_summary": "Adjacent knowledge only; no unsupported production claim."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "pass",
+            "reason": "Synthetic compensation gate passed."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T06:58:16.510143+00:00",
+        "backfill": false,
+        "originally_seen_at": "2026-09-11T06:58:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vac-1002",
+        "kind": "vacancy",
+        "dedupe_key": "orion-careers:sa-42",
+        "title": "Orion Platforms — Solution Architect",
+        "priority": "high",
+        "summary": "Подходит по solution architecture, но компенсация должна быть подтверждена до затрат на tailoring.",
+        "source_name": "Orion Careers",
+        "source_url": "https://careers.example.test/orion/sa-42",
+        "company": "Orion Platforms",
+        "role": "Solution Architect",
+        "recommendation": "conditional",
+        "fit_score": 82,
+        "compensation_status": "compensation-unknown",
+        "discovery_status": "promoted",
+        "status_reason": "Synthetic employer-direct vacancy.",
+        "origin": "scheduled-search",
+        "expires_at": "2026-09-30T22:52:16.510143+00:00",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "Solution architecture",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Synthetic direct architecture evidence.",
+              "central": true
+            },
+            {
+              "requirement": "Domain-specific billing platform",
+              "importance": "mandatory",
+              "category": "domain",
+              "classification": "Adjacent",
+              "evidence_summary": "Adjacent enterprise-platform experience; exact domain not claimed."
+            },
+            {
+              "requirement": "English stakeholder calls",
+              "importance": "unclear",
+              "category": "language",
+              "classification": "Unknown",
+              "evidence_summary": "Must be verified for the concrete process."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "unresolved",
+            "reason": "Диапазон не опубликован."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T06:58:16.510143+00:00",
+        "backfill": false,
+        "originally_seen_at": "2026-09-11T06:58:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vacancy-1001",
+        "kind": "vacancy",
+        "dedupe_key": "demo-board:1001",
+        "title": "Northstar Bank — Enterprise Architect",
+        "priority": "high",
+        "summary": "Сильное соответствие architecture-first роли; компенсационный gate пройден в синтетическом сценарии.",
+        "source_name": "Demo Job Board",
+        "source_url": "https://jobs.example.test/1001",
+        "company": "Northstar Bank",
+        "role": "Enterprise Architect",
+        "recommendation": "pursue",
+        "fit_score": 88,
+        "compensation": "synthetic approved range",
+        "compensation_status": "qualified",
+        "discovery_status": "promoted",
+        "origin": "scheduled-search",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Ключевые требования подтверждены синтетическими evidence records.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "Enterprise architecture ownership",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Синтетический профиль подтверждает архитектурную ответственность.",
+              "central": true
+            },
+            {
+              "requirement": "Integration architecture",
+              "importance": "mandatory",
+              "category": "integration",
+              "classification": "Direct",
+              "evidence_summary": "Синтетический профиль содержит integration architecture case."
+            },
+            {
+              "requirement": "Cloud landing-zone ownership",
+              "importance": "optional",
+              "category": "cloud",
+              "classification": "Adjacent",
+              "evidence_summary": "Есть смежный опыт, но не заявлен production ownership."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "pass",
+            "reason": "Синтетический диапазон прошёл policy gate.",
+            "normalized_compensation": "demo-qualified"
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T04:52:16.510143+00:00",
+        "backfill": false,
+        "originally_seen_at": "2026-09-11T04:52:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vacancy-2002",
+        "kind": "vacancy",
+        "dedupe_key": "demo-network:2002",
+        "title": "Meridian Insurance — Solution Architect",
+        "priority": "high",
+        "summary": "Архитектурный fit подтверждён, но диапазон компенсации остаётся неизвестным.",
+        "source_name": "Professional Network",
+        "source_url": "https://network.example.test/jobs/2002",
+        "company": "Meridian Insurance",
+        "role": "Solution Architect",
+        "recommendation": "conditional",
+        "fit_score": 81,
+        "compensation_status": "compensation-unknown",
+        "discovery_status": "promoted",
+        "origin": "recruiter-inbound",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Основной solution architecture контур подтверждён; один доменный пункт требует уточнения.",
+          "confidence": "medium",
+          "requirements": [
+            {
+              "requirement": "Solution architecture",
+              "importance": "mandatory",
+              "category": "architecture",
+              "classification": "Direct",
+              "evidence_summary": "Синтетический architecture case подтверждает требование.",
+              "central": true
+            },
+            {
+              "requirement": "Insurance domain depth",
+              "importance": "mandatory",
+              "category": "domain",
+              "classification": "Unknown",
+              "evidence_summary": "Доменная глубина намеренно оставлена неизвестной."
+            }
+          ],
+          "hard_blockers": [],
+          "compensation_gate": {
+            "status": "unresolved",
+            "reason": "Approved range отсутствует в синтетической карточке."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T04:52:16.510143+00:00",
+        "backfill": false,
+        "originally_seen_at": "2026-09-11T04:52:16.510143+00:00"
+      },
+      {
+        "item_id": "demo-vac-1003",
+        "kind": "vacancy",
+        "dedupe_key": "orbit:1003",
+        "title": "Helios Tech — Senior System Analyst",
+        "priority": "low",
+        "summary": "Роль не соответствует architecture-first track.",
+        "source_name": "Orbit Jobs",
+        "source_url": "https://jobs.example.test/vacancies/1003",
+        "company": "Helios Tech",
+        "role": "Senior System Analyst",
+        "recommendation": "skip",
+        "fit_score": 35,
+        "compensation_status": "not-applicable",
+        "discovery_status": "dismissed",
+        "status_reason": "Synthetic hard blocker: role is dominated by system analysis.",
+        "origin": "scheduled-search",
+        "match_analysis": {
+          "role_track": "architecture-first",
+          "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+          "confidence": "high",
+          "requirements": [
+            {
+              "requirement": "System analysis ownership",
+              "importance": "mandatory",
+              "category": "role-track",
+              "classification": "Unsupported",
+              "evidence_summary": "Outside target role track.",
+              "central": true
+            }
+          ],
+          "hard_blockers": [
+            {
+              "code": "role-track",
+              "reason": "Основная работа — системный анализ, а не архитектура."
+            }
+          ],
+          "compensation_gate": {
+            "status": "not-applicable",
+            "reason": "Compensation is irrelevant after a role-track blocker."
+          }
+        },
+        "workflow": "vacancy-market-screening",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "observed_at": "2026-09-11T06:58:16.510143+00:00",
+        "backfill": false,
+        "originally_seen_at": "2026-09-11T06:58:16.510143+00:00"
+      }
+    ],
+    "runs": [
+      {
+        "schema_version": 1,
+        "run_id": "demo-career-mail-monitoring-20260911",
+        "workflow": "career-mail-monitoring",
+        "started_at": "2026-09-11T07:32:16.510143+00:00",
+        "completed_at": "2026-09-11T07:33:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетическое входящее карьерное уведомление.",
+        "items": [
+          {
+            "item_id": "demo-email-001",
+            "kind": "email",
+            "dedupe_key": "demo-mail:001",
+            "title": "Northstar Bank: интервью назначено",
+            "priority": "urgent",
+            "summary": "Синтетическое уведомление: требуется подготовка архитектурных кейсов; отправка ответов из demo отключена.",
+            "source_name": "Demo Mailbox",
+            "source_url": "https://mail.example.test/message/001"
+          }
+        ]
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "started_at": "2026-09-11T07:22:16.510143+00:00",
+        "completed_at": "2026-09-11T07:24:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетические brand measurements для демонстрации наблюдательной аналитики без causal claims.",
+        "brand_metrics": [
+          {
+            "platform": "setka",
+            "scope": "profile",
+            "observed_at": "2026-09-09T06:52:16.510143+00:00",
+            "collection_mode": "user-provided",
+            "collection_status": "checked",
+            "followers": 120,
+            "profile_views": 30,
+            "content_views": 250
+          },
+          {
+            "platform": "setka",
+            "scope": "post",
+            "observed_at": "2026-09-10T16:52:16.510143+00:00",
+            "collection_mode": "user-provided",
+            "collection_status": "checked",
+            "subject_url": "https://social.example.test/posts/adr-demo",
+            "views": 1400,
+            "reactions": 70,
+            "comments": 12,
+            "reposts": 6,
+            "erv": 6.3
+          },
+          {
+            "platform": "setka",
+            "scope": "profile",
+            "observed_at": "2026-09-11T06:52:16.510143+00:00",
+            "collection_mode": "user-provided",
+            "collection_status": "checked",
+            "followers": 126,
+            "profile_views": 44,
+            "content_views": 330
+          }
+        ],
+        "items": []
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-daily-brand-scan-20260911",
+        "workflow": "daily-brand-scan",
+        "started_at": "2026-09-11T07:12:16.510143+00:00",
+        "completed_at": "2026-09-11T07:16:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетический content scan: подготовлен один архитектурный пост.",
+        "source_metrics": [
+          {
+            "source_ref": "dynamic:architecture-journal",
+            "source_name": "Architecture Journal",
+            "source_url": "https://content.example.test/",
+            "stream": "content",
+            "mode": "dynamic",
+            "check_status": "checked",
+            "found": 4,
+            "new_unique": 2,
+            "qualified": 1,
+            "actionable": 1,
+            "notes": "Synthetic content source."
+          }
+        ],
+        "items": [
+          {
+            "item_id": "demo-post-001",
+            "kind": "post",
+            "dedupe_key": "https://content.example.test/adr|Setka|post",
+            "title": "ADR как инструмент управления изменениями",
+            "publication_title": "Что должно быть в ADR",
+            "priority": "normal",
+            "summary": "Synthetic content package demonstrating human-authorized publishing.",
+            "source_name": "Architecture Journal",
+            "source_url": "https://content.example.test/adr",
+            "target_platform": "Setka",
+            "brand_topic": "architecture-governance",
+            "copy_text": "Синтетический текст для демонстрации: ADR полезен не как архив решения, а как управляемая запись контекста, альтернатив, последствий и условий пересмотра.",
+            "content_status": "published",
+            "published_url": "https://social.example.test/posts/adr-demo",
+            "published_at": "2026-09-10T08:52:16.510143+00:00",
+            "expires_at": "2026-09-19T22:52:16.510143+00:00"
+          }
+        ]
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-side-income-screening-20260911",
+        "workflow": "side-income-screening",
+        "started_at": "2026-09-11T07:02:16.510143+00:00",
+        "completed_at": "2026-09-11T07:05:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетический поиск подработки: одна ограниченная архитектурная задача.",
+        "source_metrics": [
+          {
+            "source_ref": "task-market",
+            "source_name": "Task Market",
+            "source_url": "https://tasks.example.test/",
+            "stream": "side-income",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 3,
+            "new_unique": 2,
+            "qualified": 1,
+            "actionable": 1,
+            "notes": "Synthetic side-income telemetry."
+          }
+        ],
+        "items": [
+          {
+            "item_id": "demo-side-001",
+            "kind": "side-income",
+            "dedupe_key": "task-market:arch-review-001",
+            "title": "Architecture review for integration platform",
+            "priority": "normal",
+            "summary": "Ограниченная по объёму синтетическая задача: review схемы интеграций и ADR.",
+            "source_name": "Task Market",
+            "source_url": "https://tasks.example.test/arch-review-001",
+            "recommendation": "CONSIDER",
+            "expires_at": "2026-09-19T22:52:16.510143+00:00"
+          }
+        ]
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "workflow": "vacancy-market-screening",
+        "started_at": "2026-09-11T06:52:16.510143+00:00",
+        "completed_at": "2026-09-11T06:58:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетический поиск: 5 кандидатов, 3 уникальных, 2 квалифицированы, 2 требуют действия.",
+        "source_metrics": [
+          {
+            "source_ref": "orbit-jobs",
+            "source_name": "Orbit Jobs",
+            "source_url": "https://jobs.example.test/",
+            "stream": "permanent-russia",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 4,
+            "new_unique": 2,
+            "qualified": 1,
+            "actionable": 1,
+            "notes": "Synthetic job-board telemetry."
+          },
+          {
+            "source_ref": "orion-careers",
+            "source_name": "Orion Careers",
+            "source_url": "https://careers.example.test/orion/",
+            "stream": "permanent-russia",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 1,
+            "new_unique": 1,
+            "qualified": 1,
+            "actionable": 1,
+            "notes": "Synthetic employer-direct telemetry."
+          }
+        ],
+        "items": [
+          {
+            "item_id": "demo-vac-1001",
+            "kind": "vacancy",
+            "dedupe_key": "orbit:1001",
+            "title": "Northstar Bank — Enterprise Architect",
+            "priority": "high",
+            "summary": "Сильное соответствие архитектурному треку; процесс уже начат.",
+            "source_name": "Orbit Jobs",
+            "source_url": "https://jobs.example.test/vacancies/1001",
+            "company": "Northstar Bank",
+            "role": "Enterprise Architect",
+            "recommendation": "pursue",
+            "fit_score": 88,
+            "compensation_status": "qualified",
+            "discovery_status": "promoted",
+            "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
+            "origin": "scheduled-search",
+            "expires_at": "2026-09-30T22:52:16.510143+00:00",
+            "match_analysis": {
+              "role_track": "architecture-first",
+              "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+              "confidence": "high",
+              "requirements": [
+                {
+                  "requirement": "Enterprise architecture ownership",
+                  "importance": "mandatory",
+                  "category": "architecture",
+                  "classification": "Direct",
+                  "evidence_summary": "Synthetic verified architecture ownership evidence.",
+                  "central": true
+                },
+                {
+                  "requirement": "Event-driven integration",
+                  "importance": "mandatory",
+                  "category": "integration",
+                  "classification": "Direct",
+                  "evidence_summary": "Synthetic integration architecture evidence."
+                },
+                {
+                  "requirement": "Public cloud ownership",
+                  "importance": "optional",
+                  "category": "cloud",
+                  "classification": "Partial",
+                  "evidence_summary": "Adjacent knowledge only; no unsupported production claim."
+                }
+              ],
+              "hard_blockers": [],
+              "compensation_gate": {
+                "status": "pass",
+                "reason": "Synthetic compensation gate passed."
+              }
+            }
+          },
+          {
+            "item_id": "demo-vac-1002",
+            "kind": "vacancy",
+            "dedupe_key": "orion-careers:sa-42",
+            "title": "Orion Platforms — Solution Architect",
+            "priority": "high",
+            "summary": "Подходит по solution architecture, но компенсация должна быть подтверждена до затрат на tailoring.",
+            "source_name": "Orion Careers",
+            "source_url": "https://careers.example.test/orion/sa-42",
+            "company": "Orion Platforms",
+            "role": "Solution Architect",
+            "recommendation": "conditional",
+            "fit_score": 82,
+            "compensation_status": "compensation-unknown",
+            "discovery_status": "promoted",
+            "status_reason": "Synthetic employer-direct vacancy.",
+            "origin": "scheduled-search",
+            "expires_at": "2026-09-30T22:52:16.510143+00:00",
+            "match_analysis": {
+              "role_track": "architecture-first",
+              "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+              "confidence": "high",
+              "requirements": [
+                {
+                  "requirement": "Solution architecture",
+                  "importance": "mandatory",
+                  "category": "architecture",
+                  "classification": "Direct",
+                  "evidence_summary": "Synthetic direct architecture evidence.",
+                  "central": true
+                },
+                {
+                  "requirement": "Domain-specific billing platform",
+                  "importance": "mandatory",
+                  "category": "domain",
+                  "classification": "Adjacent",
+                  "evidence_summary": "Adjacent enterprise-platform experience; exact domain not claimed."
+                },
+                {
+                  "requirement": "English stakeholder calls",
+                  "importance": "unclear",
+                  "category": "language",
+                  "classification": "Unknown",
+                  "evidence_summary": "Must be verified for the concrete process."
+                }
+              ],
+              "hard_blockers": [],
+              "compensation_gate": {
+                "status": "unresolved",
+                "reason": "Диапазон не опубликован."
+              }
+            }
+          },
+          {
+            "item_id": "demo-vac-1003",
+            "kind": "vacancy",
+            "dedupe_key": "orbit:1003",
+            "title": "Helios Tech — Senior System Analyst",
+            "priority": "low",
+            "summary": "Роль не соответствует architecture-first track.",
+            "source_name": "Orbit Jobs",
+            "source_url": "https://jobs.example.test/vacancies/1003",
+            "company": "Helios Tech",
+            "role": "Senior System Analyst",
+            "recommendation": "skip",
+            "fit_score": 35,
+            "compensation_status": "not-applicable",
+            "discovery_status": "dismissed",
+            "status_reason": "Synthetic hard blocker: role is dominated by system analysis.",
+            "origin": "scheduled-search",
+            "match_analysis": {
+              "role_track": "architecture-first",
+              "fit_summary": "Synthetic evidence-based assessment for the public demo.",
+              "confidence": "high",
+              "requirements": [
+                {
+                  "requirement": "System analysis ownership",
+                  "importance": "mandatory",
+                  "category": "role-track",
+                  "classification": "Unsupported",
+                  "evidence_summary": "Outside target role track.",
+                  "central": true
+                }
+              ],
+              "hard_blockers": [
+                {
+                  "code": "role-track",
+                  "reason": "Основная работа — системный анализ, а не архитектура."
+                }
+              ],
+              "compensation_gate": {
+                "status": "not-applicable",
+                "reason": "Compensation is irrelevant after a role-track blocker."
+              }
+            }
+          }
+        ]
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "started_at": "2026-09-11T05:32:16.510143+00:00",
+        "completed_at": "2026-09-11T05:37:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетические brand metrics для демонстрации наблюдательного сравнения без причинной атрибуции.",
+        "brand_metrics": [
+          {
+            "platform": "setka",
+            "scope": "profile",
+            "observed_at": "2026-09-09T03:52:16.510143+00:00",
+            "collection_mode": "user-provided",
+            "collection_status": "checked",
+            "followers": 120,
+            "profile_views": 30,
+            "content_views": 240
+          },
+          {
+            "platform": "setka",
+            "scope": "post",
+            "observed_at": "2026-09-10T13:52:16.510143+00:00",
+            "collection_mode": "user-provided",
+            "collection_status": "checked",
+            "subject_url": "https://setka.example.test/posts/demo-adr",
+            "views": 1250,
+            "reactions": 63,
+            "comments": 12,
+            "reposts": 4,
+            "erv": 6.3
+          },
+          {
+            "platform": "setka",
+            "scope": "profile",
+            "observed_at": "2026-09-11T03:52:16.510143+00:00",
+            "collection_mode": "user-provided",
+            "collection_status": "checked",
+            "followers": 126,
+            "profile_views": 46,
+            "content_views": 315
+          }
+        ],
+        "items": []
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-daily-brand-scan-20260911",
+        "workflow": "daily-brand-scan",
+        "started_at": "2026-09-11T05:12:16.510143+00:00",
+        "completed_at": "2026-09-11T05:22:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетический brand workflow подготовил один опубликованный архитектурный пост и один draft-кандидат.",
+        "source_metrics": [
+          {
+            "source_ref": "demo-architecture-feed",
+            "source_name": "Architecture Feed",
+            "source_url": "https://content.example.test/",
+            "stream": "content",
+            "mode": "dynamic",
+            "check_status": "checked",
+            "found": 6,
+            "new_unique": 3,
+            "qualified": 2,
+            "actionable": 2
+          }
+        ],
+        "items": [
+          {
+            "item_id": "demo-post-adr",
+            "kind": "post",
+            "dedupe_key": "https://content.example.test/adr|Setka|post",
+            "title": "Как фиксировать условия пересмотра архитектурного решения",
+            "publication_title": "ADR: фиксировать не только выбор",
+            "priority": "normal",
+            "summary": "Синтетическая публикация для демонстрации Brand Intelligence.",
+            "source_name": "Architecture Feed",
+            "source_url": "https://content.example.test/adr",
+            "target_platform": "Setka",
+            "brand_topic": "architecture-governance",
+            "copy_text": "Синтетический демонстрационный текст о том, почему ADR полезно хранить вместе с последствиями, ограничениями и условиями пересмотра решения.",
+            "content_status": "published",
+            "published_url": "https://setka.example.test/posts/demo-adr",
+            "published_at": "2026-09-10T04:52:16.510143+00:00",
+            "publication_verified_at": "2026-09-11T05:17:16.510143+00:00"
+          },
+          {
+            "item_id": "demo-post-integration",
+            "kind": "post",
+            "dedupe_key": "https://content.example.test/integration|LinkedIn|post",
+            "title": "Граница ответственности интеграционной платформы",
+            "publication_title": "Граница платформы важнее списка технологий",
+            "priority": "normal",
+            "summary": "Синтетический draft; внешняя публикация не выполняется автоматически.",
+            "source_name": "Architecture Feed",
+            "source_url": "https://content.example.test/integration",
+            "target_platform": "LinkedIn",
+            "brand_topic": "enterprise-integration",
+            "copy_text": "Synthetic draft: platform boundaries should be explicit before integration technology is selected.",
+            "content_status": "unpublished"
+          }
+        ]
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-side-income-screening-20260911",
+        "workflow": "side-income-screening",
+        "started_at": "2026-09-11T05:02:16.510143+00:00",
+        "completed_at": "2026-09-11T05:07:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетический поиск подработки нашёл один ограниченный архитектурный review engagement.",
+        "source_metrics": [
+          {
+            "source_ref": "demo-contracts",
+            "source_name": "Demo Contract Board",
+            "source_url": "https://contracts.example.test/",
+            "stream": "side-income",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 5,
+            "new_unique": 2,
+            "qualified": 1,
+            "actionable": 1
+          }
+        ],
+        "items": [
+          {
+            "item_id": "demo-side-001",
+            "kind": "side-income",
+            "dedupe_key": "demo-contracts:arch-review-001",
+            "title": "Architecture review for integration platform",
+            "priority": "normal",
+            "summary": "Фиксированный scope: review целевой архитектуры и список рисков, без production ownership.",
+            "source_name": "Demo Contract Board",
+            "source_url": "https://contracts.example.test/tasks/arch-review-001",
+            "recommendation": "TAKE",
+            "compensation": "synthetic fixed-fee",
+            "deadline": "2026-09-17"
+          }
+        ]
+      },
+      {
+        "schema_version": 1,
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "workflow": "vacancy-market-screening",
+        "started_at": "2026-09-11T04:42:16.510143+00:00",
+        "completed_at": "2026-09-11T04:52:16.510143+00:00",
+        "status": "success",
+        "summary": "Синтетический демонстрационный поиск: два архитектурных сигнала сохранены, один из них уже связан с активным процессом.",
+        "source_metrics": [
+          {
+            "source_ref": "demo-board",
+            "source_name": "Demo Job Board",
+            "source_url": "https://jobs.example.test/",
+            "stream": "permanent-russia",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 8,
+            "new_unique": 3,
+            "qualified": 2,
+            "actionable": 1
+          },
+          {
+            "source_ref": "demo-network",
+            "source_name": "Professional Network",
+            "source_url": "https://network.example.test/",
+            "stream": "permanent-russia",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 4,
+            "new_unique": 2,
+            "qualified": 1,
+            "actionable": 1
+          },
+          {
+            "source_ref": "northstar-careers",
+            "source_name": "Northstar Bank Careers",
+            "source_url": "https://northstar.example.test/careers",
+            "stream": "permanent-russia",
+            "mode": "fixed",
+            "check_status": "checked",
+            "found": 2,
+            "new_unique": 1,
+            "qualified": 1,
+            "actionable": 1
+          }
+        ],
+        "items": [
+          {
+            "item_id": "demo-vacancy-1001",
+            "kind": "vacancy",
+            "dedupe_key": "demo-board:1001",
+            "title": "Northstar Bank — Enterprise Architect",
+            "priority": "high",
+            "summary": "Сильное соответствие architecture-first роли; компенсационный gate пройден в синтетическом сценарии.",
+            "source_name": "Demo Job Board",
+            "source_url": "https://jobs.example.test/1001",
+            "company": "Northstar Bank",
+            "role": "Enterprise Architect",
+            "recommendation": "pursue",
+            "fit_score": 88,
+            "compensation": "synthetic approved range",
+            "compensation_status": "qualified",
+            "discovery_status": "promoted",
+            "origin": "scheduled-search",
+            "match_analysis": {
+              "role_track": "architecture-first",
+              "fit_summary": "Ключевые требования подтверждены синтетическими evidence records.",
+              "confidence": "high",
+              "requirements": [
+                {
+                  "requirement": "Enterprise architecture ownership",
+                  "importance": "mandatory",
+                  "category": "architecture",
+                  "classification": "Direct",
+                  "evidence_summary": "Синтетический профиль подтверждает архитектурную ответственность.",
+                  "central": true
+                },
+                {
+                  "requirement": "Integration architecture",
+                  "importance": "mandatory",
+                  "category": "integration",
+                  "classification": "Direct",
+                  "evidence_summary": "Синтетический профиль содержит integration architecture case."
+                },
+                {
+                  "requirement": "Cloud landing-zone ownership",
+                  "importance": "optional",
+                  "category": "cloud",
+                  "classification": "Adjacent",
+                  "evidence_summary": "Есть смежный опыт, но не заявлен production ownership."
+                }
+              ],
+              "hard_blockers": [],
+              "compensation_gate": {
+                "status": "pass",
+                "reason": "Синтетический диапазон прошёл policy gate.",
+                "normalized_compensation": "demo-qualified"
+              }
+            }
+          },
+          {
+            "item_id": "demo-vacancy-2002",
+            "kind": "vacancy",
+            "dedupe_key": "demo-network:2002",
+            "title": "Meridian Insurance — Solution Architect",
+            "priority": "high",
+            "summary": "Архитектурный fit подтверждён, но диапазон компенсации остаётся неизвестным.",
+            "source_name": "Professional Network",
+            "source_url": "https://network.example.test/jobs/2002",
+            "company": "Meridian Insurance",
+            "role": "Solution Architect",
+            "recommendation": "conditional",
+            "fit_score": 81,
+            "compensation_status": "compensation-unknown",
+            "discovery_status": "promoted",
+            "origin": "recruiter-inbound",
+            "match_analysis": {
+              "role_track": "architecture-first",
+              "fit_summary": "Основной solution architecture контур подтверждён; один доменный пункт требует уточнения.",
+              "confidence": "medium",
+              "requirements": [
+                {
+                  "requirement": "Solution architecture",
+                  "importance": "mandatory",
+                  "category": "architecture",
+                  "classification": "Direct",
+                  "evidence_summary": "Синтетический architecture case подтверждает требование.",
+                  "central": true
+                },
+                {
+                  "requirement": "Insurance domain depth",
+                  "importance": "mandatory",
+                  "category": "domain",
+                  "classification": "Unknown",
+                  "evidence_summary": "Доменная глубина намеренно оставлена неизвестной."
+                }
+              ],
+              "hard_blockers": [],
+              "compensation_gate": {
+                "status": "unresolved",
+                "reason": "Approved range отсутствует в синтетической карточке."
+              }
+            }
+          },
+          {
+            "item_id": "demo-vacancy-3003",
+            "kind": "vacancy",
+            "dedupe_key": "demo-board:3003",
+            "title": "Atlas Retail — Platform Architect",
+            "priority": "normal",
+            "summary": "Роль сохранена для демонстрации pre-application decision state.",
+            "source_name": "Demo Job Board",
+            "source_url": "https://jobs.example.test/3003",
+            "company": "Atlas Retail",
+            "role": "Platform Architect",
+            "recommendation": "conditional",
+            "fit_score": 74,
+            "compensation_status": "compensation-unknown",
+            "discovery_status": "reviewing",
+            "origin": "scheduled-search",
+            "match_analysis": {
+              "role_track": "architecture-first",
+              "fit_summary": "Architecture ownership подтверждён частично; platform scope требует проверки.",
+              "confidence": "medium",
+              "requirements": [
+                {
+                  "requirement": "Platform architecture",
+                  "importance": "mandatory",
+                  "category": "architecture",
+                  "classification": "Partial",
+                  "evidence_summary": "Подтверждён смежный platform-design опыт, но ownership уже по объёму."
+                }
+              ],
+              "hard_blockers": [],
+              "compensation_gate": {
+                "status": "unresolved",
+                "reason": "Диапазон не указан."
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "workflow_health": [
+      {
+        "workflow": "vacancy-market-screening",
+        "health": "success",
+        "run_status": "success",
+        "run_id": "demo-vacancy-market-screening-20260911",
+        "completed_at": "2026-09-11T06:58:16.510143+00:00",
+        "age_hours": 0.9,
+        "freshness_hours": 36,
+        "started_at": "2026-09-11T06:52:16.510143+00:00",
+        "duration_seconds": 360,
+        "run_summary": "Синтетический поиск: 5 кандидатов, 3 уникальных, 2 квалифицированы, 2 требуют действия.",
+        "source_coverage": {
+          "telemetry_status": "measured",
+          "reported_sources": 2,
+          "checked_sources": 2,
+          "unavailable_sources": 0,
+          "found_candidates": 5,
+          "actionable_candidates": 2,
+          "mandatory_expected": 2,
+          "mandatory_checked": 0,
+          "mandatory_unavailable": [],
+          "mandatory_missing": [
+            {
+              "source_ref": "demo-board",
+              "source_name": "Demo Job Board"
+            },
+            {
+              "source_ref": "demo-network",
+              "source_name": "Professional Network"
+            }
+          ]
+        }
+      },
+      {
+        "workflow": "side-income-screening",
+        "health": "success",
+        "run_status": "success",
+        "run_id": "demo-side-income-screening-20260911",
+        "completed_at": "2026-09-11T07:05:16.510143+00:00",
+        "age_hours": 0.8,
+        "freshness_hours": 36,
+        "started_at": "2026-09-11T07:02:16.510143+00:00",
+        "duration_seconds": 180,
+        "run_summary": "Синтетический поиск подработки: одна ограниченная архитектурная задача.",
+        "source_coverage": {
+          "telemetry_status": "measured",
+          "reported_sources": 1,
+          "checked_sources": 1,
+          "unavailable_sources": 0,
+          "found_candidates": 3,
+          "actionable_candidates": 1,
+          "mandatory_expected": 0,
+          "mandatory_checked": 0,
+          "mandatory_unavailable": [],
+          "mandatory_missing": []
+        }
+      },
+      {
+        "workflow": "setka-monitoring",
+        "health": "success",
+        "run_status": "success",
+        "run_id": "demo-setka-monitoring-20260911",
+        "completed_at": "2026-09-11T07:24:16.510143+00:00",
+        "age_hours": 0.5,
+        "freshness_hours": 36,
+        "started_at": "2026-09-11T07:22:16.510143+00:00",
+        "duration_seconds": 120,
+        "run_summary": "Синтетические brand measurements для демонстрации наблюдательной аналитики без causal claims.",
+        "source_coverage": {
+          "telemetry_status": "unknown",
+          "reported_sources": null,
+          "checked_sources": null,
+          "unavailable_sources": null,
+          "found_candidates": null,
+          "actionable_candidates": null,
+          "mandatory_expected": 0,
+          "mandatory_checked": null,
+          "mandatory_unavailable": [],
+          "mandatory_missing": []
+        }
+      },
+      {
+        "workflow": "daily-brand-scan",
+        "health": "success",
+        "run_status": "success",
+        "run_id": "demo-daily-brand-scan-20260911",
+        "completed_at": "2026-09-11T07:16:16.510143+00:00",
+        "age_hours": 0.6,
+        "freshness_hours": 36,
+        "started_at": "2026-09-11T07:12:16.510143+00:00",
+        "duration_seconds": 240,
+        "run_summary": "Синтетический content scan: подготовлен один архитектурный пост.",
+        "source_coverage": {
+          "telemetry_status": "measured",
+          "reported_sources": 1,
+          "checked_sources": 1,
+          "unavailable_sources": 0,
+          "found_candidates": 4,
+          "actionable_candidates": 1,
+          "mandatory_expected": 0,
+          "mandatory_checked": 0,
+          "mandatory_unavailable": [],
+          "mandatory_missing": []
+        }
+      }
+    ],
+    "control_plane": {
+      "manual_refresh": {
+        "request_count": 0,
+        "queued_count": 0,
+        "running_count": 0,
+        "completed_count": 0,
+        "latest_request": null,
+        "last_completed": null,
+        "recent_requests": []
+      }
+    },
+    "reliability_summary": {
+      "latest_run_count": 4,
+      "average_duration_seconds": 225,
+      "source_checks_latest": 4,
+      "source_unavailable_latest": 0,
+      "mandatory_expected_latest": 2,
+      "mandatory_checked_latest": 0,
+      "mandatory_unavailable_latest": 0,
+      "mandatory_missing_latest": 2
+    },
+    "brand_metrics": [
+      {
+        "platform": "setka",
+        "scope": "profile",
+        "observed_at": "2026-09-11T06:52:16.510143+00:00",
+        "collection_mode": "user-provided",
+        "collection_status": "checked",
+        "followers": 126,
+        "profile_views": 44,
+        "content_views": 330,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "run_completed_at": "2026-09-11T07:24:16.510143+00:00"
+      },
+      {
+        "platform": "setka",
+        "scope": "profile",
+        "observed_at": "2026-09-11T03:52:16.510143+00:00",
+        "collection_mode": "user-provided",
+        "collection_status": "checked",
+        "followers": 126,
+        "profile_views": 46,
+        "content_views": 315,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "run_completed_at": "2026-09-11T05:37:16.510143+00:00"
+      },
+      {
+        "platform": "setka",
+        "scope": "post",
+        "observed_at": "2026-09-10T16:52:16.510143+00:00",
+        "collection_mode": "user-provided",
+        "collection_status": "checked",
+        "subject_url": "https://social.example.test/posts/adr-demo",
+        "views": 1400,
+        "reactions": 70,
+        "comments": 12,
+        "reposts": 6,
+        "erv": 6.3,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "run_completed_at": "2026-09-11T07:24:16.510143+00:00"
+      },
+      {
+        "platform": "setka",
+        "scope": "post",
+        "observed_at": "2026-09-10T13:52:16.510143+00:00",
+        "collection_mode": "user-provided",
+        "collection_status": "checked",
+        "subject_url": "https://setka.example.test/posts/demo-adr",
+        "views": 1250,
+        "reactions": 63,
+        "comments": 12,
+        "reposts": 4,
+        "erv": 6.3,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "run_completed_at": "2026-09-11T05:37:16.510143+00:00"
+      },
+      {
+        "platform": "setka",
+        "scope": "profile",
+        "observed_at": "2026-09-09T06:52:16.510143+00:00",
+        "collection_mode": "user-provided",
+        "collection_status": "checked",
+        "followers": 120,
+        "profile_views": 30,
+        "content_views": 250,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "run_completed_at": "2026-09-11T07:24:16.510143+00:00"
+      },
+      {
+        "platform": "setka",
+        "scope": "profile",
+        "observed_at": "2026-09-09T03:52:16.510143+00:00",
+        "collection_mode": "user-provided",
+        "collection_status": "checked",
+        "followers": 120,
+        "profile_views": 30,
+        "content_views": 240,
+        "run_id": "demo-setka-monitoring-20260911",
+        "workflow": "setka-monitoring",
+        "run_completed_at": "2026-09-11T05:37:16.510143+00:00"
+      }
+    ]
+  },
+  "analytics": {
+    "vacancy_count": 7,
+    "vacancy_active_count": 2,
+    "vacancy_consideration_count": 3,
+    "vacancy_closed_count": 2,
+    "vacancy_status_counts": {
+      "technical-or-architecture-interview": 1,
+      "promoted": 1,
+      "reviewing": 1,
+      "qualified": 2,
+      "rejected": 1,
+      "dismissed": 1
+    },
+    "vacancy_origin_counts": {
+      "scheduled-search": 5,
+      "recruiter-inbound": 1,
+      "manual-search": 1
+    },
+    "opportunity_count": 4,
+    "active_opportunity_count": 3,
+    "stage_counts": {
+      "qualified": 2,
+      "technical-or-architecture-interview": 1,
+      "rejected": 1
+    },
+    "source_counts": {
+      "Professional Network": 1,
+      "Demo Job Board": 1,
+      "Orion Careers": 1,
+      "Orbit Jobs": 1
+    },
+    "item_kind_counts": {
+      "email": 1,
+      "post": 2,
+      "side-income": 2,
+      "vacancy": 6
+    },
+    "content_count": 2,
+    "published_content_count": 1,
+    "content_status_counts": {
+      "unpublished": 1,
+      "published": 1
+    },
+    "interaction_count": 5,
+    "funnel": {
+      "current_state": {
+        "definition": "canonical-current-stage-distribution",
+        "opportunity_count": 4,
+        "stage_counts": {
+          "qualified": 2,
+          "technical-or-architecture-interview": 1,
+          "rejected": 1
+        },
+        "segments": {
+          "source": [
+            {
+              "value": "Demo Job Board",
+              "count": 1
+            },
+            {
+              "value": "Orbit Jobs",
+              "count": 1
+            },
+            {
+              "value": "Orion Careers",
+              "count": 1
+            },
+            {
+              "value": "Professional Network",
+              "count": 1
+            }
+          ],
+          "role_track": [
+            {
+              "value": "unknown",
+              "count": 4
+            }
+          ],
+          "fit_status": [
+            {
+              "value": "qualified",
+              "count": 4
+            }
+          ],
+          "recommendation": [
+            {
+              "value": "pursue",
+              "count": 3
+            },
+            {
+              "value": "closed",
+              "count": 1
+            }
+          ],
+          "compensation_status": [
+            {
+              "value": "compensation-unknown",
+              "count": 2
+            },
+            {
+              "value": "qualified",
+              "count": 2
+            }
+          ]
+        }
+      },
+      "historical": {
+        "definition": "interaction-log-stage-after-event-only",
+        "evidence_basis": "Interaction Log -> Stage after event",
+        "opportunity_count": 4,
+        "evidenced_opportunity_count": 2,
+        "missing_transition_evidence_count": 2,
+        "milestone_counts": {
+          "applied": 2,
+          "recruiter": 1,
+          "interview": 1,
+          "offer": 0,
+          "accepted": 0
+        },
+        "transitions": [
+          {
+            "id": "applied_to_recruiter",
+            "from": "applied",
+            "to": "recruiter",
+            "source_count": 2,
+            "converted_count": 1,
+            "conversion_pct": 50.0,
+            "source_opportunity_ids": [
+              "DEMO-OPP-001",
+              "DEMO-OPP-003"
+            ],
+            "converted_opportunity_ids": [
+              "DEMO-OPP-001"
+            ],
+            "evidence": [
+              {
+                "opportunity_id": "DEMO-OPP-001",
+                "from_interaction_id": "INT-DEMO-001",
+                "from_timestamp": "2026-09-08T05:52:16.510143+00:00",
+                "from_stage_after_event": "applied",
+                "to_interaction_id": "INT-DEMO-002",
+                "to_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                "to_stage_after_event": "recruiter-screen"
+              }
+            ]
+          },
+          {
+            "id": "recruiter_to_interview",
+            "from": "recruiter",
+            "to": "interview",
+            "source_count": 1,
+            "converted_count": 1,
+            "conversion_pct": 100.0,
+            "source_opportunity_ids": [
+              "DEMO-OPP-001"
+            ],
+            "converted_opportunity_ids": [
+              "DEMO-OPP-001"
+            ],
+            "evidence": [
+              {
+                "opportunity_id": "DEMO-OPP-001",
+                "from_interaction_id": "INT-DEMO-002",
+                "from_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                "from_stage_after_event": "recruiter-screen",
+                "to_interaction_id": "INT-DEMO-003",
+                "to_timestamp": "2026-09-11T06:52:16.510143+00:00",
+                "to_stage_after_event": "technical-or-architecture-interview"
+              }
+            ]
+          },
+          {
+            "id": "interview_to_offer",
+            "from": "interview",
+            "to": "offer",
+            "source_count": 1,
+            "converted_count": 0,
+            "conversion_pct": 0.0,
+            "source_opportunity_ids": [
+              "DEMO-OPP-001"
+            ],
+            "converted_opportunity_ids": [],
+            "evidence": []
+          },
+          {
+            "id": "offer_to_accepted",
+            "from": "offer",
+            "to": "accepted",
+            "source_count": 0,
+            "converted_count": 0,
+            "conversion_pct": null,
+            "source_opportunity_ids": [],
+            "converted_opportunity_ids": [],
+            "evidence": []
+          }
+        ],
+        "segments": {
+          "source": [
+            {
+              "value": "Demo Job Board",
+              "opportunity_count": 1,
+              "evidenced_opportunity_count": 1,
+              "evidence_coverage_pct": 100.0,
+              "milestone_counts": {
+                "applied": 1,
+                "recruiter": 1,
+                "interview": 1,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-001",
+                      "from_timestamp": "2026-09-08T05:52:16.510143+00:00",
+                      "from_stage_after_event": "applied",
+                      "to_interaction_id": "INT-DEMO-002",
+                      "to_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "to_stage_after_event": "recruiter-screen"
+                    }
+                  ]
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-002",
+                      "from_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "from_stage_after_event": "recruiter-screen",
+                      "to_interaction_id": "INT-DEMO-003",
+                      "to_timestamp": "2026-09-11T06:52:16.510143+00:00",
+                      "to_stage_after_event": "technical-or-architecture-interview"
+                    }
+                  ]
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            },
+            {
+              "value": "Orbit Jobs",
+              "opportunity_count": 1,
+              "evidenced_opportunity_count": 1,
+              "evidence_coverage_pct": 100.0,
+              "milestone_counts": {
+                "applied": 1,
+                "recruiter": 0,
+                "interview": 0,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-003"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            },
+            {
+              "value": "Orion Careers",
+              "opportunity_count": 1,
+              "evidenced_opportunity_count": 0,
+              "evidence_coverage_pct": 0.0,
+              "milestone_counts": {
+                "applied": 0,
+                "recruiter": 0,
+                "interview": 0,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            },
+            {
+              "value": "Professional Network",
+              "opportunity_count": 1,
+              "evidenced_opportunity_count": 0,
+              "evidence_coverage_pct": 0.0,
+              "milestone_counts": {
+                "applied": 0,
+                "recruiter": 0,
+                "interview": 0,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            }
+          ],
+          "role_track": [
+            {
+              "value": "unknown",
+              "opportunity_count": 4,
+              "evidenced_opportunity_count": 2,
+              "evidence_coverage_pct": 50.0,
+              "milestone_counts": {
+                "applied": 2,
+                "recruiter": 1,
+                "interview": 1,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 2,
+                  "converted_count": 1,
+                  "conversion_pct": 50.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001",
+                    "DEMO-OPP-003"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-001",
+                      "from_timestamp": "2026-09-08T05:52:16.510143+00:00",
+                      "from_stage_after_event": "applied",
+                      "to_interaction_id": "INT-DEMO-002",
+                      "to_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "to_stage_after_event": "recruiter-screen"
+                    }
+                  ]
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-002",
+                      "from_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "from_stage_after_event": "recruiter-screen",
+                      "to_interaction_id": "INT-DEMO-003",
+                      "to_timestamp": "2026-09-11T06:52:16.510143+00:00",
+                      "to_stage_after_event": "technical-or-architecture-interview"
+                    }
+                  ]
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            }
+          ],
+          "fit_status": [
+            {
+              "value": "qualified",
+              "opportunity_count": 4,
+              "evidenced_opportunity_count": 2,
+              "evidence_coverage_pct": 50.0,
+              "milestone_counts": {
+                "applied": 2,
+                "recruiter": 1,
+                "interview": 1,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 2,
+                  "converted_count": 1,
+                  "conversion_pct": 50.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001",
+                    "DEMO-OPP-003"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-001",
+                      "from_timestamp": "2026-09-08T05:52:16.510143+00:00",
+                      "from_stage_after_event": "applied",
+                      "to_interaction_id": "INT-DEMO-002",
+                      "to_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "to_stage_after_event": "recruiter-screen"
+                    }
+                  ]
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-002",
+                      "from_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "from_stage_after_event": "recruiter-screen",
+                      "to_interaction_id": "INT-DEMO-003",
+                      "to_timestamp": "2026-09-11T06:52:16.510143+00:00",
+                      "to_stage_after_event": "technical-or-architecture-interview"
+                    }
+                  ]
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            }
+          ],
+          "recommendation": [
+            {
+              "value": "pursue",
+              "opportunity_count": 3,
+              "evidenced_opportunity_count": 1,
+              "evidence_coverage_pct": 33.3,
+              "milestone_counts": {
+                "applied": 1,
+                "recruiter": 1,
+                "interview": 1,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-001",
+                      "from_timestamp": "2026-09-08T05:52:16.510143+00:00",
+                      "from_stage_after_event": "applied",
+                      "to_interaction_id": "INT-DEMO-002",
+                      "to_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "to_stage_after_event": "recruiter-screen"
+                    }
+                  ]
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-002",
+                      "from_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "from_stage_after_event": "recruiter-screen",
+                      "to_interaction_id": "INT-DEMO-003",
+                      "to_timestamp": "2026-09-11T06:52:16.510143+00:00",
+                      "to_stage_after_event": "technical-or-architecture-interview"
+                    }
+                  ]
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            },
+            {
+              "value": "closed",
+              "opportunity_count": 1,
+              "evidenced_opportunity_count": 1,
+              "evidence_coverage_pct": 100.0,
+              "milestone_counts": {
+                "applied": 1,
+                "recruiter": 0,
+                "interview": 0,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-003"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            }
+          ],
+          "compensation_status": [
+            {
+              "value": "compensation-unknown",
+              "opportunity_count": 2,
+              "evidenced_opportunity_count": 0,
+              "evidence_coverage_pct": 0.0,
+              "milestone_counts": {
+                "applied": 0,
+                "recruiter": 0,
+                "interview": 0,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            },
+            {
+              "value": "qualified",
+              "opportunity_count": 2,
+              "evidenced_opportunity_count": 2,
+              "evidence_coverage_pct": 100.0,
+              "milestone_counts": {
+                "applied": 2,
+                "recruiter": 1,
+                "interview": 1,
+                "offer": 0,
+                "accepted": 0
+              },
+              "transitions": [
+                {
+                  "id": "applied_to_recruiter",
+                  "from": "applied",
+                  "to": "recruiter",
+                  "source_count": 2,
+                  "converted_count": 1,
+                  "conversion_pct": 50.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001",
+                    "DEMO-OPP-003"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-001",
+                      "from_timestamp": "2026-09-08T05:52:16.510143+00:00",
+                      "from_stage_after_event": "applied",
+                      "to_interaction_id": "INT-DEMO-002",
+                      "to_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "to_stage_after_event": "recruiter-screen"
+                    }
+                  ]
+                },
+                {
+                  "id": "recruiter_to_interview",
+                  "from": "recruiter",
+                  "to": "interview",
+                  "source_count": 1,
+                  "converted_count": 1,
+                  "conversion_pct": 100.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "evidence": [
+                    {
+                      "opportunity_id": "DEMO-OPP-001",
+                      "from_interaction_id": "INT-DEMO-002",
+                      "from_timestamp": "2026-09-09T07:52:16.510143+00:00",
+                      "from_stage_after_event": "recruiter-screen",
+                      "to_interaction_id": "INT-DEMO-003",
+                      "to_timestamp": "2026-09-11T06:52:16.510143+00:00",
+                      "to_stage_after_event": "technical-or-architecture-interview"
+                    }
+                  ]
+                },
+                {
+                  "id": "interview_to_offer",
+                  "from": "interview",
+                  "to": "offer",
+                  "source_count": 1,
+                  "converted_count": 0,
+                  "conversion_pct": 0.0,
+                  "source_opportunity_ids": [
+                    "DEMO-OPP-001"
+                  ],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                },
+                {
+                  "id": "offer_to_accepted",
+                  "from": "offer",
+                  "to": "accepted",
+                  "source_count": 0,
+                  "converted_count": 0,
+                  "conversion_pct": null,
+                  "source_opportunity_ids": [],
+                  "converted_opportunity_ids": [],
+                  "evidence": []
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "action_center": {
+      "definition": "canonical-opportunity-next-action-read-only",
+      "items": [
+        {
+          "action_id": "DEMO-OPP-002:next-action",
+          "opportunity_id": "DEMO-OPP-002",
+          "company": "Meridian Insurance",
+          "role": "Solution Architect",
+          "current_stage": "qualified",
+          "action_kind": "decision",
+          "next_action": {
+            "text": "Уточнить утверждённый диапазон компенсации",
+            "date": "to-verify",
+            "due_kind": "to-verify",
+            "source": "canonical-opportunity"
+          },
+          "recommendation": "pursue",
+          "compensation_gate": {
+            "status": "unresolved",
+            "source": "canonical-opportunity",
+            "reason": "Approved range отсутствует в синтетической карточке."
+          },
+          "unresolved_gates": [
+            {
+              "kind": "compensation",
+              "status": "unresolved",
+              "label": "Approved range отсутствует в синтетической карточке."
+            },
+            {
+              "kind": "mandatory-requirement",
+              "status": "unknown",
+              "label": "Insurance domain depth"
+            }
+          ],
+          "unresolved_gate_count": 2,
+          "tailoring_readiness": {
+            "status": "hold",
+            "reason": "Сначала нужно закрыть существенные qualification gates или пробелы в evidence."
+          },
+          "draft_preparation": {
+            "mode": "copy-context",
+            "requires_explicit_authorization": true,
+            "external_action": false
+          },
+          "data_quality": []
+        },
+        {
+          "action_id": "DEMO-OPP-001:next-action",
+          "opportunity_id": "DEMO-OPP-001",
+          "company": "Northstar Bank",
+          "role": "Enterprise Architect",
+          "current_stage": "technical-or-architecture-interview",
+          "action_kind": "follow-up",
+          "next_action": {
+            "text": "Подготовить архитектурный кейс к интервью",
+            "date": "2026-09-13",
+            "due_kind": "exact",
+            "source": "canonical-opportunity"
+          },
+          "recommendation": "pursue",
+          "compensation_gate": {
+            "status": "pass",
+            "source": "canonical-opportunity",
+            "reason": "Синтетический диапазон прошёл policy gate.",
+            "normalized_compensation": "demo-qualified"
+          },
+          "unresolved_gates": [],
+          "unresolved_gate_count": 0,
+          "tailoring_readiness": {
+            "status": "ready",
+            "reason": "Материальные qualification gates закрыты; адаптацию материалов можно начинать."
+          },
+          "draft_preparation": {
+            "mode": "copy-context",
+            "requires_explicit_authorization": true,
+            "external_action": false
+          },
+          "data_quality": []
+        },
+        {
+          "action_id": "DEMO-OPP-002:next-action",
+          "opportunity_id": "DEMO-OPP-002",
+          "company": "Orion Platforms",
+          "role": "Solution Architect",
+          "current_stage": "qualified",
+          "action_kind": "decision",
+          "next_action": {
+            "text": "Уточнить утверждённый диапазон компенсации до tailoring",
+            "date": "to-verify",
+            "due_kind": "to-verify",
+            "source": "canonical-opportunity"
+          },
+          "recommendation": "pursue",
+          "compensation_gate": {
+            "status": "unresolved",
+            "source": "canonical-opportunity",
+            "reason": "Диапазон не опубликован."
+          },
+          "unresolved_gates": [
+            {
+              "kind": "compensation",
+              "status": "unresolved",
+              "label": "Диапазон не опубликован."
+            }
+          ],
+          "unresolved_gate_count": 1,
+          "tailoring_readiness": {
+            "status": "hold",
+            "reason": "Сначала нужно закрыть существенные qualification gates или пробелы в evidence."
+          },
+          "draft_preparation": {
+            "mode": "copy-context",
+            "requires_explicit_authorization": true,
+            "external_action": false
+          },
+          "data_quality": []
+        }
+      ],
+      "summary": {
+        "total": 3,
+        "decisions": 2,
+        "follow_ups": 1,
+        "exact_dates": 1,
+        "dates_to_verify": 2,
+        "undated": 0,
+        "data_quality_issues": 0,
+        "with_unresolved_gates": 2
+      },
+      "safety": {
+        "read_only": true,
+        "external_actions_require_explicit_authorization": true,
+        "browser_credentials_required": false
+      }
+    },
+    "discovered_vacancy_count": 6,
+    "actionable_discovered_vacancy_count": 1,
+    "discovery_status_counts": {
+      "reviewing": 1,
+      "promoted": 4,
+      "dismissed": 1
+    },
+    "brand_metric_count": 6,
+    "setka_brand_metric_count": 6,
+    "brand_intelligence": {
+      "taxonomy_version": 1,
+      "classified_published_posts": 1,
+      "unclassified_published_posts": 0,
+      "posts_with_engagement": 1,
+      "profile_signal_pairs": 1,
+      "topics": [
+        {
+          "topic_id": "architecture-governance",
+          "label": "Архитектурные решения и governance",
+          "description": "ADR, архитектурные принципы, decision governance, контроль архитектурных решений и стоимость изменения.",
+          "published_posts": 1,
+          "linked_post_metrics": 1,
+          "engagement_samples": 1,
+          "avg_views": 1400.0,
+          "avg_erv": 6.3,
+          "avg_interactions_per_1000_views": 62.86,
+          "profile_signal_pairs": 1,
+          "avg_followers_delta": 6.0,
+          "avg_profile_views_delta": 16.0,
+          "avg_content_views_delta": 65.0,
+          "platforms": {
+            "setka": 1
+          },
+          "evidence_strength": "low",
+          "correlation_status": "engagement-and-profile-coincidence"
+        },
+        {
+          "topic_id": "enterprise-integration",
+          "label": "Корпоративная интеграция",
+          "description": "API, события, messaging, интеграционные контракты, идемпотентность и границы систем.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        },
+        {
+          "topic_id": "platform-architecture",
+          "label": "Платформенная архитектура",
+          "description": "Platform engineering, paved road, guardrails, эксплуатационные контракты и внутренние платформы.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        },
+        {
+          "topic_id": "enterprise-architecture",
+          "label": "Корпоративная архитектура и моделирование",
+          "description": "Enterprise Architecture, TOGAF, ArchiMate, ландшафты, capabilities и архитектурные репозитории.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        },
+        {
+          "topic_id": "ai-assisted-engineering",
+          "label": "ИИ в разработке и архитектуре",
+          "description": "LLM, агенты, AI-assisted engineering, agentic workflows и governance применения ИИ.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        },
+        {
+          "topic_id": "software-architecture",
+          "label": "Архитектура ПО и эволюция систем",
+          "description": "Границы модулей, надёжность, миграции, технический долг и эволюционность архитектуры.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        },
+        {
+          "topic_id": "content-platforms",
+          "label": "ECM, контент и корпоративные платформы",
+          "description": "ECM, документы, контент, объектное хранение и архитектура корпоративных контентных платформ.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        },
+        {
+          "topic_id": "architecture-tools",
+          "label": "Инструменты архитектора",
+          "description": "SILA Union, архитектурные репозитории, скрипты и автоматизация практической работы архитектора.",
+          "published_posts": 0,
+          "linked_post_metrics": 0,
+          "engagement_samples": 0,
+          "avg_views": null,
+          "avg_erv": null,
+          "avg_interactions_per_1000_views": null,
+          "profile_signal_pairs": 0,
+          "avg_followers_delta": null,
+          "avg_profile_views_delta": null,
+          "avg_content_views_delta": null,
+          "platforms": {},
+          "evidence_strength": "insufficient",
+          "correlation_status": "insufficient-data"
+        }
+      ],
+      "methodology": {
+        "claim_mode": "observational",
+        "claim_mode_label": "наблюдательное сопоставление, не причинная атрибуция",
+        "profile_window_days": 7,
+        "profile_pairing": "nearest comparable before/after profile snapshots with the same collection mode and no other published post between the snapshots",
+        "unknown_policy": "missing measurements and unclassified historical content remain unknown",
+        "causality_claimed": false
+      }
+    }
+  },
+  "warnings": [],
+  "source_analytics": {
+    "sources": [
+      {
+        "key": "dynamic:content:demo-architecture-feed",
+        "source_id": "demo-architecture-feed",
+        "name": "Architecture Feed",
+        "stream": "content",
+        "stream_label": "Контент",
+        "category": "discovered-at-runtime",
+        "source_type": "observed-result-source",
+        "mode": "dynamic",
+        "coverage": "observed",
+        "enabled": true,
+        "entrypoint": "https://content.example.test/",
+        "parent": "daily-brand-scan",
+        "search_channel": null,
+        "notes": "Источник был фактически проверен или появился в сохранённых результатах, но не является отдельной текущей записью фиксированного реестра.",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 6,
+        "new_unique_candidates": 3,
+        "qualified_candidates": 2,
+        "actionable_candidates": 2,
+        "saved_results": 3,
+        "saved_actionable_results": 3,
+        "runs_with_results": 1,
+        "attributed_vacancies": 0,
+        "linked_opportunities": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": "2026-09-11T05:22:16.510143+00:00",
+        "last_finding_at": "2026-09-11T07:16:16.510143+00:00",
+        "last_progress_at": null,
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": null,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": 33.3,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 6,
+          "new_unique": 3,
+          "qualified": 2,
+          "actionable": 2,
+          "saved_results": 3,
+          "attributed_vacancies": 0,
+          "linked_opportunities": 0,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 3.0,
+          "qualified_per_check": 2.0,
+          "actionable_per_check": 2.0,
+          "application_conversion_pct": null,
+          "last_attempt_at": "2026-09-11T05:22:16.510143+00:00",
+          "last_checked_at": "2026-09-11T05:22:16.510143+00:00",
+          "last_finding_at": "2026-09-11T05:22:16.510143+00:00",
+          "signal": "actionable-yield"
+        }
+      },
+      {
+        "key": "dynamic-channel:daily-brand-scan",
+        "source_id": "daily-brand-dynamic-discovery",
+        "name": "Динамический поиск источников для контента",
+        "stream": "content",
+        "stream_label": "Контент",
+        "category": "dynamic-discovery",
+        "source_type": "web-search",
+        "mode": "dynamic-channel",
+        "coverage": "workflow",
+        "enabled": true,
+        "entrypoint": null,
+        "parent": null,
+        "search_channel": "Свежие русско- и англоязычные материалы и обсуждения для LinkedIn и Сетки.",
+        "notes": "Конкретные сайты, авторы и обсуждения выбираются во время запуска и учитываются как динамически найденные источники.",
+        "telemetry_available": false,
+        "checks": null,
+        "unavailable_attempts": null,
+        "found_candidates": null,
+        "new_unique_candidates": null,
+        "qualified_candidates": null,
+        "actionable_candidates": null,
+        "saved_results": 0,
+        "saved_actionable_results": 0,
+        "runs_with_results": 0,
+        "attributed_vacancies": 0,
+        "linked_opportunities": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": null,
+        "last_finding_at": null,
+        "last_progress_at": null,
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": null,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": null,
+        "window_28d": {
+          "attempts": 0,
+          "checks": 0,
+          "unavailable": 0,
+          "availability_pct": null,
+          "found": 0,
+          "new_unique": 0,
+          "qualified": 0,
+          "actionable": 0,
+          "saved_results": 0,
+          "attributed_vacancies": 0,
+          "linked_opportunities": 0,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": null,
+          "qualified_per_check": null,
+          "actionable_per_check": null,
+          "application_conversion_pct": null,
+          "last_attempt_at": null,
+          "last_checked_at": null,
+          "last_finding_at": null,
+          "signal": "not-covered"
+        }
+      },
+      {
+        "key": "fixed:vacancy-search-sources:demo-board",
+        "source_id": "demo-board",
+        "name": "Demo Job Board",
+        "stream": "permanent-russia",
+        "stream_label": "Основная работа",
+        "category": "job-board",
+        "source_type": null,
+        "mode": "fixed",
+        "coverage": "mandatory",
+        "enabled": true,
+        "entrypoint": "https://jobs.example.test/",
+        "parent": null,
+        "search_channel": null,
+        "notes": null,
+        "priority": null,
+        "registry": "vacancy-search-sources",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 8,
+        "new_unique_candidates": 3,
+        "qualified_candidates": 2,
+        "actionable_candidates": 1,
+        "saved_results": 4,
+        "saved_actionable_results": 3,
+        "runs_with_results": 1,
+        "attributed_vacancies": 4,
+        "linked_opportunities": 1,
+        "applications": 1,
+        "recruiter_contacts": 1,
+        "interviews": 1,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 1,
+        "last_checked_at": "2026-09-11T04:52:16.510143+00:00",
+        "last_finding_at": "2026-09-11T06:58:16.510143+00:00",
+        "last_progress_at": "2026-09-11T06:52:16.510143+00:00",
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": 25.0,
+        "recruiter_conversion_pct": 100.0,
+        "interview_conversion_pct": 100.0,
+        "offer_conversion_pct": 0.0,
+        "actionable_yield_pct": 12.5,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 8,
+          "new_unique": 3,
+          "qualified": 2,
+          "actionable": 1,
+          "saved_results": 4,
+          "attributed_vacancies": 4,
+          "linked_opportunities": 1,
+          "applications": 1,
+          "recruiter_contacts": 1,
+          "interviews": 1,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 3.0,
+          "qualified_per_check": 2.0,
+          "actionable_per_check": 1.0,
+          "application_conversion_pct": 25.0,
+          "last_attempt_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_checked_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_finding_at": "2026-09-11T04:52:16.510143+00:00",
+          "signal": "downstream-progress"
+        },
+        "execution_priority_class": "mandatory",
+        "execution_priority_rank": 0,
+        "execution_priority_reason": "Обязательный источник проверяется на каждом запуске независимо от yield."
+      },
+      {
+        "key": "fixed:vacancy-search-sources:demo-network",
+        "source_id": "demo-network",
+        "name": "Professional Network",
+        "stream": "permanent-russia",
+        "stream_label": "Основная работа",
+        "category": "professional-network",
+        "source_type": null,
+        "mode": "fixed",
+        "coverage": "mandatory",
+        "enabled": true,
+        "entrypoint": "https://network.example.test/",
+        "parent": null,
+        "search_channel": null,
+        "notes": null,
+        "priority": null,
+        "registry": "vacancy-search-sources",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 4,
+        "new_unique_candidates": 2,
+        "qualified_candidates": 1,
+        "actionable_candidates": 1,
+        "saved_results": 1,
+        "saved_actionable_results": 1,
+        "runs_with_results": 1,
+        "attributed_vacancies": 1,
+        "linked_opportunities": 1,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": "2026-09-11T04:52:16.510143+00:00",
+        "last_finding_at": "2026-09-11T04:52:16.510143+00:00",
+        "last_progress_at": null,
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": 0.0,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": 25.0,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 4,
+          "new_unique": 2,
+          "qualified": 1,
+          "actionable": 1,
+          "saved_results": 1,
+          "attributed_vacancies": 1,
+          "linked_opportunities": 1,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 2.0,
+          "qualified_per_check": 1.0,
+          "actionable_per_check": 1.0,
+          "application_conversion_pct": 0.0,
+          "last_attempt_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_checked_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_finding_at": "2026-09-11T04:52:16.510143+00:00",
+          "signal": "actionable-yield"
+        },
+        "execution_priority_class": "mandatory",
+        "execution_priority_rank": 0,
+        "execution_priority_reason": "Обязательный источник проверяется на каждом запуске независимо от yield."
+      },
+      {
+        "key": "fixed:employer-direct-watchlist:northstar-careers",
+        "source_id": "northstar-careers",
+        "name": "Northstar Bank Careers",
+        "stream": "permanent-russia",
+        "stream_label": "Основная работа",
+        "category": "employer-careers",
+        "source_type": "employer-career-site",
+        "mode": "fixed",
+        "coverage": "rotation",
+        "enabled": true,
+        "entrypoint": "https://northstar.example.test/careers",
+        "parent": "employer-direct-rotation",
+        "search_channel": null,
+        "notes": null,
+        "priority": "high",
+        "registry": "employer-direct-watchlist",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 2,
+        "new_unique_candidates": 1,
+        "qualified_candidates": 1,
+        "actionable_candidates": 1,
+        "saved_results": 0,
+        "saved_actionable_results": 0,
+        "runs_with_results": 0,
+        "attributed_vacancies": 0,
+        "linked_opportunities": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": "2026-09-11T04:52:16.510143+00:00",
+        "last_finding_at": "2026-09-11T04:52:16.510143+00:00",
+        "last_progress_at": null,
+        "source_group": "employer-direct",
+        "employer_direct_tier": "rotation",
+        "application_conversion_pct": null,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": 50.0,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 2,
+          "new_unique": 1,
+          "qualified": 1,
+          "actionable": 1,
+          "saved_results": 0,
+          "attributed_vacancies": 0,
+          "linked_opportunities": 0,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 1.0,
+          "qualified_per_check": 1.0,
+          "actionable_per_check": 1.0,
+          "application_conversion_pct": null,
+          "last_attempt_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_checked_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_finding_at": "2026-09-11T04:52:16.510143+00:00",
+          "signal": "actionable-yield"
+        },
+        "execution_priority_class": "actionable-yield",
+        "execution_priority_rank": 1,
+        "execution_priority_reason": "Источник давал целевые вакансии за 28 дней."
+      },
+      {
+        "key": "dynamic:permanent-russia:orion-careers",
+        "source_id": "orion-careers",
+        "name": "Orion Careers",
+        "stream": "permanent-russia",
+        "stream_label": "Основная работа",
+        "category": "discovered-at-runtime",
+        "source_type": "observed-result-source",
+        "mode": "dynamic",
+        "coverage": "observed",
+        "enabled": true,
+        "entrypoint": "https://careers.example.test/orion/",
+        "parent": "vacancy-market-screening",
+        "search_channel": null,
+        "notes": "Источник был фактически проверен или появился в сохранённых результатах, но не является отдельной текущей записью фиксированного реестра.",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 1,
+        "new_unique_candidates": 1,
+        "qualified_candidates": 1,
+        "actionable_candidates": 1,
+        "saved_results": 1,
+        "saved_actionable_results": 1,
+        "runs_with_results": 1,
+        "attributed_vacancies": 1,
+        "linked_opportunities": 1,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": "2026-09-11T06:58:16.510143+00:00",
+        "last_finding_at": "2026-09-11T06:58:16.510143+00:00",
+        "last_progress_at": null,
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": 0.0,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": 100.0,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 1,
+          "new_unique": 1,
+          "qualified": 1,
+          "actionable": 1,
+          "saved_results": 1,
+          "attributed_vacancies": 1,
+          "linked_opportunities": 1,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 1.0,
+          "qualified_per_check": 1.0,
+          "actionable_per_check": 1.0,
+          "application_conversion_pct": 0.0,
+          "last_attempt_at": "2026-09-11T06:58:16.510143+00:00",
+          "last_checked_at": "2026-09-11T06:58:16.510143+00:00",
+          "last_finding_at": "2026-09-11T06:58:16.510143+00:00",
+          "signal": "actionable-yield"
+        }
+      },
+      {
+        "key": "fixed:side-income-search-sources:demo-contracts",
+        "source_id": "demo-contracts",
+        "name": "Demo Contract Board",
+        "stream": "side-income",
+        "stream_label": "Подработка",
+        "category": "contract-board",
+        "source_type": null,
+        "mode": "fixed",
+        "coverage": "exploratory",
+        "enabled": true,
+        "entrypoint": "https://contracts.example.test/",
+        "parent": null,
+        "search_channel": null,
+        "notes": null,
+        "priority": null,
+        "registry": "side-income-search-sources",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 5,
+        "new_unique_candidates": 2,
+        "qualified_candidates": 1,
+        "actionable_candidates": 1,
+        "saved_results": 1,
+        "saved_actionable_results": 1,
+        "runs_with_results": 1,
+        "attributed_vacancies": 0,
+        "linked_opportunities": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": "2026-09-11T05:07:16.510143+00:00",
+        "last_finding_at": "2026-09-11T05:07:16.510143+00:00",
+        "last_progress_at": null,
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": null,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": 20.0,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 5,
+          "new_unique": 2,
+          "qualified": 1,
+          "actionable": 1,
+          "saved_results": 1,
+          "attributed_vacancies": 0,
+          "linked_opportunities": 0,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 2.0,
+          "qualified_per_check": 1.0,
+          "actionable_per_check": 1.0,
+          "application_conversion_pct": null,
+          "last_attempt_at": "2026-09-11T05:07:16.510143+00:00",
+          "last_checked_at": "2026-09-11T05:07:16.510143+00:00",
+          "last_finding_at": "2026-09-11T05:07:16.510143+00:00",
+          "signal": "actionable-yield"
+        }
+      },
+      {
+        "key": "dynamic:side-income:task-market",
+        "source_id": "task-market",
+        "name": "Task Market",
+        "stream": "side-income",
+        "stream_label": "Подработка",
+        "category": "discovered-at-runtime",
+        "source_type": "observed-result-source",
+        "mode": "dynamic",
+        "coverage": "observed",
+        "enabled": true,
+        "entrypoint": "https://tasks.example.test/",
+        "parent": "side-income-screening",
+        "search_channel": null,
+        "notes": "Источник был фактически проверен или появился в сохранённых результатах, но не является отдельной текущей записью фиксированного реестра.",
+        "telemetry_available": true,
+        "checks": 1,
+        "unavailable_attempts": 0,
+        "found_candidates": 3,
+        "new_unique_candidates": 2,
+        "qualified_candidates": 1,
+        "actionable_candidates": 1,
+        "saved_results": 1,
+        "saved_actionable_results": 1,
+        "runs_with_results": 1,
+        "attributed_vacancies": 0,
+        "linked_opportunities": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "interaction_started": 0,
+        "last_checked_at": "2026-09-11T07:05:16.510143+00:00",
+        "last_finding_at": "2026-09-11T07:05:16.510143+00:00",
+        "last_progress_at": null,
+        "source_group": "other",
+        "employer_direct_tier": null,
+        "application_conversion_pct": null,
+        "recruiter_conversion_pct": null,
+        "interview_conversion_pct": null,
+        "offer_conversion_pct": null,
+        "actionable_yield_pct": 33.3,
+        "window_28d": {
+          "attempts": 1,
+          "checks": 1,
+          "unavailable": 0,
+          "availability_pct": 100.0,
+          "found": 3,
+          "new_unique": 2,
+          "qualified": 1,
+          "actionable": 1,
+          "saved_results": 1,
+          "attributed_vacancies": 0,
+          "linked_opportunities": 0,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "new_unique_per_check": 2.0,
+          "qualified_per_check": 1.0,
+          "actionable_per_check": 1.0,
+          "application_conversion_pct": null,
+          "last_attempt_at": "2026-09-11T07:05:16.510143+00:00",
+          "last_checked_at": "2026-09-11T07:05:16.510143+00:00",
+          "last_finding_at": "2026-09-11T07:05:16.510143+00:00",
+          "signal": "actionable-yield"
+        }
+      }
+    ],
+    "employer_direct": {
+      "as_of": "2026-09-11T06:58:16.510143+00:00",
+      "window_days": 28,
+      "rotation_window_days": 7,
+      "summary": {
+        "source_count": 1,
+        "attempted_sources": 1,
+        "checked_sources": 1,
+        "attempts": 1,
+        "checks": 1,
+        "unavailable": 0,
+        "availability_pct": 100.0,
+        "found": 2,
+        "new_unique": 1,
+        "qualified": 1,
+        "actionable": 1,
+        "new_unique_per_check": 1.0,
+        "qualified_per_check": 1.0,
+        "actionable_per_check": 1.0,
+        "attributed_vacancies": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "application_conversion_pct": null
+      },
+      "benchmark": {
+        "source_count": 0,
+        "attempted_sources": 0,
+        "checked_sources": 0,
+        "attempts": 0,
+        "checks": 0,
+        "unavailable": 0,
+        "availability_pct": null,
+        "found": 0,
+        "new_unique": 0,
+        "qualified": 0,
+        "actionable": 0,
+        "new_unique_per_check": null,
+        "qualified_per_check": null,
+        "actionable_per_check": null,
+        "attributed_vacancies": 0,
+        "applications": 0,
+        "recruiter_contacts": 0,
+        "interviews": 0,
+        "offers": 0,
+        "accepted": 0,
+        "application_conversion_pct": null
+      },
+      "rotation_enabled": 1,
+      "rotation_attempted_7d": 1,
+      "rotation_checked_7d": 1,
+      "rotation_attempt_coverage_pct": 100.0,
+      "rotation_check_coverage_pct": 100.0,
+      "zero_qualified_sources": 0,
+      "productive_sources": 1
+    },
+    "target_accounts": {
+      "as_of": "2026-09-11T06:58:16.510143+00:00",
+      "accounts": [
+        {
+          "account_id": "northstar-careers",
+          "name": "Northstar Bank Careers",
+          "priority": "high",
+          "tier": "rotation",
+          "source_ref": "northstar-careers",
+          "entrypoint": "https://northstar.example.test/careers",
+          "state": "actionable-signal",
+          "needs_attention": false,
+          "attempts_28d": 1,
+          "checks_28d": 1,
+          "availability_pct": 100.0,
+          "new_unique_28d": 1,
+          "qualified_28d": 1,
+          "actionable_28d": 1,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "last_attempt_at": "2026-09-11T04:52:16.510143+00:00",
+          "last_finding_at": "2026-09-11T04:52:16.510143+00:00"
+        }
+      ],
+      "summary": {
+        "total": 1,
+        "high_priority": 1,
+        "medium_priority": 0,
+        "active_process": 0,
+        "actionable_signal": 1,
+        "qualified_signal": 0,
+        "coverage_debt": 0,
+        "access_risk": 0,
+        "needs_attention": 0
+      }
+    },
+    "source_prioritization": {
+      "as_of": "2026-09-11T06:58:16.510143+00:00",
+      "window_days": 28,
+      "rotation_window_days": 7,
+      "mandatory_count": 2,
+      "exploratory_queue": [
+        {
+          "rank": 1,
+          "source_ref": "northstar-careers",
+          "name": "Northstar Bank Careers",
+          "tier": "rotation",
+          "strategic_priority": "high",
+          "priority_class": "actionable-yield",
+          "reason": "Источник давал целевые вакансии за 28 дней.",
+          "attempts_28d": 1,
+          "checks_28d": 1,
+          "new_unique_28d": 1,
+          "qualified_28d": 1,
+          "actionable_28d": 1,
+          "applications": 0,
+          "recruiter_contacts": 0,
+          "interviews": 0,
+          "offers": 0,
+          "accepted": 0,
+          "last_attempt_at": "2026-09-11T04:52:16.510143+00:00"
+        }
+      ],
+      "summary": {
+        "exploratory_count": 1,
+        "coverage_debt": 0,
+        "proven_useful": 1,
+        "exploration_needed": 0,
+        "access_risk": 0,
+        "low_yield_monitoring": 0
+      }
+    },
+    "summary": {
+      "fixed_total": 4,
+      "fixed_enabled": 4,
+      "dynamic_observed": 3,
+      "telemetry_sources": 7,
+      "source_checks": 7,
+      "unavailable_attempts": 0,
+      "found_candidates": 29,
+      "new_unique_candidates": 14,
+      "qualified_candidates": 9,
+      "actionable_candidates": 8,
+      "saved_results": 11,
+      "attributed_vacancies": 6,
+      "linked_opportunities": 3,
+      "applications": 1,
+      "recruiter_contacts": 1,
+      "interviews": 1,
+      "offers": 0,
+      "accepted": 0,
+      "interaction_started": 1,
+      "scheduled_unlinked_opportunities": 0
+    },
+    "methodology": {
+      "telemetry_definition": "Новые запуски сохраняют по каждому реально проверенному источнику воронку: проверка → найдено → новые уникальные → квалифицировано → целевые.",
+      "finding_definition": "«Найдено» считает кандидатов, которые были реально открыты/прочитаны достаточно для первичной оценки, а не сырые строки поисковой выдачи.",
+      "actionable_definition": "Целевые — pursue/conditional для основной работы, TAKE/CONSIDER для подработки и прошедшие quality gate кандидаты контента.",
+      "interaction_definition": "Downstream-конверсия строится только для вакансий с трассируемым discovery_key: сохранённая вакансия → каноническая opportunity → подтверждённые Stage after event в Interaction Log.",
+      "conversion_definition": "Отклик, контакт с рекрутером, интервью и оффер считаются только по фактически зафиксированным переходам. Текущий stage сам по себе не используется как доказательство исторической конверсии.",
+      "attribution_definition": "Если вакансия живёт на HH.ru, но впервые была найдена через Setka или другой discovery-layer источник, downstream credit получает источник обнаружения; canonical source_url остаётся ссылкой на исходную карточку.",
+      "conversion_rate_definition": "Конверсия в отклик считается от уникальных сохранённых вакансий, атрибутированных источнику. Следующие проценты считаются последовательно: рекрутер/отклик, интервью/рекрутер, оффер/интервью.",
+      "dynamic_definition": "Динамический источник не входит в фиксированный реестр: он был найден и фактически проверен во время конкретного запуска.",
+      "legacy_definition": "Старые opportunities без надёжного discovery_key не приписываются источнику задним числом. Для старых запусков без source_metrics детальные pre-persistence метрики остаются неизвестными, а не нулевыми.",
+      "employer_direct_definition": "Employer-direct effectiveness считается по 28-дневному окну от последнего сохранённого запуска. Официальные career sources сравниваются с benchmark HH.ru + Getmatch + Habr Career + Setka по доступности и yield на успешную проверку; ротационный watchlist отдельно контролируется по 7-дневному покрытию.",
+      "target_account_definition": "Целевые работодатели — производная account-centric проекция существующих employer source registries. Mandatory employer-career источники получают high priority; watchlist использует свой явный priority. Отдельный дублирующий справочник компаний не создаётся.",
+      "prioritization_definition": "Обязательные источники всегда проверяются. После них concrete exploratory sources ранжируются по 7-дневному coverage debt и 28-дневной доказанной полезности: downstream → actionable → qualified → exploration → observed → access risk → low-yield monitoring. Рейтинг меняет только порядок проверки и не мутирует реестры."
+    }
+  },
+  "demo": {
+    "is_demo": true,
+    "dataset_kind": "synthetic",
+    "label": "Публичная демо-версия",
+    "message": "Все компании, вакансии, взаимодействия, метрики и сообщения в этой версии синтетические.",
+    "architecture": [
+      "Источники и workflow создают append-only run history.",
+      "Каноническое состояние opportunities хранится отдельно от discovery history.",
+      "Career Center строится как read-only derived projection с дедупликацией и аналитикой.",
+      "Публичный demo data plane физически отделён от production career data."
+    ],
+    "governance": [
+      "ИИ может искать, оценивать и готовить материалы, но не выполняет внешние действия автоматически.",
+      "Compensation gate и hard blockers существуют отдельно от fit score.",
+      "Unknown остаётся unknown; unsupported experience не повышается до production experience.",
+      "Публикация demo разрешена только после zero-leakage gate."
+    ],
+    "tradeoffs": [
+      "GitHub/static-first снижает стоимость и операционную сложность, но ограничивает realtime mutation.",
+      "Append-only history повышает traceability ценой большего объёма производных вычислений.",
+      "Human-in-the-loop уменьшает скорость внешних действий, но удерживает управляемость и репутационный риск."
+    ],
+    "safety": {
+      "private_data_included": false,
+      "credentials_included": false,
+      "external_actions_enabled": false,
+      "source_dataset": "committed synthetic fixture only"
+    }
+  }
+}

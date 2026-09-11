@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Career Operations Platform — architecture case study</title>
+  <style>
+    body{font-family:system-ui,sans-serif;max-width:980px;margin:0 auto;padding:40px 24px;line-height:1.55;background:#0f1318;color:#eef2f6}
+    h1,h2{line-height:1.15}.muted{color:#a9b4bf}.card{border:1px solid #2b3640;border-radius:14px;padding:20px;margin:18px 0;background:#151b22}
+    .flow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.node{padding:12px 16px;border:1px solid #44515e;border-radius:10px;background:#1b232c}
+    .arrow{color:#8da2b5;font-weight:700}a{color:#8fc7ff}
+  </style>
+</head>
+<body>
+  <p><a href="./">← Вернуться в demo</a></p>
+  <h1>Career Operations Platform</h1>
+  <p class="muted">Публичный architecture case study. Все данные в runnable demo синтетические.</p>
+  <div class="card">
+    <h2>Проблема</h2>
+    <p>Карьерный процесс включает discovery, оценку fit, взаимодействия, контент, аналитику и последующие действия. Архитектурная задача — не смешивать историю наблюдений с каноническим состоянием и сохранять человеческий контроль над внешними действиями.</p>
+  </div>
+  <div class="card">
+    <h2>Архитектурная схема</h2>
+    <div class="flow"><div class="node">Sources</div><div class="arrow">→</div><div class="node">Workflows</div><div class="arrow">→</div><div class="node">Append-only runs</div><div class="arrow">→</div><div class="node">Derived Career Center</div></div>
+    <p>Discovery history и canonical opportunity state разделены. Dashboard является read-only derived projection и не становится вторым источником истины.</p>
+  </div>
+  <div class="card">
+    <h2>Human-control boundary</h2>
+    <div class="flow"><div class="node">AI: discover / assess / draft</div><div class="arrow">→</div><div class="node">Human decision</div><div class="arrow">→</div><div class="node">External action</div></div>
+    <p>Demo не содержит mutation controls. Отклики, сообщения и публикации всегда требуют отдельного решения человека.</p>
+  </div>
+  <div class="card">
+    <h2>Ключевые trade-offs</h2>
+    <ul>
+      <li><b>Static/GitHub-first:</b> ниже стоимость и операционная сложность, но нет realtime mutation plane.</li>
+      <li><b>Append-only history:</b> высокая traceability ценой более сложных derived projections.</li>
+      <li><b>Human-in-the-loop:</b> меньше автономности, зато управляемый репутационный риск.</li>
+      <li><b>Synthetic public data plane:</b> открытая демонстрация без использования production career data.</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>Privacy-by-design</h2>
+    <p>Public demo собирается только из committed synthetic fixture. Перед публикацией автоматическая проверка подтверждает явный demo marker, отсутствие private runtime references и совпадений с production records.</p>
+  </div>
+  <div class="card">
+    <h2>Что демонстрирует решение</h2>
+    <p>Solution Architecture · Workflow Automation · State & Lifecycle Modeling · Data Provenance · Idempotent Processing · Explainable Matching · Funnel Analytics · Privacy-by-Design · Human-in-the-loop Governance</p>
+  </div>
+</body>
+</html>
