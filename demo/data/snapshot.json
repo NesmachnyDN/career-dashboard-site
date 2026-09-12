@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-12T01:05:07.771454+00:00",
+  "generated_at": "2026-09-12T01:05:34.488098+00:00",
   "vacancies": [
     {
       "vacancy_key": "opportunity:DEMO-OPP-001",
@@ -13,7 +13,7 @@
       "source_name": "Demo Job Board",
       "source_url": "https://jobs.example.test/1001",
       "first_seen_at": "2026-09-07",
-      "last_activity_at": "2026-09-12T00:05:07.721039+00:00",
+      "last_activity_at": "2026-09-12T00:05:34.436353+00:00",
       "fit_score": 88,
       "fit_status": "qualified",
       "recommendation": "pursue",
@@ -125,8 +125,8 @@
       "origin": "scheduled-search",
       "source_name": "Orbit Jobs",
       "source_url": "https://jobs.example.test/vacancies/1001",
-      "first_seen_at": "2026-09-12T00:11:07.721039+00:00",
-      "last_activity_at": "2026-09-12T00:11:07.721039+00:00",
+      "first_seen_at": "2026-09-12T00:11:34.436353+00:00",
+      "last_activity_at": "2026-09-12T00:11:34.436353+00:00",
       "fit_score": 88,
       "fit_status": null,
       "recommendation": "pursue",
@@ -209,8 +209,8 @@
       "origin": "scheduled-search",
       "source_name": "Demo Job Board",
       "source_url": "https://jobs.example.test/3003",
-      "first_seen_at": "2026-09-11T22:05:07.721039+00:00",
-      "last_activity_at": "2026-09-11T22:05:07.721039+00:00",
+      "first_seen_at": "2026-09-11T22:05:34.436353+00:00",
+      "last_activity_at": "2026-09-11T22:05:34.436353+00:00",
       "fit_score": 74,
       "fit_status": null,
       "recommendation": "conditional",
@@ -279,7 +279,7 @@
       "source_name": "Orion Careers",
       "source_url": "https://careers.example.test/orion/sa-42",
       "first_seen_at": "2026-09-10",
-      "last_activity_at": "2026-09-12T00:11:07.721039+00:00",
+      "last_activity_at": "2026-09-12T00:11:34.436353+00:00",
       "fit_score": 82,
       "fit_status": "qualified",
       "recommendation": "conditional",
@@ -396,7 +396,7 @@
       "source_name": "Professional Network",
       "source_url": "https://network.example.test/jobs/2002",
       "first_seen_at": "2026-09-10",
-      "last_activity_at": "2026-09-11T22:05:07.721039+00:00",
+      "last_activity_at": "2026-09-11T22:05:34.436353+00:00",
       "fit_score": 81,
       "fit_status": "qualified",
       "recommendation": "conditional",
@@ -518,7 +518,7 @@
       "source_name": "Orbit Jobs",
       "source_url": "https://jobs.example.test/vacancies/0901",
       "first_seen_at": "2026-09-02",
-      "last_activity_at": "2026-09-09T01:05:07.721039+00:00",
+      "last_activity_at": "2026-09-09T01:05:34.436353+00:00",
       "fit_score": null,
       "fit_status": "qualified",
       "recommendation": null,
@@ -572,8 +572,8 @@
       "origin": "scheduled-search",
       "source_name": "Orbit Jobs",
       "source_url": "https://jobs.example.test/vacancies/1003",
-      "first_seen_at": "2026-09-12T00:11:07.721039+00:00",
-      "last_activity_at": "2026-09-12T00:11:07.721039+00:00",
+      "first_seen_at": "2026-09-12T00:11:34.436353+00:00",
+      "last_activity_at": "2026-09-12T00:11:34.436353+00:00",
       "fit_score": 35,
       "fit_status": null,
       "recommendation": "skip",
@@ -725,7 +725,7 @@
         {
           "interaction_id": "INT-DEMO-001",
           "title": "Application submitted",
-          "timestamp": "2026-09-08T23:05:07.721039+00:00",
+          "timestamp": "2026-09-08T23:05:34.436353+00:00",
           "direction": "outbound",
           "channel": "platform",
           "event": "Application submitted.",
@@ -734,7 +734,7 @@
         {
           "interaction_id": "INT-DEMO-002",
           "title": "Recruiter screen completed",
-          "timestamp": "2026-09-10T01:05:07.721039+00:00",
+          "timestamp": "2026-09-10T01:05:34.436353+00:00",
           "direction": "inbound",
           "channel": "video",
           "event": "Recruiter screen completed.",
@@ -743,7 +743,7 @@
         {
           "interaction_id": "INT-DEMO-003",
           "title": "Architecture interview scheduled",
-          "timestamp": "2026-09-12T00:05:07.721039+00:00",
+          "timestamp": "2026-09-12T00:05:34.436353+00:00",
           "direction": "inbound",
           "channel": "email",
           "event": "Architecture interview scheduled.",
@@ -856,7 +856,7 @@
         {
           "interaction_id": "INT-DEMO-003",
           "title": "Отклик отправлен",
-          "timestamp": "2026-09-04T00:05:07.721039+00:00",
+          "timestamp": "2026-09-04T00:05:34.436353+00:00",
           "direction": "outbound",
           "channel": "platform",
           "event": "Synthetic application submitted.",
@@ -865,7 +865,7 @@
         {
           "interaction_id": "INT-DEMO-004",
           "title": "Отказ после интервью",
-          "timestamp": "2026-09-09T01:05:07.721039+00:00",
+          "timestamp": "2026-09-09T01:05:34.436353+00:00",
           "direction": "inbound",
           "channel": "platform",
           "event": "Synthetic process closed.",
@@ -916,7 +916,7 @@
         "source_url": "https://mail.example.test/message/001",
         "workflow": "career-mail-monitoring",
         "run_id": "demo-career-mail-monitoring-20260911",
-        "observed_at": "2026-09-12T00:46:07.721039+00:00"
+        "observed_at": "2026-09-12T00:46:34.436353+00:00"
       },
       {
         "item_id": "demo-post-001",
@@ -933,11 +933,11 @@
         "copy_text": "Синтетический текст для демонстрации: ADR полезен не как архив решения, а как управляемая запись контекста, альтернатив, последствий и условий пересмотра.",
         "content_status": "published",
         "published_url": "https://social.example.test/posts/adr-demo",
-        "published_at": "2026-09-11T02:05:07.721039+00:00",
-        "expires_at": "2026-09-20T16:05:07.721039+00:00",
+        "published_at": "2026-09-11T02:05:34.436353+00:00",
+        "expires_at": "2026-09-20T16:05:34.436353+00:00",
         "workflow": "daily-brand-scan",
         "run_id": "demo-daily-brand-scan-20260911",
-        "observed_at": "2026-09-12T00:29:07.721039+00:00"
+        "observed_at": "2026-09-12T00:29:34.436353+00:00"
       },
       {
         "item_id": "demo-side-001",
@@ -949,10 +949,10 @@
         "source_name": "Task Market",
         "source_url": "https://tasks.example.test/arch-review-001",
         "recommendation": "CONSIDER",
-        "expires_at": "2026-09-20T16:05:07.721039+00:00",
+        "expires_at": "2026-09-20T16:05:34.436353+00:00",
         "workflow": "side-income-screening",
         "run_id": "demo-side-income-screening-20260911",
-        "observed_at": "2026-09-12T00:18:07.721039+00:00"
+        "observed_at": "2026-09-12T00:18:34.436353+00:00"
       },
       {
         "item_id": "demo-vac-1001",
@@ -971,7 +971,7 @@
         "discovery_status": "promoted",
         "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
         "origin": "scheduled-search",
-        "expires_at": "2026-10-01T16:05:07.721039+00:00",
+        "expires_at": "2026-10-01T16:05:34.436353+00:00",
         "match_analysis": {
           "role_track": "architecture-first",
           "fit_summary": "Synthetic evidence-based assessment for the public demo.",
@@ -1008,7 +1008,7 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-12T00:11:07.721039+00:00"
+        "observed_at": "2026-09-12T00:11:34.436353+00:00"
       },
       {
         "item_id": "demo-vac-1002",
@@ -1027,7 +1027,7 @@
         "discovery_status": "promoted",
         "status_reason": "Synthetic employer-direct vacancy.",
         "origin": "scheduled-search",
-        "expires_at": "2026-10-01T16:05:07.721039+00:00",
+        "expires_at": "2026-10-01T16:05:34.436353+00:00",
         "match_analysis": {
           "role_track": "architecture-first",
           "fit_summary": "Synthetic evidence-based assessment for the public demo.",
@@ -1064,7 +1064,7 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-12T00:11:07.721039+00:00"
+        "observed_at": "2026-09-12T00:11:34.436353+00:00"
       },
       {
         "item_id": "demo-vac-1003",
@@ -1110,7 +1110,7 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-12T00:11:07.721039+00:00"
+        "observed_at": "2026-09-12T00:11:34.436353+00:00"
       },
       {
         "item_id": "demo-post-integration",
@@ -1128,7 +1128,7 @@
         "content_status": "unpublished",
         "workflow": "daily-brand-scan",
         "run_id": "demo-daily-brand-scan-20260911",
-        "observed_at": "2026-09-11T22:35:07.721039+00:00"
+        "observed_at": "2026-09-11T22:35:34.436353+00:00"
       },
       {
         "item_id": "demo-side-001",
@@ -1144,7 +1144,7 @@
         "deadline": "2026-09-18",
         "workflow": "side-income-screening",
         "run_id": "demo-side-income-screening-20260911",
-        "observed_at": "2026-09-11T22:20:07.721039+00:00"
+        "observed_at": "2026-09-11T22:20:34.436353+00:00"
       },
       {
         "item_id": "demo-vacancy-1001",
@@ -1200,7 +1200,7 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-11T22:05:07.721039+00:00"
+        "observed_at": "2026-09-11T22:05:34.436353+00:00"
       },
       {
         "item_id": "demo-vacancy-2002",
@@ -1247,7 +1247,7 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-11T22:05:07.721039+00:00"
+        "observed_at": "2026-09-11T22:05:34.436353+00:00"
       },
       {
         "item_id": "demo-vacancy-3003",
@@ -1286,7 +1286,7 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-11T22:05:07.721039+00:00"
+        "observed_at": "2026-09-11T22:05:34.436353+00:00"
       }
     ],
     "content_items": [
@@ -1306,7 +1306,7 @@
         "content_status": "unpublished",
         "workflow": "daily-brand-scan",
         "run_id": "demo-daily-brand-scan-20260911",
-        "observed_at": "2026-09-11T22:35:07.721039+00:00"
+        "observed_at": "2026-09-11T22:35:34.436353+00:00"
       },
       {
         "item_id": "demo-post-001",
@@ -1323,11 +1323,11 @@
         "copy_text": "Синтетический текст для демонстрации: ADR полезен не как архив решения, а как управляемая запись контекста, альтернатив, последствий и условий пересмотра.",
         "content_status": "published",
         "published_url": "https://social.example.test/posts/adr-demo",
-        "published_at": "2026-09-11T02:05:07.721039+00:00",
-        "expires_at": "2026-09-20T16:05:07.721039+00:00",
+        "published_at": "2026-09-11T02:05:34.436353+00:00",
+        "expires_at": "2026-09-20T16:05:34.436353+00:00",
         "workflow": "daily-brand-scan",
         "run_id": "demo-daily-brand-scan-20260911",
-        "observed_at": "2026-09-12T00:29:07.721039+00:00"
+        "observed_at": "2026-09-12T00:29:34.436353+00:00"
       }
     ],
     "discovered_vacancies": [
@@ -1368,9 +1368,9 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-11T22:05:07.721039+00:00",
+        "observed_at": "2026-09-11T22:05:34.436353+00:00",
         "backfill": false,
-        "originally_seen_at": "2026-09-11T22:05:07.721039+00:00"
+        "originally_seen_at": "2026-09-11T22:05:34.436353+00:00"
       },
       {
         "item_id": "demo-vac-1001",
@@ -1389,7 +1389,7 @@
         "discovery_status": "promoted",
         "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
         "origin": "scheduled-search",
-        "expires_at": "2026-10-01T16:05:07.721039+00:00",
+        "expires_at": "2026-10-01T16:05:34.436353+00:00",
         "match_analysis": {
           "role_track": "architecture-first",
           "fit_summary": "Synthetic evidence-based assessment for the public demo.",
@@ -1426,9 +1426,9 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-12T00:11:07.721039+00:00",
+        "observed_at": "2026-09-12T00:11:34.436353+00:00",
         "backfill": false,
-        "originally_seen_at": "2026-09-12T00:11:07.721039+00:00"
+        "originally_seen_at": "2026-09-12T00:11:34.436353+00:00"
       },
       {
         "item_id": "demo-vac-1002",
@@ -1447,7 +1447,7 @@
         "discovery_status": "promoted",
         "status_reason": "Synthetic employer-direct vacancy.",
         "origin": "scheduled-search",
-        "expires_at": "2026-10-01T16:05:07.721039+00:00",
+        "expires_at": "2026-10-01T16:05:34.436353+00:00",
         "match_analysis": {
           "role_track": "architecture-first",
           "fit_summary": "Synthetic evidence-based assessment for the public demo.",
@@ -1484,9 +1484,9 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-12T00:11:07.721039+00:00",
+        "observed_at": "2026-09-12T00:11:34.436353+00:00",
         "backfill": false,
-        "originally_seen_at": "2026-09-12T00:11:07.721039+00:00"
+        "originally_seen_at": "2026-09-12T00:11:34.436353+00:00"
       },
       {
         "item_id": "demo-vacancy-1001",
@@ -1542,9 +1542,9 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-11T22:05:07.721039+00:00",
+        "observed_at": "2026-09-11T22:05:34.436353+00:00",
         "backfill": false,
-        "originally_seen_at": "2026-09-11T22:05:07.721039+00:00"
+        "originally_seen_at": "2026-09-11T22:05:34.436353+00:00"
       },
       {
         "item_id": "demo-vacancy-2002",
@@ -1591,9 +1591,9 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-11T22:05:07.721039+00:00",
+        "observed_at": "2026-09-11T22:05:34.436353+00:00",
         "backfill": false,
-        "originally_seen_at": "2026-09-11T22:05:07.721039+00:00"
+        "originally_seen_at": "2026-09-11T22:05:34.436353+00:00"
       },
       {
         "item_id": "demo-vac-1003",
@@ -1639,9 +1639,9 @@
         },
         "workflow": "vacancy-market-screening",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "observed_at": "2026-09-12T00:11:07.721039+00:00",
+        "observed_at": "2026-09-12T00:11:34.436353+00:00",
         "backfill": false,
-        "originally_seen_at": "2026-09-12T00:11:07.721039+00:00"
+        "originally_seen_at": "2026-09-12T00:11:34.436353+00:00"
       }
     ],
     "runs": [
@@ -1649,8 +1649,8 @@
         "schema_version": 1,
         "run_id": "demo-career-mail-monitoring-20260911",
         "workflow": "career-mail-monitoring",
-        "started_at": "2026-09-12T00:45:07.721039+00:00",
-        "completed_at": "2026-09-12T00:46:07.721039+00:00",
+        "started_at": "2026-09-12T00:45:34.436353+00:00",
+        "completed_at": "2026-09-12T00:46:34.436353+00:00",
         "status": "success",
         "summary": "Синтетическое входящее карьерное уведомление.",
         "items": [
@@ -1670,15 +1670,15 @@
         "schema_version": 1,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "started_at": "2026-09-12T00:35:07.721039+00:00",
-        "completed_at": "2026-09-12T00:37:07.721039+00:00",
+        "started_at": "2026-09-12T00:35:34.436353+00:00",
+        "completed_at": "2026-09-12T00:37:34.436353+00:00",
         "status": "success",
         "summary": "Синтетические brand measurements для демонстрации наблюдательной аналитики без causal claims.",
         "brand_metrics": [
           {
             "platform": "setka",
             "scope": "profile",
-            "observed_at": "2026-09-10T00:05:07.721039+00:00",
+            "observed_at": "2026-09-10T00:05:34.436353+00:00",
             "collection_mode": "user-provided",
             "collection_status": "checked",
             "followers": 120,
@@ -1688,7 +1688,7 @@
           {
             "platform": "setka",
             "scope": "post",
-            "observed_at": "2026-09-11T10:05:07.721039+00:00",
+            "observed_at": "2026-09-11T10:05:34.436353+00:00",
             "collection_mode": "user-provided",
             "collection_status": "checked",
             "subject_url": "https://social.example.test/posts/adr-demo",
@@ -1701,7 +1701,7 @@
           {
             "platform": "setka",
             "scope": "profile",
-            "observed_at": "2026-09-12T00:05:07.721039+00:00",
+            "observed_at": "2026-09-12T00:05:34.436353+00:00",
             "collection_mode": "user-provided",
             "collection_status": "checked",
             "followers": 126,
@@ -1715,8 +1715,8 @@
         "schema_version": 1,
         "run_id": "demo-daily-brand-scan-20260911",
         "workflow": "daily-brand-scan",
-        "started_at": "2026-09-12T00:25:07.721039+00:00",
-        "completed_at": "2026-09-12T00:29:07.721039+00:00",
+        "started_at": "2026-09-12T00:25:34.436353+00:00",
+        "completed_at": "2026-09-12T00:29:34.436353+00:00",
         "status": "success",
         "summary": "Синтетический content scan: подготовлен один архитектурный пост.",
         "source_metrics": [
@@ -1750,8 +1750,8 @@
             "copy_text": "Синтетический текст для демонстрации: ADR полезен не как архив решения, а как управляемая запись контекста, альтернатив, последствий и условий пересмотра.",
             "content_status": "published",
             "published_url": "https://social.example.test/posts/adr-demo",
-            "published_at": "2026-09-11T02:05:07.721039+00:00",
-            "expires_at": "2026-09-20T16:05:07.721039+00:00"
+            "published_at": "2026-09-11T02:05:34.436353+00:00",
+            "expires_at": "2026-09-20T16:05:34.436353+00:00"
           }
         ]
       },
@@ -1759,8 +1759,8 @@
         "schema_version": 1,
         "run_id": "demo-side-income-screening-20260911",
         "workflow": "side-income-screening",
-        "started_at": "2026-09-12T00:15:07.721039+00:00",
-        "completed_at": "2026-09-12T00:18:07.721039+00:00",
+        "started_at": "2026-09-12T00:15:34.436353+00:00",
+        "completed_at": "2026-09-12T00:18:34.436353+00:00",
         "status": "success",
         "summary": "Синтетический поиск подработки: одна ограниченная архитектурная задача.",
         "source_metrics": [
@@ -1789,7 +1789,7 @@
             "source_name": "Task Market",
             "source_url": "https://tasks.example.test/arch-review-001",
             "recommendation": "CONSIDER",
-            "expires_at": "2026-09-20T16:05:07.721039+00:00"
+            "expires_at": "2026-09-20T16:05:34.436353+00:00"
           }
         ]
       },
@@ -1797,8 +1797,8 @@
         "schema_version": 1,
         "run_id": "demo-vacancy-market-screening-20260911",
         "workflow": "vacancy-market-screening",
-        "started_at": "2026-09-12T00:05:07.721039+00:00",
-        "completed_at": "2026-09-12T00:11:07.721039+00:00",
+        "started_at": "2026-09-12T00:05:34.436353+00:00",
+        "completed_at": "2026-09-12T00:11:34.436353+00:00",
         "status": "success",
         "summary": "Синтетический поиск: 5 кандидатов, 3 уникальных, 2 квалифицированы, 2 требуют действия.",
         "source_metrics": [
@@ -1847,7 +1847,7 @@
             "discovery_status": "promoted",
             "status_reason": "Synthetic vacancy linked to a canonical opportunity.",
             "origin": "scheduled-search",
-            "expires_at": "2026-10-01T16:05:07.721039+00:00",
+            "expires_at": "2026-10-01T16:05:34.436353+00:00",
             "match_analysis": {
               "role_track": "architecture-first",
               "fit_summary": "Synthetic evidence-based assessment for the public demo.",
@@ -1900,7 +1900,7 @@
             "discovery_status": "promoted",
             "status_reason": "Synthetic employer-direct vacancy.",
             "origin": "scheduled-search",
-            "expires_at": "2026-10-01T16:05:07.721039+00:00",
+            "expires_at": "2026-10-01T16:05:34.436353+00:00",
             "match_analysis": {
               "role_track": "architecture-first",
               "fit_summary": "Synthetic evidence-based assessment for the public demo.",
@@ -1985,15 +1985,15 @@
         "schema_version": 1,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "started_at": "2026-09-11T22:45:07.721039+00:00",
-        "completed_at": "2026-09-11T22:50:07.721039+00:00",
+        "started_at": "2026-09-11T22:45:34.436353+00:00",
+        "completed_at": "2026-09-11T22:50:34.436353+00:00",
         "status": "success",
         "summary": "Синтетические brand metrics для демонстрации наблюдательного сравнения без причинной атрибуции.",
         "brand_metrics": [
           {
             "platform": "setka",
             "scope": "profile",
-            "observed_at": "2026-09-09T21:05:07.721039+00:00",
+            "observed_at": "2026-09-09T21:05:34.436353+00:00",
             "collection_mode": "user-provided",
             "collection_status": "checked",
             "followers": 120,
@@ -2003,7 +2003,7 @@
           {
             "platform": "setka",
             "scope": "post",
-            "observed_at": "2026-09-11T07:05:07.721039+00:00",
+            "observed_at": "2026-09-11T07:05:34.436353+00:00",
             "collection_mode": "user-provided",
             "collection_status": "checked",
             "subject_url": "https://setka.example.test/posts/demo-adr",
@@ -2016,7 +2016,7 @@
           {
             "platform": "setka",
             "scope": "profile",
-            "observed_at": "2026-09-11T21:05:07.721039+00:00",
+            "observed_at": "2026-09-11T21:05:34.436353+00:00",
             "collection_mode": "user-provided",
             "collection_status": "checked",
             "followers": 126,
@@ -2030,8 +2030,8 @@
         "schema_version": 1,
         "run_id": "demo-daily-brand-scan-20260911",
         "workflow": "daily-brand-scan",
-        "started_at": "2026-09-11T22:25:07.721039+00:00",
-        "completed_at": "2026-09-11T22:35:07.721039+00:00",
+        "started_at": "2026-09-11T22:25:34.436353+00:00",
+        "completed_at": "2026-09-11T22:35:34.436353+00:00",
         "status": "success",
         "summary": "Синтетический brand workflow подготовил один опубликованный архитектурный пост и один draft-кандидат.",
         "source_metrics": [
@@ -2064,8 +2064,8 @@
             "copy_text": "Синтетический демонстрационный текст о том, почему ADR полезно хранить вместе с последствиями, ограничениями и условиями пересмотра решения.",
             "content_status": "published",
             "published_url": "https://setka.example.test/posts/demo-adr",
-            "published_at": "2026-09-10T22:05:07.721039+00:00",
-            "publication_verified_at": "2026-09-11T22:30:07.721039+00:00"
+            "published_at": "2026-09-10T22:05:34.436353+00:00",
+            "publication_verified_at": "2026-09-11T22:30:34.436353+00:00"
           },
           {
             "item_id": "demo-post-integration",
@@ -2088,8 +2088,8 @@
         "schema_version": 1,
         "run_id": "demo-side-income-screening-20260911",
         "workflow": "side-income-screening",
-        "started_at": "2026-09-11T22:15:07.721039+00:00",
-        "completed_at": "2026-09-11T22:20:07.721039+00:00",
+        "started_at": "2026-09-11T22:15:34.436353+00:00",
+        "completed_at": "2026-09-11T22:20:34.436353+00:00",
         "status": "success",
         "summary": "Синтетический поиск подработки нашёл один ограниченный архитектурный review engagement.",
         "source_metrics": [
@@ -2126,8 +2126,8 @@
         "schema_version": 1,
         "run_id": "demo-vacancy-market-screening-20260911",
         "workflow": "vacancy-market-screening",
-        "started_at": "2026-09-11T21:55:07.721039+00:00",
-        "completed_at": "2026-09-11T22:05:07.721039+00:00",
+        "started_at": "2026-09-11T21:55:34.436353+00:00",
+        "completed_at": "2026-09-11T22:05:34.436353+00:00",
         "status": "success",
         "summary": "Синтетический демонстрационный поиск: два архитектурных сигнала сохранены, один из них уже связан с активным процессом.",
         "source_metrics": [
@@ -2311,10 +2311,10 @@
         "health": "success",
         "run_status": "success",
         "run_id": "demo-vacancy-market-screening-20260911",
-        "completed_at": "2026-09-12T00:11:07.721039+00:00",
+        "completed_at": "2026-09-12T00:11:34.436353+00:00",
         "age_hours": 0.9,
         "freshness_hours": 36,
-        "started_at": "2026-09-12T00:05:07.721039+00:00",
+        "started_at": "2026-09-12T00:05:34.436353+00:00",
         "duration_seconds": 360,
         "run_summary": "Синтетический поиск: 5 кандидатов, 3 уникальных, 2 квалифицированы, 2 требуют действия.",
         "source_coverage": {
@@ -2344,10 +2344,10 @@
         "health": "success",
         "run_status": "success",
         "run_id": "demo-side-income-screening-20260911",
-        "completed_at": "2026-09-12T00:18:07.721039+00:00",
+        "completed_at": "2026-09-12T00:18:34.436353+00:00",
         "age_hours": 0.8,
         "freshness_hours": 36,
-        "started_at": "2026-09-12T00:15:07.721039+00:00",
+        "started_at": "2026-09-12T00:15:34.436353+00:00",
         "duration_seconds": 180,
         "run_summary": "Синтетический поиск подработки: одна ограниченная архитектурная задача.",
         "source_coverage": {
@@ -2368,10 +2368,10 @@
         "health": "success",
         "run_status": "success",
         "run_id": "demo-setka-monitoring-20260911",
-        "completed_at": "2026-09-12T00:37:07.721039+00:00",
+        "completed_at": "2026-09-12T00:37:34.436353+00:00",
         "age_hours": 0.5,
         "freshness_hours": 36,
-        "started_at": "2026-09-12T00:35:07.721039+00:00",
+        "started_at": "2026-09-12T00:35:34.436353+00:00",
         "duration_seconds": 120,
         "run_summary": "Синтетические brand measurements для демонстрации наблюдательной аналитики без causal claims.",
         "source_coverage": {
@@ -2392,10 +2392,10 @@
         "health": "success",
         "run_status": "success",
         "run_id": "demo-daily-brand-scan-20260911",
-        "completed_at": "2026-09-12T00:29:07.721039+00:00",
+        "completed_at": "2026-09-12T00:29:34.436353+00:00",
         "age_hours": 0.6,
         "freshness_hours": 36,
-        "started_at": "2026-09-12T00:25:07.721039+00:00",
+        "started_at": "2026-09-12T00:25:34.436353+00:00",
         "duration_seconds": 240,
         "run_summary": "Синтетический content scan: подготовлен один архитектурный пост.",
         "source_coverage": {
@@ -2437,7 +2437,7 @@
       {
         "platform": "setka",
         "scope": "profile",
-        "observed_at": "2026-09-12T00:05:07.721039+00:00",
+        "observed_at": "2026-09-12T00:05:34.436353+00:00",
         "collection_mode": "user-provided",
         "collection_status": "checked",
         "followers": 126,
@@ -2445,12 +2445,12 @@
         "content_views": 330,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "run_completed_at": "2026-09-12T00:37:07.721039+00:00"
+        "run_completed_at": "2026-09-12T00:37:34.436353+00:00"
       },
       {
         "platform": "setka",
         "scope": "profile",
-        "observed_at": "2026-09-11T21:05:07.721039+00:00",
+        "observed_at": "2026-09-11T21:05:34.436353+00:00",
         "collection_mode": "user-provided",
         "collection_status": "checked",
         "followers": 126,
@@ -2458,12 +2458,12 @@
         "content_views": 315,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "run_completed_at": "2026-09-11T22:50:07.721039+00:00"
+        "run_completed_at": "2026-09-11T22:50:34.436353+00:00"
       },
       {
         "platform": "setka",
         "scope": "post",
-        "observed_at": "2026-09-11T10:05:07.721039+00:00",
+        "observed_at": "2026-09-11T10:05:34.436353+00:00",
         "collection_mode": "user-provided",
         "collection_status": "checked",
         "subject_url": "https://social.example.test/posts/adr-demo",
@@ -2474,12 +2474,12 @@
         "erv": 6.3,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "run_completed_at": "2026-09-12T00:37:07.721039+00:00"
+        "run_completed_at": "2026-09-12T00:37:34.436353+00:00"
       },
       {
         "platform": "setka",
         "scope": "post",
-        "observed_at": "2026-09-11T07:05:07.721039+00:00",
+        "observed_at": "2026-09-11T07:05:34.436353+00:00",
         "collection_mode": "user-provided",
         "collection_status": "checked",
         "subject_url": "https://setka.example.test/posts/demo-adr",
@@ -2490,12 +2490,12 @@
         "erv": 6.3,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "run_completed_at": "2026-09-11T22:50:07.721039+00:00"
+        "run_completed_at": "2026-09-11T22:50:34.436353+00:00"
       },
       {
         "platform": "setka",
         "scope": "profile",
-        "observed_at": "2026-09-10T00:05:07.721039+00:00",
+        "observed_at": "2026-09-10T00:05:34.436353+00:00",
         "collection_mode": "user-provided",
         "collection_status": "checked",
         "followers": 120,
@@ -2503,12 +2503,12 @@
         "content_views": 250,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "run_completed_at": "2026-09-12T00:37:07.721039+00:00"
+        "run_completed_at": "2026-09-12T00:37:34.436353+00:00"
       },
       {
         "platform": "setka",
         "scope": "profile",
-        "observed_at": "2026-09-09T21:05:07.721039+00:00",
+        "observed_at": "2026-09-09T21:05:34.436353+00:00",
         "collection_mode": "user-provided",
         "collection_status": "checked",
         "followers": 120,
@@ -2516,7 +2516,7 @@
         "content_views": 240,
         "run_id": "demo-setka-monitoring-20260911",
         "workflow": "setka-monitoring",
-        "run_completed_at": "2026-09-11T22:50:07.721039+00:00"
+        "run_completed_at": "2026-09-11T22:50:34.436353+00:00"
       }
     ]
   },
@@ -2658,10 +2658,10 @@
               {
                 "opportunity_id": "DEMO-OPP-001",
                 "from_interaction_id": "INT-DEMO-001",
-                "from_timestamp": "2026-09-08T23:05:07.721039+00:00",
+                "from_timestamp": "2026-09-08T23:05:34.436353+00:00",
                 "from_stage_after_event": "applied",
                 "to_interaction_id": "INT-DEMO-002",
-                "to_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                "to_timestamp": "2026-09-10T01:05:34.436353+00:00",
                 "to_stage_after_event": "recruiter-screen"
               }
             ]
@@ -2683,10 +2683,10 @@
               {
                 "opportunity_id": "DEMO-OPP-001",
                 "from_interaction_id": "INT-DEMO-002",
-                "from_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                "from_timestamp": "2026-09-10T01:05:34.436353+00:00",
                 "from_stage_after_event": "recruiter-screen",
                 "to_interaction_id": "INT-DEMO-003",
-                "to_timestamp": "2026-09-12T00:05:07.721039+00:00",
+                "to_timestamp": "2026-09-12T00:05:34.436353+00:00",
                 "to_stage_after_event": "technical-or-architecture-interview"
               }
             ]
@@ -2748,10 +2748,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-001",
-                      "from_timestamp": "2026-09-08T23:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-08T23:05:34.436353+00:00",
                       "from_stage_after_event": "applied",
                       "to_interaction_id": "INT-DEMO-002",
-                      "to_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "to_stage_after_event": "recruiter-screen"
                     }
                   ]
@@ -2773,10 +2773,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-002",
-                      "from_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "from_stage_after_event": "recruiter-screen",
                       "to_interaction_id": "INT-DEMO-003",
-                      "to_timestamp": "2026-09-12T00:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-12T00:05:34.436353+00:00",
                       "to_stage_after_event": "technical-or-architecture-interview"
                     }
                   ]
@@ -3019,10 +3019,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-001",
-                      "from_timestamp": "2026-09-08T23:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-08T23:05:34.436353+00:00",
                       "from_stage_after_event": "applied",
                       "to_interaction_id": "INT-DEMO-002",
-                      "to_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "to_stage_after_event": "recruiter-screen"
                     }
                   ]
@@ -3044,10 +3044,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-002",
-                      "from_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "from_stage_after_event": "recruiter-screen",
                       "to_interaction_id": "INT-DEMO-003",
-                      "to_timestamp": "2026-09-12T00:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-12T00:05:34.436353+00:00",
                       "to_stage_after_event": "technical-or-architecture-interview"
                     }
                   ]
@@ -3111,10 +3111,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-001",
-                      "from_timestamp": "2026-09-08T23:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-08T23:05:34.436353+00:00",
                       "from_stage_after_event": "applied",
                       "to_interaction_id": "INT-DEMO-002",
-                      "to_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "to_stage_after_event": "recruiter-screen"
                     }
                   ]
@@ -3136,10 +3136,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-002",
-                      "from_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "from_stage_after_event": "recruiter-screen",
                       "to_interaction_id": "INT-DEMO-003",
-                      "to_timestamp": "2026-09-12T00:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-12T00:05:34.436353+00:00",
                       "to_stage_after_event": "technical-or-architecture-interview"
                     }
                   ]
@@ -3202,10 +3202,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-001",
-                      "from_timestamp": "2026-09-08T23:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-08T23:05:34.436353+00:00",
                       "from_stage_after_event": "applied",
                       "to_interaction_id": "INT-DEMO-002",
-                      "to_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "to_stage_after_event": "recruiter-screen"
                     }
                   ]
@@ -3227,10 +3227,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-002",
-                      "from_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "from_stage_after_event": "recruiter-screen",
                       "to_interaction_id": "INT-DEMO-003",
-                      "to_timestamp": "2026-09-12T00:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-12T00:05:34.436353+00:00",
                       "to_stage_after_event": "technical-or-architecture-interview"
                     }
                   ]
@@ -3414,10 +3414,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-001",
-                      "from_timestamp": "2026-09-08T23:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-08T23:05:34.436353+00:00",
                       "from_stage_after_event": "applied",
                       "to_interaction_id": "INT-DEMO-002",
-                      "to_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "to_stage_after_event": "recruiter-screen"
                     }
                   ]
@@ -3439,10 +3439,10 @@
                     {
                       "opportunity_id": "DEMO-OPP-001",
                       "from_interaction_id": "INT-DEMO-002",
-                      "from_timestamp": "2026-09-10T01:05:07.721039+00:00",
+                      "from_timestamp": "2026-09-10T01:05:34.436353+00:00",
                       "from_stage_after_event": "recruiter-screen",
                       "to_interaction_id": "INT-DEMO-003",
-                      "to_timestamp": "2026-09-12T00:05:07.721039+00:00",
+                      "to_timestamp": "2026-09-12T00:05:34.436353+00:00",
                       "to_stage_after_event": "technical-or-architecture-interview"
                     }
                   ]
@@ -3936,8 +3936,8 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 0,
-        "last_checked_at": "2026-09-11T22:35:07.721039+00:00",
-        "last_finding_at": "2026-09-12T00:29:07.721039+00:00",
+        "last_checked_at": "2026-09-11T22:35:34.436353+00:00",
+        "last_finding_at": "2026-09-12T00:29:34.436353+00:00",
         "last_progress_at": null,
         "source_group": "other",
         "employer_direct_tier": null,
@@ -3967,9 +3967,9 @@
           "qualified_per_check": 2.0,
           "actionable_per_check": 2.0,
           "application_conversion_pct": null,
-          "last_attempt_at": "2026-09-11T22:35:07.721039+00:00",
-          "last_checked_at": "2026-09-11T22:35:07.721039+00:00",
-          "last_finding_at": "2026-09-11T22:35:07.721039+00:00",
+          "last_attempt_at": "2026-09-11T22:35:34.436353+00:00",
+          "last_checked_at": "2026-09-11T22:35:34.436353+00:00",
+          "last_finding_at": "2026-09-11T22:35:34.436353+00:00",
           "signal": "actionable-yield"
         }
       },
@@ -4078,9 +4078,9 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 1,
-        "last_checked_at": "2026-09-11T22:05:07.721039+00:00",
-        "last_finding_at": "2026-09-12T00:11:07.721039+00:00",
-        "last_progress_at": "2026-09-12T00:05:07.721039+00:00",
+        "last_checked_at": "2026-09-11T22:05:34.436353+00:00",
+        "last_finding_at": "2026-09-12T00:11:34.436353+00:00",
+        "last_progress_at": "2026-09-12T00:05:34.436353+00:00",
         "source_group": "other",
         "employer_direct_tier": null,
         "application_conversion_pct": 25.0,
@@ -4109,9 +4109,9 @@
           "qualified_per_check": 2.0,
           "actionable_per_check": 1.0,
           "application_conversion_pct": 25.0,
-          "last_attempt_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_checked_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_finding_at": "2026-09-11T22:05:07.721039+00:00",
+          "last_attempt_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_checked_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_finding_at": "2026-09-11T22:05:34.436353+00:00",
           "signal": "downstream-progress"
         },
         "execution_priority_class": "mandatory",
@@ -4153,8 +4153,8 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 0,
-        "last_checked_at": "2026-09-11T22:05:07.721039+00:00",
-        "last_finding_at": "2026-09-11T22:05:07.721039+00:00",
+        "last_checked_at": "2026-09-11T22:05:34.436353+00:00",
+        "last_finding_at": "2026-09-11T22:05:34.436353+00:00",
         "last_progress_at": null,
         "source_group": "other",
         "employer_direct_tier": null,
@@ -4184,9 +4184,9 @@
           "qualified_per_check": 1.0,
           "actionable_per_check": 1.0,
           "application_conversion_pct": 0.0,
-          "last_attempt_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_checked_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_finding_at": "2026-09-11T22:05:07.721039+00:00",
+          "last_attempt_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_checked_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_finding_at": "2026-09-11T22:05:34.436353+00:00",
           "signal": "actionable-yield"
         },
         "execution_priority_class": "mandatory",
@@ -4228,8 +4228,8 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 0,
-        "last_checked_at": "2026-09-11T22:05:07.721039+00:00",
-        "last_finding_at": "2026-09-11T22:05:07.721039+00:00",
+        "last_checked_at": "2026-09-11T22:05:34.436353+00:00",
+        "last_finding_at": "2026-09-11T22:05:34.436353+00:00",
         "last_progress_at": null,
         "source_group": "employer-direct",
         "employer_direct_tier": "rotation",
@@ -4259,9 +4259,9 @@
           "qualified_per_check": 1.0,
           "actionable_per_check": 1.0,
           "application_conversion_pct": null,
-          "last_attempt_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_checked_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_finding_at": "2026-09-11T22:05:07.721039+00:00",
+          "last_attempt_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_checked_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_finding_at": "2026-09-11T22:05:34.436353+00:00",
           "signal": "actionable-yield"
         },
         "execution_priority_class": "actionable-yield",
@@ -4301,8 +4301,8 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 0,
-        "last_checked_at": "2026-09-12T00:11:07.721039+00:00",
-        "last_finding_at": "2026-09-12T00:11:07.721039+00:00",
+        "last_checked_at": "2026-09-12T00:11:34.436353+00:00",
+        "last_finding_at": "2026-09-12T00:11:34.436353+00:00",
         "last_progress_at": null,
         "source_group": "other",
         "employer_direct_tier": null,
@@ -4332,9 +4332,9 @@
           "qualified_per_check": 1.0,
           "actionable_per_check": 1.0,
           "application_conversion_pct": 0.0,
-          "last_attempt_at": "2026-09-12T00:11:07.721039+00:00",
-          "last_checked_at": "2026-09-12T00:11:07.721039+00:00",
-          "last_finding_at": "2026-09-12T00:11:07.721039+00:00",
+          "last_attempt_at": "2026-09-12T00:11:34.436353+00:00",
+          "last_checked_at": "2026-09-12T00:11:34.436353+00:00",
+          "last_finding_at": "2026-09-12T00:11:34.436353+00:00",
           "signal": "actionable-yield"
         }
       },
@@ -4373,8 +4373,8 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 0,
-        "last_checked_at": "2026-09-11T22:20:07.721039+00:00",
-        "last_finding_at": "2026-09-11T22:20:07.721039+00:00",
+        "last_checked_at": "2026-09-11T22:20:34.436353+00:00",
+        "last_finding_at": "2026-09-11T22:20:34.436353+00:00",
         "last_progress_at": null,
         "source_group": "other",
         "employer_direct_tier": null,
@@ -4404,9 +4404,9 @@
           "qualified_per_check": 1.0,
           "actionable_per_check": 1.0,
           "application_conversion_pct": null,
-          "last_attempt_at": "2026-09-11T22:20:07.721039+00:00",
-          "last_checked_at": "2026-09-11T22:20:07.721039+00:00",
-          "last_finding_at": "2026-09-11T22:20:07.721039+00:00",
+          "last_attempt_at": "2026-09-11T22:20:34.436353+00:00",
+          "last_checked_at": "2026-09-11T22:20:34.436353+00:00",
+          "last_finding_at": "2026-09-11T22:20:34.436353+00:00",
           "signal": "actionable-yield"
         }
       },
@@ -4443,8 +4443,8 @@
         "offers": 0,
         "accepted": 0,
         "interaction_started": 0,
-        "last_checked_at": "2026-09-12T00:18:07.721039+00:00",
-        "last_finding_at": "2026-09-12T00:18:07.721039+00:00",
+        "last_checked_at": "2026-09-12T00:18:34.436353+00:00",
+        "last_finding_at": "2026-09-12T00:18:34.436353+00:00",
         "last_progress_at": null,
         "source_group": "other",
         "employer_direct_tier": null,
@@ -4474,15 +4474,15 @@
           "qualified_per_check": 1.0,
           "actionable_per_check": 1.0,
           "application_conversion_pct": null,
-          "last_attempt_at": "2026-09-12T00:18:07.721039+00:00",
-          "last_checked_at": "2026-09-12T00:18:07.721039+00:00",
-          "last_finding_at": "2026-09-12T00:18:07.721039+00:00",
+          "last_attempt_at": "2026-09-12T00:18:34.436353+00:00",
+          "last_checked_at": "2026-09-12T00:18:34.436353+00:00",
+          "last_finding_at": "2026-09-12T00:18:34.436353+00:00",
           "signal": "actionable-yield"
         }
       }
     ],
     "employer_direct": {
-      "as_of": "2026-09-12T00:11:07.721039+00:00",
+      "as_of": "2026-09-12T00:11:34.436353+00:00",
       "window_days": 28,
       "rotation_window_days": 7,
       "summary": {
@@ -4540,7 +4540,7 @@
       "productive_sources": 1
     },
     "target_accounts": {
-      "as_of": "2026-09-12T00:11:07.721039+00:00",
+      "as_of": "2026-09-12T00:11:34.436353+00:00",
       "accounts": [
         {
           "account_id": "northstar-careers",
@@ -4562,8 +4562,8 @@
           "interviews": 0,
           "offers": 0,
           "accepted": 0,
-          "last_attempt_at": "2026-09-11T22:05:07.721039+00:00",
-          "last_finding_at": "2026-09-11T22:05:07.721039+00:00"
+          "last_attempt_at": "2026-09-11T22:05:34.436353+00:00",
+          "last_finding_at": "2026-09-11T22:05:34.436353+00:00"
         }
       ],
       "summary": {
@@ -4579,7 +4579,7 @@
       }
     },
     "source_prioritization": {
-      "as_of": "2026-09-12T00:11:07.721039+00:00",
+      "as_of": "2026-09-12T00:11:34.436353+00:00",
       "window_days": 28,
       "rotation_window_days": 7,
       "mandatory_count": 2,
@@ -4602,7 +4602,7 @@
           "interviews": 0,
           "offers": 0,
           "accepted": 0,
-          "last_attempt_at": "2026-09-11T22:05:07.721039+00:00"
+          "last_attempt_at": "2026-09-11T22:05:34.436353+00:00"
         }
       ],
       "summary": {
