@@ -89,6 +89,44 @@
     return [...latest.values()];
   };
 
+  const setkaCommentInbox = () => snapshot?.automation?.setka_comment_inbox || {
+    items: [],
+    summary: { requires_attention: 0 },
+  };
+
+  const responseLabel = (status) => ({
+    unanswered: 'без ответа',
+    'reply-drafted': 'черновик готов',
+    answered: 'отвечено',
+    dismissed: 'ответ не требуется',
+    unknown: 'неизвестно',
+  }[status] || status || 'неизвестно');
+
+  const commentsTable = (inbox) => {
+    const items = Array.isArray(inbox?.items) ? inbox.items : [];
+    if (!items.length) {
+      return '<div class="empty compact">Входящих комментариев к отслеживаемым публикациям пока нет.</div>';
+    }
+    const rows = items.slice(0, 20).map(item => {
+      const details = item.details || {};
+      const author = details.comment_author || details.author || 'Автор не указан';
+      const url = safeUrl(item.target_url || item.source_url || '');
+      const title = url
+        ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(displayTitle(item.title || 'Комментарий в Сетке'))}</a>`
+        : esc(displayTitle(item.title || 'Комментарий в Сетке'));
+      return `<tr>
+        <td>${title}<div class="meta">${esc(item.summary || details.comment_summary || '')}</div></td>
+        <td>${esc(author)}</td>
+        <td>${esc(responseLabel(item.response_status))}</td>
+        <td>${esc(fmtDate(item.source_published_at || item.observed_at))}</td>
+      </tr>`;
+    }).join('');
+    return `<div class="table-wrap"><table>
+      <thead><tr><th>Комментарий</th><th>Автор</th><th>Статус</th><th>Дата</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+  };
+
   const profileHistoryTable = (profiles) => {
     if (!profiles.length) {
       return '<div class="empty compact">Срезов профиля Сетки пока нет.</div>';
@@ -153,8 +191,10 @@
     const latestAttempt = profiles[0] || null;
     const latest = profiles.find(hasProfileMeasurement) || latestAttempt;
     const posts = latestPostMetrics(metrics);
+    const commentInbox = setkaCommentInbox();
+    const commentsRequiringAttention = Number(commentInbox?.summary?.requires_attention || 0);
 
-    if (!metrics.length) {
+    if (!metrics.length && !(commentInbox?.items || []).length) {
       return `<div class="section analytics-section">
         <div class="section-head"><div><h2>Сетка — личный бренд</h2><p class="section-note">Исторические срезы ещё не собраны. Они появятся после выполнения setka-monitoring.</p></div></div>
         <div class="empty">Нет измерений Сетки.</div>
@@ -174,6 +214,7 @@
         ${metric('ER', latest ? percent(latest.er) : '—')}
         ${metric('ERV', latest ? percent(latest.erv) : '—')}
         ${metric('Отслеживаемых постов', posts.length)}
+        ${metric('Комментариев требуют ответа', commentsRequiringAttention)}
       </div>
       <div class="section analytics-section">
         <div class="section-head"><div><h3>Динамика профиля</h3><p class="section-note">Последние исторические срезы. Публичные и авторизованные измерения явно различаются.</p></div></div>
@@ -182,6 +223,10 @@
       <div class="section analytics-section">
         <div class="section-head"><div><h3>Эффективность публикаций</h3><p class="section-note">Для каждого поста показан последний доступный срез. Таблица будет становиться точнее по мере накопления статистики.</p></div></div>
         <div class="card chart-card">${postsTable(posts)}</div>
+      </div>
+      <div class="section analytics-section">
+        <div class="section-head"><div><h3>Комментарии к публикациям</h3><p class="section-note">Требуют внимания: ${esc(String(commentsRequiringAttention))}. Черновик ответа не считается опубликованным ответом.</p></div></div>
+        <div class="card chart-card">${commentsTable(commentInbox)}</div>
       </div>
       <p class="section-note">Совпадение публикаций по времени с ростом просмотров профиля или входящими контактами трактуется только как корреляция, если источник контакта явно не подтверждён.</p>
     </div>`;
