@@ -413,10 +413,10 @@ function startApp() {
   render();
 }
 
-const titles = {demo:'О демо',today:'Сегодня',health:'Состояние системы',vacancies:'Все вакансии',opportunities:'Процессы',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
+const titles = {demo:'О демо',today:'Сегодня',health:'Состояние системы',vacancies:'Все вакансии',opportunities:'Процессы',profiles:'Профили',content:'Контент',inbox:'Почта и действия',analytics:'Аналитика',runs:'История запусков'};
 function render() {
   $('#view-title').textContent = titles[currentView];
-  const fn = {demo:renderDemo,today:renderToday,health:renderHealth,vacancies:renderVacancies,opportunities:renderOpportunities,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
+  const fn = {demo:renderDemo,today:renderToday,health:renderHealth,vacancies:renderVacancies,opportunities:renderOpportunities,profiles:renderProfileSync,content:renderContent,inbox:renderInbox,analytics:renderAnalytics,runs:renderRuns}[currentView];
   $('#view').innerHTML = fn();
 }
 
