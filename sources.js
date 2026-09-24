@@ -44,6 +44,7 @@
     'qualified-yield':'Есть квалифицированные',
     'observed-only':'Есть находки без квалификации',
     'zero-qualified-yield':'Нет квалифицированных',
+    'degraded-only':'Только частичные проверки',
     'unavailable-only':'Только недоступность',
     'not-covered':'Не покрыт за 28 дней',
   }[signal] || signal || '—');

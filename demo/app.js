@@ -1589,6 +1589,7 @@ function sourceCoverageText(item) {
   }
   const parts = [
     'Проверено источников: ' + (coverage.checked_sources ?? 0),
+    'частично: ' + (coverage.partial_sources ?? 0),
     'недоступно: ' + (coverage.unavailable_sources ?? 0),
   ];
   if ((coverage.mandatory_expected ?? 0) > 0) {
@@ -1603,21 +1604,50 @@ function sourceCoverageText(item) {
 
 function sourceIssueList(item) {
   const coverage = item?.source_coverage || {};
+  const partial = coverage.mandatory_partial || [];
   const unavailable = coverage.mandatory_unavailable || [];
   const missing = coverage.mandatory_missing || [];
-  if (!unavailable.length && !missing.length) return '';
+  if (!partial.length && !unavailable.length && !missing.length) return '';
 
   let html = '<div class="summary">';
+  if (partial.length) {
+    html += '<strong>Частично покрытые обязательные источники:</strong> '
+      + partial.map(source => esc(source.source_name || source.source_ref)).join(', ') + '.';
+  }
   if (unavailable.length) {
+    if (partial.length) html += '<br>';
     html += '<strong>Недоступные обязательные источники:</strong> '
       + unavailable.map(source => esc(source.source_name || source.source_ref)).join(', ') + '.';
   }
   if (missing.length) {
-    if (unavailable.length) html += '<br>';
+    if (partial.length || unavailable.length) html += '<br>';
     html += '<strong>Не отражены в телеметрии:</strong> '
       + missing.map(source => esc(source.source_name || source.source_ref)).join(', ') + '.';
   }
   return html + '</div>';
+}
+
+function qualificationRuntimeSummary(item) {
+  const runtime = item?.qualification_runtime;
+  if (!runtime) return '';
+  const counts = runtime.candidate_counts || {};
+  const publication = runtime.publication || {};
+  const publicationState = publication.publication_status || 'pending';
+  const parts = [
+    'AI-квалификация: выбрано ' + (counts.selected_logical_candidates ?? 0),
+    'новых ' + (counts.selected_new_unique ?? 0),
+    'изменённых ' + (counts.selected_materially_changed ?? 0),
+    'оценено ' + (counts.semantic_output_count ?? 0),
+    'сохранено ' + (counts.retained_item_count ?? 0),
+  ];
+  return '<div class="summary"><strong>Runtime:</strong> '
+    + esc(parts.join(' · '))
+    + '<br><strong>Машинное покрытие:</strong> '
+    + esc(ru(runtime.deterministic_coverage_status || 'unknown'))
+    + ' · <strong>Публикация:</strong> '
+    + esc(ru(publicationState))
+    + (publication.published_at ? ' · ' + esc(fmtDate(publication.published_at)) : '')
+    + '</div>';
 }
 
 function workflowDiagnosticCard(item) {
@@ -1640,7 +1670,7 @@ function workflowDiagnosticCard(item) {
   if (coverage.actionable_candidates != null) {
     html += '<span>Целевых: ' + esc(coverage.actionable_candidates) + '</span>';
   }
-  html += '</div>' + staleText + sourceIssueList(item);
+  html += '</div>' + staleText + sourceIssueList(item) + qualificationRuntimeSummary(item);
   if (showSummary) {
     html += '<p class="section-note"><strong>Итог запуска:</strong> ' + esc(item.run_summary) + '</p>';
   }
