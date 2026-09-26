@@ -40,12 +40,19 @@ function sideIncomeItems() {
   return [...newest.values()];
 }
 
-const sideIncomePlatformSources = new Set(['professionals-4-0', 'skillstaff-projects']);
+function sideIncomeSourceRecord(item) {
+  const ref = item?.details?.discovery_source_ref;
+  if (!ref) return null;
+  return (snapshot?.source_analytics?.sources || []).find(source =>
+    source.stream === 'side-income' && source.source_id === ref
+  ) || null;
+}
 
 function sideIncomeChannel(item) {
   const details = item?.details || {};
   if (details.engagement_channel === 'platform-project') return 'platform-project';
-  if (sideIncomePlatformSources.has(details.discovery_source_ref)) return 'platform-project';
+  const source = sideIncomeSourceRecord(item);
+  if (source?.category === 'platform-project-marketplace') return 'platform-project';
   return 'other';
 }
 
