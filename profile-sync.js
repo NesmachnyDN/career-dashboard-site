@@ -35,14 +35,17 @@ function renderProfileSync() {
       ? `<a href="${esc(item.profile_url)}" target="_blank" rel="noopener noreferrer">открыть</a>`
       : '<span class="muted">URL не зафиксирован</span>';
     const acceptance = item.runtime_acceptance === 'required'
-      ? (item.adapter_ready ? 'принят' : 'ожидает live acceptance')
+      ? (item.adapter_ready ? 'принят' : 'заблокирован / ожидает acceptance')
       : 'не требуется';
+    const acceptanceNote = item.adapter_note
+      ? `<div class="profile-sync-reason">${esc(item.adapter_note)}</div>`
+      : '';
     const verified = item.last_verified_at ? esc(fmtDate(item.last_verified_at)) : 'не проверялся';
     return `<tr>
       <td><strong>${esc(item.display_name)}</strong><div class="profile-sync-sub">${esc(item.platform)}</div></td>
       <td><span class="profile-sync-status profile-sync-${esc(item.status)}">${esc(profileSyncStatusLabel(item.status))}</span><div class="profile-sync-reason">${esc(item.reason || '')}</div></td>
       <td>${esc(profileSyncModeLabel(item.publication_mode))}<div class="profile-sync-sub">read-back: ${esc(profileSyncModeLabel(item.readback_mode))}</div></td>
-      <td>${esc(acceptance)}</td>
+      <td>${esc(acceptance)}${acceptanceNote}</td>
       <td>${verified}</td>
       <td>${(item.governed_fields || []).map(field => `<span class="profile-sync-field">${esc(field)}</span>`).join(' ')}</td>
       <td>${url}</td>

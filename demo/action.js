@@ -5,7 +5,8 @@
 
   const data = () => snapshot?.analytics?.action_center || {
     items: [],
-    summary: {total: 0, decisions: 0, follow_ups: 0}
+    profile_sync_action: null,
+    summary: {total: 0, decisions: 0, follow_ups: 0, profile_updates: 0}
   };
 
   function dayNumber(value) {
@@ -127,8 +128,37 @@
     </article>`;
   }
 
+  function renderProfileSyncAction(item) {
+    if (!item) return '';
+    const ready = Number(item.publish_ready_count || 0);
+    const review = Number(item.review_required_count || 0);
+    const acceptance = Number(item.adapter_acceptance_pending || 0);
+    return `<article class="action-card action-profile-sync">
+      <header class="action-card-head">
+        <div>
+          <div class="action-chips"><span class="action-chip kind-profile-update">профили</span></div>
+          <strong class="action-company">${esc(item.title || 'Синхронизация профессиональных профилей')}</strong>
+          <div class="action-role">${esc(item.next_action?.text || 'Проверить состояние профилей')}</div>
+        </div>
+        <div class="action-stage">${Number(item.target_count || 0)} каналов</div>
+      </header>
+      <div class="action-signals">
+        <div><span>Готовы к публикации</span><strong>${ready}</strong></div>
+        <div><span>Требуют ревью</span><strong>${review}</strong></div>
+        <div><span>Ожидают acceptance</span><strong>${acceptance}</strong></div>
+      </div>
+      <div class="action-data-warning">Публикация остаётся отдельным внешним действием и требует явного разрешения, привязанного к текущим digest.</div>
+      <footer class="action-card-actions">
+        <button type="button" data-profile-sync-open="1">Открыть профили</button>
+      </footer>
+    </article>`;
+  }
+
   function renderActionCenter() {
-    const all = (data().items || []).filter(containsQuery);
+    const payload = data();
+    const all = (payload.items || []).filter(containsQuery);
+    const profileAction = payload.profile_sync_action || null;
+    const profileVisible = Boolean(profileAction && actionFilter === 'all' && containsQuery(profileAction));
     const decorated = all.map(item => ({item, deadline: deadlineState(item)}));
     const overdue = decorated.filter(row => row.deadline.id === 'overdue').length;
     const today = decorated.filter(row => row.deadline.id === 'today').length;
@@ -141,7 +171,7 @@
       Действия — оперативная очередь решений и следующих шагов. Здесь показано только то, что требует внимания сейчас: что сделать, к какому сроку и какие условия ещё не закрыты. Раздел только для чтения и ничего не отправляет автоматически.
     </div>
     <div class="grid cards action-metrics">
-      ${metric('Требуют действия', all.length)}
+      ${metric('Требуют действия', all.length + (profileVisible ? 1 : 0))}
       ${metric('Просрочено', overdue)}
       ${metric('На сегодня', today)}
       ${metric('Незакрытые условия', gates)}
@@ -149,14 +179,15 @@
     <div class="section">
       <div class="section-head"><div><h2>Что требует внимания</h2><p class="section-note">Одно текущее действие на процесс. Полная история взаимодействий находится в разделе «Процессы».</p></div></div>
       <div class="action-filter-row">
-        ${filterButton('all', 'Все', all.length)}
+        ${filterButton('all', 'Все', all.length + (profileAction ? 1 : 0))}
         ${filterButton('overdue', 'Просрочено', overdue)}
         ${filterButton('decision', 'Решения', decisions)}
         ${filterButton('follow-up', 'Следующие шаги', followUps)}
         ${filterButton('gates', 'Незакрытые условия', gates)}
       </div>
       <div class="action-list">
-        ${filtered.length ? filtered.map(renderActionCard).join('') : '<div class="empty">По выбранному фильтру действий нет.</div>'}
+        ${profileVisible ? renderProfileSyncAction(profileAction) : ''}
+        ${filtered.length ? filtered.map(renderActionCard).join('') : (!profileVisible ? '<div class="empty">По выбранному фильтру действий нет.</div>' : '')}
       </div>
     </div>`;
   }
@@ -172,6 +203,16 @@
     if (filter) {
       actionFilter = filter.dataset.actionFilter || 'all';
       if (currentView === 'action') render();
+      return;
+    }
+
+    const profileOpen = event.target.closest('[data-profile-sync-open]');
+    if (profileOpen) {
+      currentView = 'profiles';
+      query = '';
+      $('#search').value = '';
+      setActiveNav();
+      render();
       return;
     }
 
