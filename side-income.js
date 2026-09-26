@@ -1,5 +1,6 @@
 let sideIncomeRecommendationFilter = 'all';
 let sideIncomeFreshnessFilter = 'active';
+let sideIncomeChannelFilter = 'all';
 
 function sideIncomeNorm(value) {
   return String(value || '').trim().toLowerCase().replace(/[^a-zа-я0-9]+/g, '');
@@ -39,6 +40,19 @@ function sideIncomeItems() {
   return [...newest.values()];
 }
 
+const sideIncomePlatformSources = new Set(['professionals-4-0', 'skillstaff-projects']);
+
+function sideIncomeChannel(item) {
+  const details = item?.details || {};
+  if (details.engagement_channel === 'platform-project') return 'platform-project';
+  if (sideIncomePlatformSources.has(details.discovery_source_ref)) return 'platform-project';
+  return 'other';
+}
+
+function sideIncomeChannelLabel(item) {
+  return sideIncomeChannel(item) === 'platform-project' ? 'Платформенный проект' : 'Подработка';
+}
+
 function sideIncomeIsActive(item) {
   if (['dismissed','expired'].includes(item.discovery_status)) return false;
   if (!item.expires_at) return true;
@@ -57,6 +71,7 @@ function sideIncomeStats(items) {
     consider: active.filter(i => i.recommendation === 'CONSIDER').length,
     dismissed,
     expired,
+    platformProjects: active.filter(i => sideIncomeChannel(i) === 'platform-project').length,
   };
 }
 
@@ -136,7 +151,7 @@ function sideIncomeCard(item) {
   return `<article class="card">
     <div class="content-card-head">
       <div class="content-card-chips">
-        <span class="content-chip content-chip-brief">Подработка</span>
+        <span class="content-chip content-chip-brief">${esc(sideIncomeChannelLabel(item))}</span>
         ${badge(ru(item.recommendation || 'CONSIDER'), sideIncomeRecommendationClass(item.recommendation))}
         ${sideIncomeLifecycleBadge(item)}
       </div>
@@ -156,13 +171,15 @@ function renderSideIncome() {
   const stats = sideIncomeStats(all);
   const filtered = all.filter(item =>
     (sideIncomeRecommendationFilter === 'all' || item.recommendation === sideIncomeRecommendationFilter) &&
-    (sideIncomeFreshnessFilter === 'all' || (sideIncomeFreshnessFilter === 'active' ? sideIncomeIsActive(item) : !sideIncomeIsActive(item)))
+    (sideIncomeFreshnessFilter === 'all' || (sideIncomeFreshnessFilter === 'active' ? sideIncomeIsActive(item) : !sideIncomeIsActive(item))) &&
+    (sideIncomeChannelFilter === 'all' || sideIncomeChannel(item) === sideIncomeChannelFilter)
   );
 
   return `<div class="grid cards">
     ${metric('Актуальных задач', stats.active)}
     ${metric('Брать', stats.take)}
     ${metric('Рассмотреть', stats.consider)}
+    ${metric('Платформенных проектов', stats.platformProjects)}
     ${metric('Отклонено', stats.dismissed, stats.expired ? `истекло: ${stats.expired}` : '')}
   </div>
   <div class="section">
@@ -179,6 +196,13 @@ function renderSideIncome() {
           <option value="TAKE" ${sideIncomeRecommendationFilter === 'TAKE' ? 'selected' : ''}>Брать</option>
           <option value="CONSIDER" ${sideIncomeRecommendationFilter === 'CONSIDER' ? 'selected' : ''}>Рассмотреть</option>
           <option value="SKIP" ${sideIncomeRecommendationFilter === 'SKIP' ? 'selected' : ''}>Пропустить</option>
+        </select>
+      </label>
+      <label>Канал
+        <select data-side-income-filter="channel">
+          <option value="all" ${sideIncomeChannelFilter === 'all' ? 'selected' : ''}>Все</option>
+          <option value="platform-project" ${sideIncomeChannelFilter === 'platform-project' ? 'selected' : ''}>Платформенные проекты</option>
+          <option value="other" ${sideIncomeChannelFilter === 'other' ? 'selected' : ''}>Остальная подработка</option>
         </select>
       </label>
       <label>Актуальность
@@ -198,11 +222,14 @@ function sideIncomeAnalyticsMarkup() {
   const stats = sideIncomeStats(items);
   const bySource = {};
   const byRecommendation = {};
+  const byChannel = {};
   for (const item of items.filter(sideIncomeIsActive)) {
     const source = item.source_name || 'unknown';
     bySource[source] = (bySource[source] || 0) + 1;
     const recommendation = item.recommendation || 'unknown';
     byRecommendation[recommendation] = (byRecommendation[recommendation] || 0) + 1;
+    const channel = sideIncomeChannel(item) === 'platform-project' ? 'Платформенные проекты' : 'Остальная подработка';
+    byChannel[channel] = (byChannel[channel] || 0) + 1;
   }
   return `<div class="section analytics-section" id="side-income-analytics">
     <div class="section-head"><div><h2>Дополнительный заработок</h2><p class="section-note">Текущий запас актуальных коротких платных задач и распределение по источникам.</p></div></div>
@@ -210,9 +237,11 @@ function sideIncomeAnalyticsMarkup() {
       ${metric('Актуальных', stats.active)}
       ${metric('Брать', stats.take)}
       ${metric('Рассмотреть', stats.consider)}
+      ${metric('Платформенных проектов', stats.platformProjects)}
       ${metric('Отклонено', stats.dismissed, stats.expired ? `истекло: ${stats.expired}` : '')}
     </div>
     <div class="card chart-card"><h3>По рекомендации</h3>${bars(byRecommendation, null, statusTone)}</div>
+    <div class="card chart-card"><h3>По каналу</h3>${bars(byChannel, null, ()=>'origin')}</div>
     <div class="card chart-card"><h3>По источникам</h3>${bars(bySource, null, ()=>'origin')}</div>
   </div>`;
 }
@@ -237,5 +266,6 @@ document.addEventListener('change', (event) => {
   if (!filter) return;
   if (filter.dataset.sideIncomeFilter === 'recommendation') sideIncomeRecommendationFilter = filter.value;
   if (filter.dataset.sideIncomeFilter === 'freshness') sideIncomeFreshnessFilter = filter.value;
+  if (filter.dataset.sideIncomeFilter === 'channel') sideIncomeChannelFilter = filter.value;
   if (currentView === 'sideincome') render();
 });
