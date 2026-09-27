@@ -1735,7 +1735,7 @@ function renderHealth() {
     ${metric('Запросов в очереди', refresh.queued_count || 0)}
     ${metric('Выполняются', refresh.running_count || 0)}
     ${metric(
-      'Последний ручной запрос',
+      'Последний запрос обновления',
       latestRefresh?.requested_at ? fmtDate(latestRefresh.requested_at) : '—',
       latestRefresh ? ru(latestRefresh.status) : 'данных пока нет'
     )}
@@ -1746,7 +1746,7 @@ function renderHealth() {
     )}
   </div>
   <div class="section">
-    <div class="section-head"><div><h2>Контур ручного обновления</h2><p class="section-note">Статус выводится только из неизменяемых request / lock / response записей. Карьерный центр не хранит и не изменяет собственное состояние выполнения.</p></div></div>
+    <div class="section-head"><div><h2>Контур полного обновления</h2><p class="section-note">Статус выводится только из неизменяемых request / lock / response записей. Карьерный центр не хранит и не изменяет собственное состояние выполнения.</p></div></div>
     <div class="table-wrap"><table>
       <thead><tr><th>Запрошено</th><th>Состояние</th><th>Старт</th><th>Завершено</th><th>Публикация</th></tr></thead>
       <tbody>${refreshRows.map(item => `<tr>
@@ -1755,7 +1755,7 @@ function renderHealth() {
         <td>${item.started_at ? esc(fmtDate(item.started_at)) : '—'}</td>
         <td>${item.completed_at ? esc(fmtDate(item.completed_at)) : '—'}</td>
         <td>${esc(publicationStatus(item))}</td>
-      </tr>`).join('') || '<tr><td colspan="5">Ручные запросы обновления ещё не зафиксированы.</td></tr>'}</tbody>
+      </tr>`).join('') || '<tr><td colspan="5">Запросы полного обновления ещё не зафиксированы.</td></tr>'}</tbody>
     </table></div>
     ${lastCompletedRefresh?.summary ? `<p class="section-note">Последний итог: ${esc(lastCompletedRefresh.summary)}</p>` : ''}
   </div>`;
