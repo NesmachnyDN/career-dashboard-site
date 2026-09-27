@@ -1058,7 +1058,7 @@ function vacancyCard(v, index=0) {
     <div class="vacancy-card-grid">
       <div class="vacancy-main">
         <div class="vacancy-chips">${vacancyStatus(v)}${vacancyOrigin(v)}</div>
-        <strong class="vacancy-company">${esc(v.company || '—')}</strong>
+        <strong class="vacancy-company">${esc(v.company || 'Работодатель не указан')}</strong>
         <div class="vacancy-role">${esc(ru(v.role || v.title || '—'))}</div>
         ${summaryMarkup}
         ${sourceMeta.length ? `<div class="vacancy-meta">${sourceMeta.map(item=>`<span>${esc(item)}</span>`).join('')}</div>` : ''}
