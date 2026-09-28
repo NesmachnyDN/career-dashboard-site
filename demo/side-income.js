@@ -96,7 +96,7 @@ function sideIncomeLifecycleBadge(item) {
 }
 
 const sideIncomeDetailLabels = {
-  effort_estimate: 'Оценка трудозатрат',
+  effort_estimate: 'Предполагаемая трудоёмкость',
   evidence_fit: 'Подтверждённое соответствие',
   deliverables: 'Ожидаемый результат',
   calls: 'Созвоны',
@@ -121,6 +121,24 @@ function sideIncomeDetailLabel(key) {
     .replace(/^./, char => char.toUpperCase());
 }
 
+function sideIncomeEffortEstimate(item) {
+  const value = item?.details?.effort_estimate;
+  if (!value) return '';
+  if (typeof value === 'string') return displayText(value);
+  if (typeof value !== 'object') return '';
+
+  if (!['total-hours', 'hours-per-week'].includes(value.mode)) return '';
+  const min = Number(value.min_hours);
+  const likely = Number(value.likely_hours);
+  const max = Number(value.max_hours);
+  if (![min, likely, max].every(hours => Number.isInteger(hours) && hours > 0)) return '';
+  if (!(min <= likely && likely <= max)) return '';
+
+  const suffix = value.mode === 'hours-per-week' ? ' ч/нед.' : ' ч';
+  const range = min === max ? '' : ` (${min}–${max}${suffix})`;
+  return `≈${likely}${suffix}${range}`;
+}
+
 function sideIncomeDetailValue(value) {
   if (value == null) return '';
   if (Array.isArray(value)) return value.map(sideIncomeDetailValue).filter(Boolean).join('; ');
@@ -139,6 +157,7 @@ function sideIncomeDetailsMarkup(details) {
   if (typeof details === 'string') return `<p class="summary">${esc(displayText(details))}</p>`;
 
   const rows = Object.entries(details)
+    .filter(([key]) => key !== 'effort_estimate')
     .map(([key, value]) => [sideIncomeDetailLabel(key), sideIncomeDetailValue(value)])
     .filter(([, value]) => value);
   if (!rows.length) return '';
@@ -149,6 +168,7 @@ function sideIncomeDetailsMarkup(details) {
 }
 
 function sideIncomeCard(item) {
+  const effortEstimate = sideIncomeEffortEstimate(item);
   const meta = [
     item.source_name,
     item.source_published_at ? `опубликовано ${fmtDate(item.source_published_at)}` : '',
@@ -165,6 +185,7 @@ function sideIncomeCard(item) {
     </div>
     <h3>${esc(displayTitle(item.title || item.role || 'Задача'))}</h3>
     ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
+    <p class="meta"><strong>Предполагаемая трудоёмкость:</strong> ${esc(effortEstimate || 'не оценено')}</p>
     ${item.compensation ? `<p class="meta">Бюджет / ставка: ${esc(ru(item.compensation))}</p>` : ''}
     ${item.status_reason ? `<p class="summary"><strong>Статус:</strong> ${esc(displayText(item.status_reason))}</p>` : ''}
     ${item.summary ? `<p class="summary">${esc(displayText(item.summary))}</p>` : ''}
