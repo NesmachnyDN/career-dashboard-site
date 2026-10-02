@@ -709,6 +709,16 @@ function logicalItemKey(item) {
   return item.dedupe_key || item.item_id || '';
 }
 
+function storyItemKey(item) {
+  const kind = item.kind || '';
+  const story = String(item.story_key || '').trim().toLowerCase();
+  if ((kind === 'post' || kind === 'brief') && story) {
+    const platform = String(item.target_platform || '').trim().toLowerCase();
+    return `social-story|${kind}|${platform}|${story}`;
+  }
+  return logicalItemKey(item);
+}
+
 function readContentStatusOverrides() {
   try {
     const raw = localStorage.getItem(CONTENT_STATUS_STORAGE_KEY);
@@ -782,7 +792,22 @@ function itemsFromRuns(runs) {
     if (!key || newest.has(key)) continue;
     newest.set(key, item);
   }
-  return [...newest.values()].filter(item => item.content_status !== 'dismissed');
+
+  const stories = new Map();
+  for (const item of [...newest.values()].filter(item => item.content_status !== 'dismissed')) {
+    const key = storyItemKey(item);
+    const current = stories.get(key);
+    if (!current) {
+      stories.set(key, item);
+      continue;
+    }
+    const itemRank = [item.content_status === 'published' ? 1 : 0, new Date(item.observed_at || 0).getTime()];
+    const currentRank = [current.content_status === 'published' ? 1 : 0, new Date(current.observed_at || 0).getTime()];
+    if (itemRank[0] > currentRank[0] || (itemRank[0] === currentRank[0] && itemRank[1] > currentRank[1])) {
+      stories.set(key, item);
+    }
+  }
+  return [...stories.values()];
 }
 
 function runStatusLabel(status) {
