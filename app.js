@@ -37,6 +37,7 @@ const RU = {
   'running': 'выполняется',
   'published': 'обновлено и опубликовано',
   'completed-not-published': 'обновлено, публикация не подтверждена',
+  'superseded': 'отменено новым запуском',
   'success': 'успешно',
   'no-findings': 'нет подходящих результатов',
   'partial': 'частично',
@@ -1586,6 +1587,7 @@ function refreshStatusBadge(state) {
     running: 'partial',
     published: 'success',
     'completed-not-published': 'partial',
+    superseded: '',
     failed: 'failed',
   }[state] || '';
   return badge(ru(state || 'unknown'), cls);
