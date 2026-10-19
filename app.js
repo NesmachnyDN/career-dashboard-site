@@ -35,6 +35,7 @@ const RU = {
   'pending': 'ожидание',
   'queued': 'в очереди',
   'running': 'выполняется',
+  'stalled': 'исполнение зависло',
   'published': 'обновлено и опубликовано',
   'completed-not-published': 'обновлено, публикация не подтверждена',
   'superseded': 'отменено новым запуском',
@@ -1585,6 +1586,7 @@ function refreshStatusBadge(state) {
   const cls = {
     queued: 'partial',
     running: 'partial',
+    stalled: 'failed',
     published: 'success',
     'completed-not-published': 'partial',
     superseded: '',
@@ -1761,6 +1763,7 @@ function renderHealth() {
   <div class="grid cards">
     ${metric('Запросов в очереди', refresh.queued_count || 0)}
     ${metric('Выполняются', refresh.running_count || 0)}
+    ${metric('Зависли', refresh.stalled_count || 0)}
     ${metric(
       'Последний запрос обновления',
       latestRefresh?.requested_at ? fmtDate(latestRefresh.requested_at) : '—',
@@ -1773,13 +1776,13 @@ function renderHealth() {
     )}
   </div>
   <div class="section">
-    <div class="section-head"><div><h2>Контур полного обновления</h2><p class="section-note">Статус выводится только из неизменяемых request / lock / response записей. Карьерный центр не хранит и не изменяет собственное состояние выполнения.</p></div></div>
+    <div class="section-head"><div><h2>Контур полного обновления</h2><p class="section-note">Статус выводится из неизменяемых request / execution-claim / lock / response записей. Потерянный исполнитель и устаревший lock обозначаются как «исполнение зависло», а не как успешное обновление. Карьерный центр не хранит и не изменяет собственное состояние выполнения.</p></div></div>
     <div class="table-wrap"><table>
       <thead><tr><th>Запрошено</th><th>Состояние</th><th>Старт</th><th>Завершено</th><th>Публикация</th></tr></thead>
       <tbody>${refreshRows.map(item => `<tr>
         <td>${item.requested_at ? esc(fmtDate(item.requested_at)) : '—'}</td>
         <td>${refreshStatusBadge(item.status)}</td>
-        <td>${item.started_at ? esc(fmtDate(item.started_at)) : '—'}</td>
+        <td>${item.started_at ? esc(fmtDate(item.started_at)) : item.claimed_at ? esc(fmtDate(item.claimed_at)) : '—'}</td>
         <td>${item.completed_at ? esc(fmtDate(item.completed_at)) : '—'}</td>
         <td>${esc(publicationStatus(item))}</td>
       </tr>`).join('') || '<tr><td colspan="5">Запросы полного обновления ещё не зафиксированы.</td></tr>'}</tbody>
