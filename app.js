@@ -827,13 +827,48 @@ function runTable(runs, emptyText) {
   return `<div class="table-wrap"><table class="run-table"><thead><tr><th>Автоматизация</th><th>Запуск</th><th class="run-status-col">Статус</th><th>Завершено</th><th>Результаты</th><th>Итог</th></tr></thead><tbody>${runs.map(r=>`<tr><td>${esc(ru(r.workflow))}</td><td>${esc(r.run_id)}</td><td class="run-status-col">${badge(runStatusLabel(r.status), r.status)}</td><td>${esc(fmtDate(r.completed_at))}</td><td>${r.items?.length||0}</td><td>${esc(displayText(r.summary||''))}</td></tr>`).join('')||`<tr><td colspan="6">${esc(emptyText)}</td></tr>`}</tbody></table></div>`;
 }
 
+function renderFreshSources() {
+  const data = snapshot?.automation?.fresh_sources || {};
+  const hasSnapshot = data.freshness === 'fresh';
+  const latest = snapshot?.automation?.control_plane?.manual_refresh?.last_completed;
+  const lastFull = latest?.completed_at ? fmtDate(latest.completed_at) : 'нет подтверждённого полного запуска';
+  const sourceLabel = data.generated_at ? fmtDate(data.generated_at) : 'нет данных';
+  const sourceSummary = hasSnapshot
+    ? 'Исходные объявления собраны автоматически; AI-проверка соответствия, зарплаты, ссылок и доступности ещё не выполнена.'
+    : 'Актуальный снимок источников отсутствует или устарел. Не считайте записи сегодняшними.';
+  const renderList = (rows, label) => {
+    const items = Array.isArray(rows) ? rows : [];
+    return `<div class="section"><h3>${esc(label)}</h3>
+      <div class="table-wrap"><table><thead><tr><th>Найдено в источнике</th><th>Источник</th><th>Последняя проверка</th></tr></thead>
+      <tbody>${items.map(item => `<tr><td><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title)}</a>
+      ${item.company ? `<div class="meta">${esc(item.company)}</div>` : ''}</td>
+      <td>${esc(item.source_ref)}</td><td>${esc(fmtDate(item.last_seen_at))}</td></tr>`).join('') ||
+      '<tr><td colspan="3">Нет свежих записей по предварительному тематическому фильтру.</td></tr>'}</tbody></table></div></div>`;
+  };
+  return `<div class="section">
+    <div class="section-head"><div><h2>Свежие находки источников — без AI-оценки</h2>
+      <p class="section-note">Последняя синхронизация исходных данных: ${esc(sourceLabel)}.
+      Источников: ${esc(data.checked_sources ?? 0)}/${esc(data.source_count ?? 0)}, активных исходных записей: ${esc(data.active_observations ?? 0)}.
+      ${esc(sourceSummary)}</p>
+      <p class="section-note"><strong>Последнее полное AI-обновление:</strong> ${esc(lastFull)}.
+      Обновление сайта и сбор источников не означают завершение AI-квалификации.</p>
+    </div></div>
+    ${hasSnapshot ? renderList(data.permanent_russia, 'Архитектурные вакансии — ещё не оценены') : ''}
+    ${hasSnapshot ? renderList(data.side_income, 'Возможные подработки — ещё не оценены') : ''}
+    <p class="section-note">Профессиональные материалы: последний сбор ${esc(data.content?.generated_at ? fmtDate(data.content.generated_at) : 'отсутствует')};
+      сообщений ${esc(data.content?.message_count ?? 0)}, недоступных источников ${esc(data.content?.unavailable_sources ?? 0)}.
+      Отсутствие новых материалов не означает, что новостей не было.</p>
+  </div>`;
+}
+
 function renderToday() {
   const runs = runsToday();
   const items = itemsFromRuns(runs);
   const attention = items.filter(i => !i.backfill && ['urgent','high'].includes(i.priority));
   const failed = runs.filter(r => ['partial','failed'].includes(r.status));
 
-  return `<div class="grid cards">
+  return `${renderFreshSources()}
+  <div class="grid cards">
     ${metric('Запусков сегодня', runs.length)}
     ${metric('Результатов сегодня', items.length)}
     ${metric('Требуют внимания', attention.length)}
