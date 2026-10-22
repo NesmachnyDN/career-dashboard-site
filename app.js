@@ -453,6 +453,7 @@ function badge(text, cls='') { return `<span class="badge ${esc(cls)}">${esc(tex
 function link(label, url, cls='') { const u=safeUrl(url); return u?`<a class="${esc(cls)}" href="${esc(u)}" target="_blank" rel="noopener">${esc(label)}</a>`:''; }
 
 function contentTypeChip(item) {
+  if (item.kind === 'post' && item.details?.content_type === 'ai-architecture-practice-article') return '<span class="content-chip content-chip-post">Практика ИИ в архитектуре</span>';
   if (item.kind === 'post') return '<span class="content-chip content-chip-post">Пост по материалу</span>';
   if (item.kind === 'comment') return '<span class="content-chip content-chip-comment">Комментарий</span>';
   if (item.kind === 'brief') return '<span class="content-chip content-chip-brief">Обзор</span>';
