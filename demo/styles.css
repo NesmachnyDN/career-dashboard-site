@@ -709,3 +709,15 @@ tr:last-child td { border-bottom: 0; }
 .work-format-office { color: var(--danger); background: var(--soft-danger); border-color: color-mix(in srgb, var(--danger) 24%, transparent); }
 .work-format-unknown { color: var(--muted); background: var(--panel-2); border-color: var(--line); }
 .opportunity-work-format, .action-work-format { display: block; margin-top: 4px; }
+
+/* Source previews become readable cards instead of a clipped, scrolled 780px table. */
+@media (max-width: 720px) {
+  .fresh-source-table { min-width: 0; }
+  .fresh-source-table thead { display: none; }
+  .fresh-source-table tbody, .fresh-source-table tr { display: block; }
+  .fresh-source-table tr { padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  .fresh-source-table tr:last-child { border-bottom: 0; }
+  .fresh-source-table td { display: grid; grid-template-columns: minmax(88px, 36%) minmax(0, 1fr); gap: 8px; border: 0; padding: 4px 0; min-width: 0; overflow-wrap: anywhere; }
+  .fresh-source-table td:first-child { display: block; padding-bottom: 8px; }
+  .fresh-source-table td[data-label]::before { content: attr(data-label); color: var(--muted); font-size: 11px; font-weight: 700; }
+}

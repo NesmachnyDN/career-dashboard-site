@@ -843,10 +843,10 @@ function renderFreshSources() {
   const renderList = (rows, label) => {
     const items = Array.isArray(rows) ? rows : [];
     return `<div class="section"><h3>${esc(label)}</h3>
-      <div class="table-wrap"><table><thead><tr><th>Найдено в источнике</th><th>Формат работы</th><th>Источник</th><th>Последняя проверка</th></tr></thead>
+      <div class="table-wrap fresh-source-wrap"><table class="fresh-source-table"><thead><tr><th>Найдено в источнике</th><th>Формат работы</th><th>Источник</th><th>Последняя проверка</th></tr></thead>
       <tbody>${items.map(item => `<tr><td><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title)}</a>
       ${item.company ? `<div class="meta">${esc(item.company)}</div>` : ''}</td>
-      <td>${workFormatChip(item.work_format)}</td><td>${esc(item.source_ref)}</td><td>${esc(fmtDate(item.last_seen_at))}</td></tr>`).join('') ||
+      <td data-label="Формат работы">${workFormatChip(item.work_format)}</td><td data-label="Источник">${esc(item.source_ref)}</td><td data-label="Проверено">${esc(fmtDate(item.last_seen_at))}</td></tr>`).join('') ||
       '<tr><td colspan="4">Нет свежих записей по предварительному тематическому фильтру.</td></tr>'}</tbody></table></div></div>`;
   };
   return `<div class="section">
