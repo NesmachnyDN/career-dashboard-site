@@ -4,6 +4,7 @@ let query = '';
 let vacancyStatusFilter = 'all';
 let vacancyExactStatusFilter = 'all';
 let vacancyOriginFilter = 'all';
+let vacancyWorkFormatFilter = 'all';
 let vacancyPage = 1;
 let vacancyPageSize = 10;
 let opportunityStatusFilter = 'all';
@@ -376,6 +377,7 @@ function startApp() {
         vacancyStatusFilter = 'all';
       }
       if (vacancyFilter.dataset.vacancyFilter === 'origin') vacancyOriginFilter = vacancyFilter.value;
+      if (vacancyFilter.dataset.vacancyFilter === 'work-format') vacancyWorkFormatFilter = vacancyFilter.value;
       if (vacancyFilter.dataset.vacancyFilter === 'page-size') {
         vacancyPageSize = Number(vacancyFilter.value) || 10;
       }
@@ -620,6 +622,7 @@ function itemCard(item) {
         <div class="meta">${badge(ru(item.priority || 'normal'), item.priority)} ${item.backfill ? badge('историческое восстановление', 'backfill') : ''}</div>
       </div>
       <h3>${esc(displayTitle(item.title))}</h3>
+      ${item.kind === 'vacancy' ? `<div class="vacancy-chips">${workFormatChip(item.work_format)}</div>` : ''}
       ${meta.length ? `<div class="meta">${meta.map(esc).join(' · ')}</div>` : ''}
       ${item.summary?`<p class="summary">${esc(displayText(item.summary))}</p>`:''}
       ${item.compensation?`<p class="meta">Компенсация: ${esc(ru(item.compensation))}${item.compensation_status?` · ${esc(ru(item.compensation_status))}`:''}</p>`:''}
@@ -840,11 +843,11 @@ function renderFreshSources() {
   const renderList = (rows, label) => {
     const items = Array.isArray(rows) ? rows : [];
     return `<div class="section"><h3>${esc(label)}</h3>
-      <div class="table-wrap"><table><thead><tr><th>Найдено в источнике</th><th>Источник</th><th>Последняя проверка</th></tr></thead>
+      <div class="table-wrap"><table><thead><tr><th>Найдено в источнике</th><th>Формат работы</th><th>Источник</th><th>Последняя проверка</th></tr></thead>
       <tbody>${items.map(item => `<tr><td><a href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">${esc(item.title)}</a>
       ${item.company ? `<div class="meta">${esc(item.company)}</div>` : ''}</td>
-      <td>${esc(item.source_ref)}</td><td>${esc(fmtDate(item.last_seen_at))}</td></tr>`).join('') ||
-      '<tr><td colspan="3">Нет свежих записей по предварительному тематическому фильтру.</td></tr>'}</tbody></table></div></div>`;
+      <td>${workFormatChip(item.work_format)}</td><td>${esc(item.source_ref)}</td><td>${esc(fmtDate(item.last_seen_at))}</td></tr>`).join('') ||
+      '<tr><td colspan="4">Нет свежих записей по предварительному тематическому фильтру.</td></tr>'}</tbody></table></div></div>`;
   };
   return `<div class="section">
     <div class="section-head"><div><h2>Свежие находки источников — без AI-оценки</h2>
@@ -892,6 +895,13 @@ function renderToday() {
       ${metric('Взаимодействия', snapshot.analytics.interaction_count, '', {view:'opportunities'})}
     </div>
   </div>`;
+}
+
+// Visible in every individual vacancy preview, including unknown historical records.
+function workFormatChip(value) {
+  const kind = ['remote','hybrid','office'].includes(value) ? value : 'unknown';
+  const label = {remote:'Удалённо',hybrid:'Гибрид',office:'Офис',unknown:'Не указано'}[kind];
+  return `<span class="work-format-chip work-format-${kind}">Формат работы: ${label}</span>`;
 }
 
 function vacancyStatusClass(v) {
@@ -1120,7 +1130,7 @@ function vacancyCard(v, index=0) {
   return `<article class="vacancy-card ${vacancyCardClass(v)}">
     <div class="vacancy-card-grid">
       <div class="vacancy-main">
-        <div class="vacancy-chips">${vacancyStatus(v)}${vacancyOrigin(v)}</div>
+        <div class="vacancy-chips">${vacancyStatus(v)}${vacancyOrigin(v)}${workFormatChip(v.work_format)}</div>
         <strong class="vacancy-company">${esc(v.company || 'Работодатель не указан')}</strong>
         <div class="vacancy-role">${esc(ru(v.role || v.title || '—'))}</div>
         ${summaryMarkup}
@@ -1158,7 +1168,8 @@ function renderVacancies() {
   const filtered = searchable.filter(v =>
     (vacancyStatusFilter === 'all' || v.status_group === vacancyStatusFilter) &&
     (vacancyExactStatusFilter === 'all' || v.status === vacancyExactStatusFilter) &&
-    (vacancyOriginFilter === 'all' || v.origin === vacancyOriginFilter)
+    (vacancyOriginFilter === 'all' || v.origin === vacancyOriginFilter) &&
+    (vacancyWorkFormatFilter === 'all' || (v.work_format || 'unknown') === vacancyWorkFormatFilter)
   );
   if (!searchable.length) return query
     ? '<div class="empty">По поиску вакансий нет.</div>'
@@ -1200,6 +1211,11 @@ function renderVacancies() {
             <option value="manual-search" ${vacancyOriginFilter === 'manual-search' ? 'selected' : ''}>Нашёл сам</option>
             <option value="recruiter-inbound" ${vacancyOriginFilter === 'recruiter-inbound' ? 'selected' : ''}>Рекрутер предложил</option>
             <option value="platform-inbound" ${vacancyOriginFilter === 'platform-inbound' ? 'selected' : ''}>Входящее с площадки</option>
+          </select>
+        </label>
+        <label>Формат работы
+          <select data-vacancy-filter="work-format">
+            ${[['all','Все форматы'],['remote','Удалённо'],['hybrid','Гибрид'],['office','Офис'],['unknown','Не указано']].map(([value,label])=>`<option value="${value}" ${vacancyWorkFormatFilter === value?'selected':''}>${label}</option>`).join('')}
           </select>
         </label>
         <label>На странице
@@ -1398,6 +1414,7 @@ function opportunityCard(o,index) {
         <strong>${esc(o.company || displayTitle(o.title))}</strong>
         <span class="opportunity-role">${esc(ru(o.role || ''))}</span>
         <span class="opportunity-preview-meta">${esc(ru(o.role_track || ''))} · обновлено ${esc(fmtDate(o.last_updated_at))}</span>
+        <span class="opportunity-work-format">${workFormatChip(o.work_format)}</span>
       </span>
       <span class="opportunity-next">
         <small>Последний контакт</small>

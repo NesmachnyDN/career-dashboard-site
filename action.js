@@ -101,6 +101,7 @@
           </div>
           <strong class="action-company">${esc(item.company || '—')}</strong>
           <div class="action-role">${esc(ru(item.role || '—'))}</div>
+          <div class="action-work-format">${workFormatChip(item.work_format)}</div>
         </div>
         <div class="action-stage">${esc(ru(item.current_stage || 'unknown'))}</div>
       </header>

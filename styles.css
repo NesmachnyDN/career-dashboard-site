@@ -697,3 +697,15 @@ tr:last-child td { border-bottom: 0; }
 .content-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }
 .content-legend .content-chip-comment { margin-left: 8px; }
 .content-legend-note { flex-basis: 100%; margin-top: 3px; }
+
+/* The arrangement is visible without opening the vacancy/process/action card. */
+.work-format-chip {
+  display: inline-flex; align-items: center; width: fit-content; min-height: 24px;
+  padding: 4px 8px; border: 1px solid var(--line); border-radius: 999px;
+  font-size: 10px; font-weight: 700; line-height: 1.25; white-space: normal;
+}
+.work-format-remote { color: var(--success); background: var(--soft-success); border-color: color-mix(in srgb, var(--success) 24%, transparent); }
+.work-format-hybrid { color: var(--warning); background: var(--soft-warning); border-color: color-mix(in srgb, var(--warning) 25%, transparent); }
+.work-format-office { color: var(--danger); background: var(--soft-danger); border-color: color-mix(in srgb, var(--danger) 24%, transparent); }
+.work-format-unknown { color: var(--muted); background: var(--panel-2); border-color: var(--line); }
+.opportunity-work-format, .action-work-format { display: block; margin-top: 4px; }
